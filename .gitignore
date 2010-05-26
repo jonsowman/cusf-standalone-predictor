@@ -2,3 +2,4 @@
 *.swn
 *.swo
 flight_path.*
+landing-prediction-data/
