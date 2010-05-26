@@ -38,14 +38,7 @@
 		}
                 fclose($file);
 
-                /*
-                $data = file_get_contents("example_scenario.ini");
-                $data_a = explode("\n", $data);
-                $lat_a = explode("=", $data_a[1]);
-                $lon_a = explode("=", $data_a[3]);
-                 */
-
-                $data = parse_ini_file("example_scenario.ini");
+                $data = parse_ini_file("example_scenario.ini"); // get the data from the scenario file
 
                 $initial_zoom = "7";
                 $initial_lat = $data['latitude'];
@@ -60,8 +53,8 @@
 		//$dist = 2*asin(sqrt((sin(($lat1-$lat2)/2))^2 + cos($lat1)*cos($lat2)*(sin(($lon1-$lon2)/2))^2));
 		$distkm = 6366.71 * acos(sin($lat1)*sin($lat2)+cos($lat1)*cos($lat2)*cos($lon1-$lon2));
 
-		$map_lat = ((float)$_POST['lat'] + (float)$land_lat)/2;
-		$map_lon = ((float)$_POST['lon'] + (float)$land_lon)/2;
+		$map_lat = ((float)$initial_lat + (float)$land_lat)/2;
+		$map_lon = ((float)$initial_lon + (float)$land_lon)/2;
 
 		$launchdate = gmstrftime("%b %d %Y %H:%M", $timestamp);
 		$launchtime = gmstrftime("%H:%M", $timestamp);
