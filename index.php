@@ -136,7 +136,6 @@
 
 
 <p>NOTE: Now updated to work world wide and up to 120 hours in the future, although its still very buggy and gives errors for some launch locations, we will be working to fix this soon.</p>
-<p>Ascent rate and burst altitude calculator <a href="/~cuspaceflight/calc" title="ascent rate and burst altitude calculator">here</a>.</p>
 
 
 <?php
