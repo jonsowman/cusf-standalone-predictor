@@ -13,209 +13,15 @@
 	<title>CU Spaceflight - Landing Prediction (Beta)</title> 
 	<link rel="stylesheet" href="style.css">
 	<script src="http://maps.google.com/maps?file=api&v=2&key=<?php echo $google_maps_key ?>" type="text/javascript"></script>
-	<script>
-		function UpdateLaunchSite(id) {
-			txtLat = document.getElementById("lat");
-			txtLon = document.getElementById("lon");
-			switch (id) {
-				case 0: // Churchill
-					txtLat.value = "52.2135";
-					txtLon.value = "0.0964";
-					break;
-				case 1: // EARS
-					txtLat.value = "52.2511";
-					txtLon.value = "-0.0927";
-					break;
-				case 2: // Glenrothes (SpeedEvil)
-					txtLat.value = "56.13";
-					txtLon.value = "-3.06";
-					break;
-				case 3: // Bujaraloz, Monegros (gerard)
-					txtLat.value = "41.495773";
-					txtLon.value = "-0.157968";
-					break;
-				case 4: // Adelaide (Juxta)
-					txtLat.value = "-34.9499";
-					txtLon.value = "138.5194";
-
-			}
-		}
-		function SetSiteOther() {
-			optOther = document.getElementById("other");
-			//cmbSite = document.getElementById("site");
-			//cmbSite.selectedIndex = 1;
-			optOther.selected = true;
-		}
-	</script>
 </head>
 
 <body>
 <h1>CU Spaceflight - Landing Prediction</h1><hr>
 
 <?php
-	// get time of last GRIB data - this is a bit of a hack
-	//$fp = fopen("valid_model_run.txt", "r");
-	//echo "<p>Using GRIB data from the " . fread($fp, 4) . "/" . fread($fp, 2) . "/" . fread($fp, 2) . " " . fread($fp, 2) . ":00 GMT model</p>";
 
-	if (!isset($_POST['submit'])) {
-		// form not submitted, so display the form
-		$time = localtime(time(), true);
-?>
-
-<form action="index.php" method="POST">
-<table>
-	<tr>
-		<td>Launch Site:</td>
-		<td>
-			<select id="site" name="launchsite" onchange="UpdateLaunchSite(this.selectedIndex)">
-				<option value="Churchill">Churchill</option>
-				<option value="EARS">EARS</option>
-				<option value="Glenrothes">Glenrothes</option>
-				<option value="Bujaraloz, Monegros">Bujaraloz, Monegros</option>
-				<option value="Adelaide Airport">Adelaide Airport</option>
-				<option id="other" value="other">Other</option>
-			</select>
-		</td>
-	<tr>
-		<td>Latitude:</td>
-		<td><input id="lat" type="text" name="lat" value="52.2135" onKeyDown="SetSiteOther()"></td>
-	</tr>
-    <tr>
-        <td>Longitude:</td>
-        <td><input id="lon" type="text" name="lon" value="0.0964" onKeyDown="SetSiteOther()"></td>
-    </tr>
-    <tr>
-        <td>Launch altitude (m):</td>
-        <td><input type="text" name="initial_alt" value="0"></td>
-    </tr>
-	<tr>
-		<td>Launch Time:</td>
-		<td>
-			<input type="text" name="hour" value="<?php printf("%02d", $time['tm_hour']+1); ?>" maxlength="2" size="2"> :
-			<input type="text" name="min" value="<?php printf("%02d", $time['tm_min']); ?>" maxlength="2" size="2">
-			<input type="hidden" name="sec" value="0">
-			 - 
-			<input type="text" name="day" value="<?php echo $time['tm_mday']; ?>" maxlength="2" size="2">
-			<select name="month">
-				<option value="0"<?php if ($time['tm_mon'] == 0) echo " selected"; ?>>Jan</option>
-				<option value="1"<?php if ($time['tm_mon'] == 1) echo " selected"; ?>>Feb</option>
-				<option value="2"<?php if ($time['tm_mon'] == 2) echo " selected"; ?>>Mar</option>
-				<option value="3"<?php if ($time['tm_mon'] == 3) echo " selected"; ?>>Apr</option>
-				<option value="4"<?php if ($time['tm_mon'] == 4) echo " selected"; ?>>May</option>
-				<option value="5"<?php if ($time['tm_mon'] == 5) echo " selected"; ?>>Jun</option>
-				<option value="6"<?php if ($time['tm_mon'] == 6) echo " selected"; ?>>Jul</option>
-				<option value="7"<?php if ($time['tm_mon'] == 7) echo " selected"; ?>>Aug</option>
-				<option value="8"<?php if ($time['tm_mon'] == 8) echo " selected"; ?>>Sep</option>
-				<option value="9"<?php if ($time['tm_mon'] == 9) echo " selected"; ?>>Oct</option>
-				<option value="10"<?php if ($time['tm_mon'] == 10) echo " selected"; ?>>Nov</option>
-				<option value="11"<?php if ($time['tm_mon'] == 11) echo " selected"; ?>>Dec</option>
-			</select>
-			<input type="text" name="year" value="<?php echo $time['tm_year']+1900; ?>" maxlength="4" size="4">
-		</td>
-    <tr>
-        <td>Ascent Rate (m/s):</td>
-        <td><input type="text" name="ascent" value="3"></td>
-    </tr>
-    <tr>
-        <td>Descent Rate (sea level m/s):</td>
-        <td><input type="text" name="drag" value="5"></td>
-    </tr>
-    <tr>
-        <td>Burst Altitude (m):</td>
-        <td><input type="text" name="burst" value="30000"></td>
-    </tr>
-    <tr>
-        <td>Float time at apogee (s):</td>
-        <td><input type="text" name="float_time" value="0"></td>
-    </tr>
-	<tr>
-		<td></td>
-		<td><input type="submit" name="submit" value="Run Prediction!"></td>
-	</tr>
-</table>
-
-
-<p>NOTE: Now updated to work world wide and up to 120 hours in the future, although its still very buggy and gives errors for some launch locations, we will be working to fix this soon.</p>
-
-
-<?php
-
-	} else {
-		// form has been submitted so make and display the prediction
 		
-		//horrible bodge, get rid of once cron job set up
-		if($_POST['lat']==-789)
-		{
-		echo "<p>Running auto forecast - will take several minutes</p>";
-		$output = shell_exec("./auto_prediction");
-		echo "<p>" . nl2br($output) . "</p>";
-		echo "<p><a href='churchill_forecasts.kml'>KML File</a></p>";
-
-		footer();
-		exit(1);
-		}
-		
-		
-		// use lock file as a mutex, this has potential for cockups
-		if (file_exists("lock")) {
-			echo "Server currently running a prediction, please try again in a few minutes or contact us on IRC (#highaltitude irc.freenode.net).";
-			footer();
-			exit(1);
-		}
-
-		$timestamp = mktime($_POST['hour'], $_POST['min'], $_POST['sec'], (int)$_POST['month'] + 1, $_POST['day'], (int)$_POST['year'] - 2000);
-		//if ($timestamp < time() || $timestamp > (time() + 120*3600)) {
-		if ($timestamp > (time() + 180*3600)) {
-			echo "<p>Invalid launch time specified, time must be within 180 hours of the current time.</p>";
-			echo "<p>Launch time: " . gmstrftime("%b %d %Y %H:%M", $timestamp) . "<br />Current time: " . gmstrftime("%b %d %Y %H:%M", time()) . "</p>";
-			echo "<p>" . nl2br(print_r($_POST, true)) . "</p>";
-			footer();
-			exit(1);
-		}
-		
-		if($_POST['initial_alt'] < -1000)
-		{
-      echo "<p>Invalid initial altitude specified, must be greater than -1000m.</p>";
-      footer();
-			exit(1);
-			}
-		
-
-		// create lock file to prevent other users running the predictor at the same time
-		$lockfile = fopen("lock", "w");
-		fclose($lockfile);
-		
-		$initial_zoom = "7";
-		$initial_lat = $_POST['lat'];
-		$initial_lon = $_POST['lon'];
-		
-		if($_POST['float_time']>24*60*60)
-		{
-      echo "<p>Max float time allowed is 24 hours</p>";
-      footer();
-      exit(1);
-      }
-
-		$output = shell_exec("./one_off_prediction " . $_POST['lat'] . " " . $_POST['lon'] . " " . $_POST['initial_alt'] ." " . (float)$_POST['ascent'] . " " . $_POST['drag']*1.1045 . " "  . $_POST['burst'] . " " . $timestamp  . " " . $_POST['float_time']);
-    
-		if (substr_count($output, "ok") != 1) {
-			echo "<h2>Landing prediction returned with a (possibly cryptic) error:</h2>";
-			echo "<p>" . nl2br($output) . "</p>";
-			footer();
-			unlink("lock");
-			exit(1);
-		}
-		
-		$fp = fopen("valid_model_run", "r");
-		$gribyear = fread($fp, 4);
-		$gribmonth = fread($fp, 2);
-		$gribday = fread($fp, 2);
-		$gribhour = fread($fp, 2);
-	  	echo "
-		<table><tr><td>
-		<p>Using GRIB data from the " . $gribyear . "/" . $gribmonth . "/" . $gribday . " " . $gribhour . ":00 GMT model</p>";
-		
-		$file = fopen("flight_path.csv", "r");
+		$file = fopen("new.csv", "r");
 		while (($data = fgetcsv($file)) != FALSE) {
 			//print_r($data);
 			$gmapsdata .= ",new GLatLng(" . $data[1] . "," . $data[2] . ")\n";
@@ -230,8 +36,16 @@
 				$burst_timestamp = (float)$data[0];
 			}
 		}
-		fclose($file);
-		unlink("lock");
+                fclose($file);
+
+                $data = file_get_contents("example_scenario.ini");
+                $data_a = explode("\n", $data);
+                $lat_a = explode("=", $data_a[1]);
+                $lon_a = explode("=", $data_a[3]);
+
+                $initial_zoom = "7";
+                $initial_lat = $lat_a[1];
+		$initial_lon = $lon_a[1];
 
 		$lat1 = deg2rad($initial_lat);
 		$lat2 = deg2rad($land_lat);
@@ -388,35 +202,9 @@ var polyline = new GPolyline([
 ],"#ff0000", 2, 1);
 map.addOverlay(polyline);
 
-<?php
-		if (isset($_POST['vectors'])) {
-			$windfile = fopen("output1.csv", "r");
-			$data = fgetcsv($windfile);
-			$startlat = $data[3];
-			$startlon = $data[4];
-			$endlat = $data[5];
-			$endlon = $data[6];
-			$data = fgetcsv($windfile);
-			$xs = fgetcsv($windfile);
-			$ys = fgetcsv($windfile);
-			for ($x = 0; $x < ($endlat - $startlat)*2; $x++) {
-				for ($y = 0; $y < ($endlon - $startlon)*2; $y++) {
-					echo "var windline = new GPolyline([new GLatLng(";
-					echo ($startlat + $x*0.5) . "," . ($startlon + $y*0.5) . "), new GLatLng(";
-					echo $xs[$x + ($endlat - $startlat)*2*$y + 2]*0.01 + ($startlat + $x*0.5) . ",";
-					echo $ys[$x + ($endlat - $startlat)*2*$y + 2]*0.01 + ($startlon + $y*0.5). ")";
-					echo "],\"#000000\",2,1);\nmap.addOverlay(windline);\n";
-				}
-			}
-		}
-?>
-
 //]]>
 </script>
 
-<?php
-	}
-?>
 </body>
 </html>
 
