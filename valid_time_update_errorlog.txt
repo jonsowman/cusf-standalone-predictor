@@ -33,3 +33,8 @@ have advanced: Unable to decode newly downloaded grib model run: 2009040906 time
 have advanced: Unable to decode newly downloaded grib model run: 2009040906 timestamp: 1239256800
 have advanced: unable to open valid_model_run to write new data. Try re-running. model run: 2009040906 timestamp: 1239256800
 have advanced: Unable to decode newly downloaded grib model run: 2009040906 timestamp: 1239256800
+file's current hour doesn't match timestamp model run: òó·×‰wa|ð timestamp: -1208717324
+file's current hour doesn't match timestamp model run: "ú·×‰wa|ð timestamp: -1208311820
+file's current hour doesn't match timestamp model run: Âï·×‰wa|ð timestamp: -1208991756
+file's current hour doesn't match timestamp model run: ó·×‰wa|ð timestamp: -1208778764
+file's current hour doesn't match timestamp model run: rð·×‰wa|ð timestamp: -1208946700
