@@ -38,14 +38,20 @@
 		}
                 fclose($file);
 
+                /*
                 $data = file_get_contents("example_scenario.ini");
                 $data_a = explode("\n", $data);
                 $lat_a = explode("=", $data_a[1]);
                 $lon_a = explode("=", $data_a[3]);
+                 */
+
+                $data = parse_ini_file("example_scenario.ini");
 
                 $initial_zoom = "7";
-                $initial_lat = $lat_a[1];
-		$initial_lon = $lon_a[1];
+                $initial_lat = $data['latitude'];
+                $initial_lon = $data['longitude'];
+
+                $timestamp = mktime($data['hour'], $data['minute'], $data['second'], (int)$data['month'] + 1, $data['day'], (int)$data['year'] - 2000);
 
 		$lat1 = deg2rad($initial_lat);
 		$lat2 = deg2rad($land_lat);
