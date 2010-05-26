@@ -65,7 +65,7 @@
 		$time_into_model = (int)(($burst_timestamp - mktime($gribhour, 0, 0, $gribmonth, $gribday, $gribyear)) / 3600);
 		$time_into_model = $time_into_model - ($time_into_model % 3);
 ?>
-<p>Launch: <?php if ($_POST["launchsite"] != "other") echo $_POST["launchsite"]; ?> <?php echo "<b>" . $initial_lat . ", " . $initial_lon . "</b> - " . $launchdate; ?> GMT<br />
+<p>Launch: <?php echo "<b>" . $initial_lat . ", " . $initial_lon . "</b> - " . $launchdate; ?> GMT<br />
 Landing: <?php echo  "<b>" . $land_lat . ", " . $land_lon . "</b> - " . $landdate; ?> GMT<br />
 Duration: <?php echo $duration; ?><br />
 Distance: <?php echo (int)$distkm . " km (" . (int)($distkm * 0.62137) . " miles)"; ?></p>
@@ -110,7 +110,7 @@ launchIcon.image = "icons/arrow.png";
 markerOptions = { icon:launchIcon };
 var launchMarker = new GMarker(new GLatLng(<?php echo $initial_lat . "," . $initial_lon ?>), markerOptions);
 GEvent.addListener(launchMarker, "click", function() {
-	launchMarker.openInfoWindowHtml("<b>Launch Site</b><br /><?php if ($_POST["launchsite"] != "other") echo $_POST["launchsite"] . "<br />"; ?><?php echo $initial_lat . ", " . $initial_lon . " - " . $launchtime ?>");
+	launchMarker.openInfoWindowHtml("<b>Launch Site</b><br /><?php echo $initial_lat . ", " . $initial_lon . " - " . $launchtime ?>");
 });
 map.addOverlay(launchMarker)
 
@@ -155,7 +155,7 @@ apogeeIcon.image = "icons/balloon.png";
 markerOptions = { icon:apogeeIcon };
 var apogeeMarker = new GMarker(new GLatLng(<?php echo $apogee_lat . "," . $apogee_lon ?>), markerOptions);
 GEvent.addListener(apogeeMarker, "click", function() {
-	apogeeMarker.openInfoWindowHtml("<b>Balloon Burst</b><br /><?php echo $_POST["burst"] . " km<br />" . $apogee_lat . ", " . $apogee_lon . " - " . $bursttime ?>");
+	apogeeMarker.openInfoWindowHtml("<b>Balloon Burst</b><br /><?php echo $maxalt . " km<br />" . $apogee_lat . ", " . $apogee_lon . " - " . $bursttime ?>");
 });
 map.addOverlay(apogeeMarker)
 
