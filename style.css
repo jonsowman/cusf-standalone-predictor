@@ -1,0 +1,32 @@
+body {
+	background-color: black;
+	color: white;
+	font-family: Verdana, Helvetica, Arial, sans-serif;
+	font-size: 12pt;
+}
+
+A:link {text-decoration: none; color: red;}
+A:visited {text-decoration: none; color: red;}
+A:active {text-decoration: none; color: red;}
+A:hover {text-decoration: underline; color: red;}
+
+input {
+	color: white;
+	background: #333333;
+	border: 1px solid #666666;
+	font-size: 12pt;
+	margin: 5px;
+}
+
+td {
+	border-right: 25px;
+}
+
+select {
+	margin: 5px;
+	font-size: 12pt;
+}
+
+#map {
+	color: black;
+}
