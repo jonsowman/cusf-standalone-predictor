@@ -69,7 +69,6 @@
 Landing: <?php echo  "<b>" . $land_lat . ", " . $land_lon . "</b> - " . $landdate; ?> GMT<br />
 Duration: <?php echo $duration; ?><br />
 Distance: <?php echo (int)$distkm . " km (" . (int)($distkm * 0.62137) . " miles)"; ?></p>
-<p><a href="flight_path.kml">KML File</a></p>
 </td>
 <td>
 	<div id="coords"></div>
