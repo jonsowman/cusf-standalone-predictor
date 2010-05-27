@@ -1,3 +1,7 @@
+<?php
+$time = localtime(time(), true);
+?>
+
 <html>
     <head>
         <title>GUI test</title>
@@ -115,6 +119,88 @@ hello world  :)
 <br>
 this is a happy box
 </div>
+
+<div id="input_form" class="box"> 
+<form action="index.php" method="POST">
+<table>
+	<tr>
+		<td>Launch Site:</td>
+		<td>
+			<select id="site" name="launchsite" onchange="UpdateLaunchSite(this.selectedIndex)">
+				<option value="Churchill">Churchill</option>
+				<option value="EARS">EARS</option>
+				<option value="Glenrothes">Glenrothes</option>
+				<option value="Bujaraloz, Monegros">Bujaraloz, Monegros</option>
+				<option value="Adelaide Airport">Adelaide Airport</option>
+				<option id="other" value="other">Other</option>
+			</select>
+		</td>
+	<tr>
+		<td>Latitude:</td>
+		<td><input id="lat" type="text" name="lat" value="52.2135" onKeyDown="SetSiteOther()"></td>
+	</tr>
+    <tr>
+        <td>Longitude:</td>
+        <td><input id="lon" type="text" name="lon" value="0.0964" onKeyDown="SetSiteOther()"></td>
+    </tr>
+    <tr>
+        <td>Launch altitude (m):</td>
+        <td><input type="text" name="initial_alt" value="0"></td>
+    </tr>
+	<tr>
+		<td>Launch Time:</td>
+		<td>
+			<input type="text" name="hour" value="<?php printf("%02d", $time['tm_hour']+1); ?>" maxlength="2" size="2"> :
+			<input type="text" name="min" value="<?php printf("%02d", $time['tm_min']); ?>" maxlength="2" size="2">
+			<input type="hidden" name="sec" value="0"></td></tr>
+			<tr><td>Launch Date:</td><td>
+			<input type="text" name="day" value="<?php echo $time['tm_mday']; ?>" maxlength="2" size="2">
+			<select name="month">
+				<option value="0"<?php if ($time['tm_mon'] == 0) echo " selected"; ?>>Jan</option>
+				<option value="1"<?php if ($time['tm_mon'] == 1) echo " selected"; ?>>Feb</option>
+				<option value="2"<?php if ($time['tm_mon'] == 2) echo " selected"; ?>>Mar</option>
+				<option value="3"<?php if ($time['tm_mon'] == 3) echo " selected"; ?>>Apr</option>
+				<option value="4"<?php if ($time['tm_mon'] == 4) echo " selected"; ?>>May</option>
+				<option value="5"<?php if ($time['tm_mon'] == 5) echo " selected"; ?>>Jun</option>
+				<option value="6"<?php if ($time['tm_mon'] == 6) echo " selected"; ?>>Jul</option>
+				<option value="7"<?php if ($time['tm_mon'] == 7) echo " selected"; ?>>Aug</option>
+				<option value="8"<?php if ($time['tm_mon'] == 8) echo " selected"; ?>>Sep</option>
+				<option value="9"<?php if ($time['tm_mon'] == 9) echo " selected"; ?>>Oct</option>
+				<option value="10"<?php if ($time['tm_mon'] == 10) echo " selected"; ?>>Nov</option>
+				<option value="11"<?php if ($time['tm_mon'] == 11) echo " selected"; ?>>Dec</option>
+			</select>
+			<input type="text" name="year" value="<?php echo $time['tm_year']+1900; ?>" maxlength="4" size="4">
+		</td>
+    <tr>
+        <td>Ascent Rate (m/s):</td>
+        <td><input type="text" name="ascent" value="3"></td>
+    </tr>
+    <tr>
+        <td>Descent Rate (sea level m/s):</td>
+        <td><input type="text" name="drag" value="5"></td>
+    </tr>
+    <tr>
+        <td>Burst Altitude (m):</td>
+        <td><input type="text" name="burst" value="30000"></td>
+    </tr>
+    <tr>
+        <td>Float time at apogee (s):</td>
+        <td><input type="text" name="float_time" value="0"></td>
+    </tr>
+    <tr>
+        <td>Landing prediction software: <td>
+        <select name="software">
+            <option value="grib" selected="selected">GRIB (fast, less accurate)</option>
+            <option value="dap">GFS/DAP (slow, more accurate)</option>
+        </select>
+	<tr>
+		<td></td>
+		<td><input type="submit" name="submit" value="Run Prediction!"></td>
+	</tr>
+</table>
+</form>
+</div>
+
 
 </body>
 </html>

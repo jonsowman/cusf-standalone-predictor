@@ -55,6 +55,14 @@ body {
 	border-bottom: none;
 }
 
+#input_form {
+    right: 0; bottom: 0;
+    border-right: none;
+    border-bottom: none;
+    width: 400px;
+    height:350px;
+}
+
 td.right-td {
 	text-align: right;
 }
