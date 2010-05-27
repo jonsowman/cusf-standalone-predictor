@@ -1,15 +1,60 @@
 <?php
+// if the form was submitted we should
+// 1. sanity check inputs
+// 2. generate an ini file
+// 3. start prediction running
+// 4. start ajax server poller
+// 5. display the prediction data when run is complete
+// 6. make the ini and the csv/kml available for download
 $time = localtime(time(), true);
+$uuid = md5(uniqid());
+$form_submitted = 0;
+$software_available = array('grib', 'dap');
+
+if ( isset($_POST['submit'])) { // form was submitted, let's run a pred!
+    runPred();
+}
+
+function runPred() {
+    // do things
+    $form_submitted = 1;
+    $pred_uuid = $_POST['uuid'];
+    $pred_software = $_POST['software'];
+    // check the software requested is available
+    if (!in_array($pred_software, $software_available)) {
+        die("Invalid software selected");
+    }
+
+    // make a timestamp of the form data
+    $timestamp = mktime($_POST['hour'], $_POST['min'], $_POST['sec'], (int)$_POST['month'] + 1, $_POST['day'], (int)$_POST['year'] - 2000);
+    // and check that it's within range
+    if ($timestamp > (time() + 180*3600)) {
+        die("The time was too far in the future, 180 days max");
+    }
+
+    // SANITY CHECK ALL POST VARS HERE
+
+    if ( $pred_software == $software_available[0] ) { // using grib
+        //
+    } else if ( $pred_software == $software_available[1] ) { // using dap
+        //
+    } else {
+        die("We couldn't find the software you asked for");
+    }
+}
+
 ?>
 
 <html>
     <head>
-        <title>GUI test</title>
+        <title>CUSF Landing Prediction 2 - GUI test</title>
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 <link href="css/pred.css" type="text/css" rel="stylesheet">
 <script src="js/jquery.js" type="text/javascript"></script>
 <script type="text/javascript">
+
+var form_submitted = <?php echo $form_submitted; ?>;
 
 // launch site dropdown switcher
 function UpdateLaunchSite(id) {
@@ -46,20 +91,27 @@ function SetSiteOther() {
         optOther.selected = true;
 }
 
+function handlePred() {
+    $("#debuginfo").html("form subd");
+}
+
 var map;
 var launch_img = "images/marker-sm-red.png";
 var land_img = "images/marker-sm-red.png";
 var burst_img = "images/pop-marker.png";
 
 function initialize() {
-var latlng = new google.maps.LatLng(52, 0);
-var myOptions = {
-  zoom: 8,
-  center: latlng,
-  mapTypeId: google.maps.MapTypeId.ROADMAP
-};
-map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
-parseCSV("new.csv");
+    //$("#scenario_template").hide();
+    // make the map and set center
+    var latlng = new google.maps.LatLng(52, 0);
+    var myOptions = {
+      zoom: 8,
+      center: latlng,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+    parseCSV("new.csv"); // debug remove
+    if ( form_submitted ) handlePred();
 }
 
 function parseCSV(csv_name) {
@@ -149,10 +201,8 @@ function parseCSV(csv_name) {
 <body onload="initialize()">
   <div id="map_canvas" style="width:100%; height:100%"></div>
 <div id="scenario_template" class="box">
-<h1>Scenario Template</h1>
-hello world  :)
-<br>
-this is a happy box
+<h1>Debug Window</h1>
+<span id="debuginfo">No Messages</span>
 </div>
 
 <div id="input_form" class="box"> 
@@ -229,7 +279,9 @@ this is a happy box
             <option value="dap">GFS/DAP (slow, more accurate)</option>
         </select>
 	<tr>
-		<td></td>
+                <td>
+                <input type="hidden" value="<?php echo $uuid; ?>" name="uuid">
+                </td>
 		<td><input type="submit" name="submit" value="Run Prediction!"></td>
 	</tr>
 </table>
