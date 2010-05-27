@@ -1,0 +1,79 @@
+/* Basic font-size and family. */
+html {
+	font-family: sans-serif;
+	font-size: 12px;
+}
+
+body {
+	margin: 0; padding: 0;
+}
+
+/* The whoppping map in the centre */
+#map_canvas { width: 100%; height: 100%; }
+
+.box {
+	position: absolute; 
+	background-color: white; 
+	border: 1px solid #6666ff; 
+	padding: 0.5em;
+}
+
+.box {
+	background: rgba(255,255,255,0.75); /* for more modern browsers */
+}
+
+.box * {
+	font-size: 12px;
+}
+
+.box table { 
+	margin: 0.25em auto;
+	white-space: nowrap;
+}
+
+.box h1 { 
+	text-align: center;
+	margin: 0em 0em 0.5em 0em;
+}
+
+.box p { 
+	margin: 0 auto;
+	margin-bottom: 0.25em; 
+	width: 25em;
+}
+
+#trail_table { 
+	right: 0; bottom: 0;
+	border-right: none;
+	border-bottom: none;
+	display: none;
+}
+
+#scenario_template { 
+	left: 0; bottom: 0; 
+	border-left: none;
+	border-bottom: none;
+}
+
+td.right-td {
+	text-align: right;
+}
+
+td.spacer {
+	width: 1em;
+}
+
+table#trails {
+	border-collapse: collapse;
+}
+
+table#trails td, table#trails th { 
+	border: 1px solid #6666ff;
+	padding: 0.1em 0.5em;
+	text-align: center;
+}
+
+table#trails th { 
+	background-color: #6666ff;
+	color: white;
+}
