@@ -96,13 +96,12 @@ function makeINI($pred_model) { // makes an ini file
 function runGRIB($pred_model) { // runs the grib predictor
     $lockfile = fopen("lock", "w");
     $shellcmd = "./one_off_prediction " . $pred_model['lat'] . " " . $pred_model['lon'] . " " . $pred_model['alt'] ." " . (float)$pred_model['asc'] . " " . $pred_model['des']*1.1045 . " "  . $pred_model['burst'] . " " . $pred_model['timestamp']  . " " . $pred_model['float'] . " &";
-    echo $shellcmd;
-    //shell_exec($shellcmd);
+    shell_exec($shellcmd);
     if (!file_exists("flight_path.csv")) {
         unlink("lock");
         die("The predictor didn't write a file");
     }
-    shell_exec("mv flight_path.csv preds/".$pred_model['uuid']."/");
+    shell_exec("mv flight_path.* preds/".$pred_model['uuid']."/");
     unlink("lock");
 }
 
@@ -155,9 +154,15 @@ function SetSiteOther() {
         optOther.selected = true;
 }
 
+function predSub() {
+    appendDebug("Sending data to server for uuid: " + document.form1.uuid.value);
+    appendDebug("Downloading GRIB data for tile, this could take some time...");
+}
+
 function handlePred() {
-    appendDebug("Form was submitted");
     appendDebug("Prediction running with uuid: " + running_uuid);
+    appendDebug("Prediction done for uuid: " + running_uuid);
+    // now go get the prediction data from the server
 }
 
 function appendDebug(appendage) {
@@ -278,7 +283,7 @@ function parseCSV(csv_name) {
 </div>
 
 <div id="input_form" class="box"> 
-<form action="index.php" method="POST">
+<form action="index.php" method="POST" name="form1">
 <table>
 	<tr>
 		<td>Launch Site:</td>
@@ -354,7 +359,7 @@ function parseCSV(csv_name) {
                 <td>
                 <input type="hidden" value="<?php echo $uuid; ?>" name="uuid">
                 </td>
-		<td><input type="submit" name="submit" value="Run Prediction!"></td>
+		<td><input type="submit" name="submit" value="Run Prediction!" onClick="predSub();"></td>
 	</tr>
 </table>
 </form>
