@@ -11,6 +11,41 @@ $time = localtime(time(), true);
 <script src="js/jquery.js" type="text/javascript"></script>
 <script type="text/javascript">
 
+// launch site dropdown switcher
+function UpdateLaunchSite(id) {
+        txtLat = document.getElementById("lat");
+        txtLon = document.getElementById("lon");
+        switch (id) {
+                case 0: // Churchill
+                        txtLat.value = "52.2135";
+                        txtLon.value = "0.0964";
+                        break;
+                case 1: // EARS
+                        txtLat.value = "52.2511";
+                        txtLon.value = "-0.0927";
+                        break;
+                case 2: // Glenrothes (SpeedEvil)
+                        txtLat.value = "56.13";
+                        txtLon.value = "-3.06";
+                        break;
+                case 3: // Bujaraloz, Monegros (gerard)
+                        txtLat.value = "41.495773";
+                        txtLon.value = "-0.157968";
+                        break;
+                case 4: // Adelaide (Juxta)
+                        txtLat.value = "-34.9499";
+                        txtLon.value = "138.5194";
+
+        }
+}
+
+function SetSiteOther() {
+        optOther = document.getElementById("other");
+        //cmbSite = document.getElementById("site");
+        //cmbSite.selectedIndex = 1;
+        optOther.selected = true;
+}
+
 var map;
 var launch_img = "images/marker-sm-red.png";
 var land_img = "images/marker-sm-red.png";
