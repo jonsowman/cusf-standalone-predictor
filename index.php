@@ -12,32 +12,43 @@ $form_submitted = 0;
 
 $pred_model = array();
 
-$pred_model['hour'] = $_POST['hour'];
-$pred_model['min'] = $_POST['min'];
-$pred_model['sec'] = $_POST['sec'];
-
-$pred_model['month'] = $_POST['month'];
-$pred_model['day'] = $_POST['day'];
-$pred_model['year'] = $_POST['year'];
-
-$pred_model['lat'] = $_POST['lat'];
-$pred_model['lon'] = $_POST['lon'];
-$pred_model['asc'] = (float)$_POST['ascent'];
-$pred_model['alt'] = $_POST['initial_alt'];
-$pred_model['des'] = $_POST['drag'];
-$pred_model['burst'] = $_POST['burst'];
-$pred_model['float'] = $_POST['float_time'];
-
-$pred_model['wind_error'] = 0;
-
 if ( isset($_POST['submit'])) { // form was submitted, let's run a pred!
+
+    $form_submitted = 1;
+
+    // first, populate the prediction model
+    $pred_model['hour'] = $_POST['hour'];
+    $pred_model['min'] = $_POST['min'];
+    $pred_model['sec'] = $_POST['sec'];
+
+    $pred_model['uuid'] = $_POST['uuid'];
+
+    $pred_model['month'] = $_POST['month'];
+    $pred_model['day'] = $_POST['day'];
+    $pred_model['year'] = $_POST['year'];
+
+    $pred_model['lat'] = $_POST['lat'];
+    $pred_model['lon'] = $_POST['lon'];
+    $pred_model['asc'] = (float)$_POST['ascent'];
+    $pred_model['alt'] = $_POST['initial_alt'];
+    $pred_model['des'] = $_POST['drag'];
+    $pred_model['burst'] = $_POST['burst'];
+    $pred_model['float'] = $_POST['float_time'];
+
+    $pred_model['wind_error'] = 0;
+
+    // make a timestamp of the form data
+    $pred_model['timestamp'] = mktime($_POST['hour'], $_POST['min'], $_POST['sec'], (int)$_POST['month'] + 1, $_POST['day'], (int)$_POST['year'] - 2000);
+        // and check that it's within range
+    if ($pred_model['timestamp'] > (time() + 180*3600)) {
+            die("The time was too far in the future, 180 days max");
+    }
+    // now we have a populated model, run the predictor
     runPred($pred_model);
 }
 
 function runPred($pred_model) {
     // do things
-    $form_submitted = 1;
-    $pred_uuid = $_POST['uuid'];
     $pred_software = $_POST['software'];
     // check the software requested is available
     $software_available = array('grib', 'dap');
@@ -45,18 +56,12 @@ function runPred($pred_model) {
         die("Invalid software selected: " . $pred_software);
     }
 
-    // make a timestamp of the form data
-    $timestamp = mktime($_POST['hour'], $_POST['min'], $_POST['sec'], (int)$_POST['month'] + 1, $_POST['day'], (int)$_POST['year'] - 2000);
-    // and check that it's within range
-    if ($timestamp > (time() + 180*3600)) {
-        die("The time was too far in the future, 180 days max");
-    }
-
+    
     // SANITY CHECK ALL POST VARS HERE
     //
     // make in INI file
-    makePredDir($pred_uuid);
-    makeINI($pred_uuid, $pred_model);
+    makePredDir($pred_model);
+    makeINI($pred_model);
 
     if ( $pred_software == $software_available[0] ) { // using grib
        //runGRIB(); 
@@ -67,12 +72,12 @@ function runPred($pred_model) {
     }
 }
 
-function makePredDir($pred_uuid) {
-    shell_exec("mkdir preds/" . $pred_uuid); //make sure we use the POSTed uuid
+function makePredDir($pred_model) {
+    shell_exec("mkdir preds/" . $pred_model['uuid']); //make sure we use the POSTed uuid
 }
 
-function makeINI($pred_uuid, $pred_model) { // makes an ini file
-    $fh = fopen("preds/" . $pred_uuid . "/scenario.ini", "a"); //append
+function makeINI($pred_model) { // makes an ini file
+    $fh = fopen("preds/" . $pred_model['uuid'] . "/scenario.ini", "a"); //append
 
     $w_string = "[launch-site]\nlatitude = " . $pred_model['lat'] . "\naltitude = " . $pred_model['alt'] . "\n";
     $w_string .= "longitude = " . $pred_model['lon'] . "\n[atmosphere]\nwind-error = ";
@@ -85,7 +90,6 @@ function makeINI($pred_uuid, $pred_model) { // makes an ini file
 
     fwrite($fh, $w_string);
     fclose($fh);
-
 }
 
 
@@ -105,6 +109,7 @@ function runGRIB() { // runs the grib predictor
 <script type="text/javascript">
 
 var form_submitted = <?php echo $form_submitted; ?>;
+var running_uuid = '<?php echo $pred_model['uuid']; ?>';
 
 // launch site dropdown switcher
 function UpdateLaunchSite(id) {
@@ -142,8 +147,16 @@ function SetSiteOther() {
 }
 
 function handlePred() {
-    $("#debuginfo").html("form subd");
+    appendDebug("Form was submitted");
+    appendDebug("Prediction running with uuid: " + running_uuid);
 }
+
+function appendDebug(appendage) {
+    var curr = $("#debuginfo").html();
+    curr += "<br>" + appendage;
+    $("#debuginfo").html(curr);
+}
+
 
 var map;
 var launch_img = "images/marker-sm-red.png";
