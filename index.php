@@ -64,7 +64,7 @@ function runPred($pred_model) {
     makeINI($pred_model);
 
     if ( $pred_software == $software_available[0] ) { // using grib
-       //runGRIB(); 
+       runGRIB($pred_model); 
     } else if ( $pred_software == $software_available[1] ) { // using dap
         //runDAP();
     } else {
@@ -93,8 +93,17 @@ function makeINI($pred_model) { // makes an ini file
 }
 
 
-function runGRIB() { // runs the grib predictor
-
+function runGRIB($pred_model) { // runs the grib predictor
+    $lockfile = fopen("lock", "w");
+    $shellcmd = "./one_off_prediction " . $pred_model['lat'] . " " . $pred_model['lon'] . " " . $pred_model['alt'] ." " . (float)$pred_model['asc'] . " " . $pred_model['des']*1.1045 . " "  . $pred_model['burst'] . " " . $pred_model['timestamp']  . " " . $pred_model['float'] . " &";
+    echo $shellcmd;
+    //shell_exec($shellcmd);
+    if (!file_exists("flight_path.csv")) {
+        unlink("lock");
+        die("The predictor didn't write a file");
+    }
+    shell_exec("mv flight_path.csv preds/".$pred_model['uuid']."/");
+    unlink("lock");
 }
 
 ?>
