@@ -9,7 +9,7 @@ The source for the standalone predictor is somewhere where nobody can find it, t
 The webserver needs to have a connection timeout of 30+. The GFS data needs to be updated regularly, that script is part of the hourly predictor [here](http://www.github.com/rjw57/cusf-landing-prediction).  
 
 Credit as detailed in individual files, but notably:  
-* Rich Wareham - The new predictor and the hourly predictor system
+* Rich Wareham - The new predictor and the hourly predictor system  
 * Rob Anderson - The GRIB predictor  
 * And Fergus Noble, Ed Moore and many others  
 
