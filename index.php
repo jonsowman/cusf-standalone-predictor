@@ -1,208 +1,293 @@
 <?php
-	$google_maps_key = "ABQIAAAAzpAeP4iTRyyvc3_y95bQZBSKwkMTdHp8HFczqP8NHp8p-gzf6hS3D2nn-v4cH1tY-5dVl1LLI46Lng";
-	$map_width = "100%";
-	$map_height = "70%";
-	
-	function footer() {
-		echo "</body></html>";
-	}
-?>
-<html>
+// if the form was submitted we should
+// 1. sanity check inputs
+// 2. generate an ini file
+// 3. start prediction running
+// 4. start ajax server poller
+// 5. display the prediction data when run is complete
+// 6. make the ini and the csv/kml available for download
+$time = localtime(time(), true);
+$uuid = md5(uniqid());
+$form_submitted = 0;
+$software_available = array('grib', 'dap');
 
-<head>
-	<title>CU Spaceflight - Landing Prediction (Beta)</title> 
-	<link rel="stylesheet" href="style.css">
-	<script src="http://maps.google.com/maps?file=api&v=2&key=<?php echo $google_maps_key ?>" type="text/javascript"></script>
-</head>
-
-<body>
-<h1>CU Spaceflight - Landing Prediction</h1><hr>
-
-<?php
-
-		
-		$file = fopen("new.csv", "r");
-		while (($data = fgetcsv($file)) != FALSE) {
-			//print_r($data);
-			$gmapsdata .= ",new GLatLng(" . $data[1] . "," . $data[2] . ")\n";
-			//print $data[1] . " " . $data[2] . " " . $data[3] . "<br />";
-			$land_timestamp = (float)$data[0];
-			$land_lat = $data[1];
-			$land_lon = $data[2];
-			if ((int)$data[3] > $maxalt) {
-				$maxalt = (int)$data[3];
-				$apogee_lat = $data[1];
-				$apogee_lon = $data[2];
-				$burst_timestamp = (float)$data[0];
-			}
-		}
-                fclose($file);
-
-                $data = parse_ini_file("example_scenario.ini"); // get the data from the scenario file
-
-                $initial_zoom = "7";
-                $initial_lat = $data['latitude'];
-                $initial_lon = $data['longitude'];
-
-                $timestamp = mktime($data['hour'], $data['minute'], $data['second'], (int)$data['month'] + 1, $data['day'], (int)$data['year'] - 2000);
-
-		$lat1 = deg2rad($initial_lat);
-		$lat2 = deg2rad($land_lat);
-		$lon1 = deg2rad($initial_lon);
-		$lon2 = deg2rad($land_lon);
-		//$dist = 2*asin(sqrt((sin(($lat1-$lat2)/2))^2 + cos($lat1)*cos($lat2)*(sin(($lon1-$lon2)/2))^2));
-		$distkm = 6366.71 * acos(sin($lat1)*sin($lat2)+cos($lat1)*cos($lat2)*cos($lon1-$lon2));
-
-		$map_lat = ((float)$initial_lat + (float)$land_lat)/2;
-		$map_lon = ((float)$initial_lon + (float)$land_lon)/2;
-
-		$launchdate = gmstrftime("%b %d %Y %H:%M", $timestamp);
-		$launchtime = gmstrftime("%H:%M", $timestamp);
-		$landdate = gmstrftime("%b %d %Y %H:%M", $land_timestamp);
-		$landtime = gmstrftime("%H:%M", $land_timestamp);
-		$bursttime = gmstrftime("%H:%M", $burst_timestamp);
-		$duration = gmstrftime("%H:%M", $land_timestamp - $timestamp);
-		$time_into_model = (int)(($burst_timestamp - mktime($gribhour, 0, 0, $gribmonth, $gribday, $gribyear)) / 3600);
-		$time_into_model = $time_into_model - ($time_into_model % 3);
-?>
-<p>Launch: <?php echo "<b>" . $initial_lat . ", " . $initial_lon . "</b> - " . $launchdate; ?> GMT<br />
-Landing: <?php echo  "<b>" . $land_lat . ", " . $land_lon . "</b> - " . $landdate; ?> GMT<br />
-Duration: <?php echo $duration; ?><br />
-Distance: <?php echo (int)$distkm . " km (" . (int)($distkm * 0.62137) . " miles)"; ?></p>
-</td>
-<td>
-	<div id="coords"></div>
-	<form name="wind_overlay">
-	<p>
-		GFS wind speed data overlay (knots): <input type="checkbox" name="wind_overlay_enabled" onChange="update_wind_overlay()"> 
-		<br />mBar (approx. altitude): 
-		<select name="mbar" onChange="update_wind_overlay()">
-			<option value="200">200 (12km)</option>
-			<option value="300" selected>300 (9km)</option>
-			<option value="500">500 (5.5km)</option>
-			<option value="700">700 (3km)</option>
-			<option value="850">850 (1.5km)</option>			
-		</select>
-	</p></form>
-</td></tr></table>
-
-<div id="map" style="width: <?php echo $map_width ?>; height: <?php echo $map_height ?>">
-</div>
-
-<script type="text/javascript">
-//<![CDATA[
-var map = new GMap2(document.getElementById("map"));
-map.addControl(new GLargeMapControl());
-map.addControl(new GMapTypeControl());
-map.addControl(new GScaleControl());
-//map.setUIToDefault();
-
-map.setCenter(new GLatLng(<?php echo $map_lat ?>, <?php echo $map_lon ?>), <?php echo $initial_zoom ?>);
-
-var baseIcon = new GIcon();
-baseIcon.iconSize = new GSize(20,20);
-baseIcon.iconAnchor = new GPoint(10,10);
-baseIcon.infoWindowAnchor = new GPoint(10,10);
-
-var launchIcon = new GIcon(baseIcon);
-launchIcon.image = "icons/arrow.png";
-markerOptions = { icon:launchIcon };
-var launchMarker = new GMarker(new GLatLng(<?php echo $initial_lat . "," . $initial_lon ?>), markerOptions);
-GEvent.addListener(launchMarker, "click", function() {
-	launchMarker.openInfoWindowHtml("<b>Launch Site</b><br /><?php echo $initial_lat . ", " . $initial_lon . " - " . $launchtime ?>");
-});
-map.addOverlay(launchMarker)
-
-var landIcon = new GIcon(baseIcon);
-landIcon.image = "icons/target-red.png";
-markerOptions = { icon:landIcon };
-var landMarker = new GMarker(new GLatLng(<?php echo $land_lat . "," . $land_lon ?>), markerOptions);
-GEvent.addListener(landMarker, "click", function() {
-	landMarker.openInfoWindowHtml("<b>Predicted Landing</b><br /><?php echo $land_lat . ", " . $land_lon . " - " . $landtime ?>");
-});
-map.addOverlay(landMarker)
-
-function drawCircle(center, radius, color, width, complexity) {
-    var points = [];
-    var radians = Math.PI / 180;
-    var longitudeOffset = radius / (Math.cos(center.y * radians) *
-111325);
-    var latitudeOffset = radius / 111325;
-    for (var i = 0; i < 360; i += complexity) {
-        var point = new GPoint(center.x + (longitudeOffset * Math.cos(i
-* radians)), center.y + (latitudeOffset * Math.sin(i * radians)));
-        points.push(point);
-    }
-    points.push(points[0]);// close the circle
-    var polygon = new GPolygon(points, true, color,0.25, true);
-
-    map.addOverlay(polygon);
-} 
-
-drawCircle(new GLatLng(<?php echo $land_lat . "," . $land_lon ?>),15000,"#ffff00",3,10);
-drawCircle(new GLatLng(<?php echo $land_lat . "," . $land_lon ?>),10000,"#ff0000",3,10);
-drawCircle(new GLatLng(<?php echo $land_lat . "," . $land_lon ?>),5000,"#ff0000",3,10);
-
-GEvent.addDomListener(map,'mousemove', 
-function(point){
-	document.getElementById("coords").innerHTML = 'Coords: ' + point.lat().toFixed(4) + ', ' + point.lng().toFixed(4) + '<br />Range from launch site ' + (point.distanceFrom(new GLatLng(<?php echo $initial_lat . ',' . $initial_lon ?>))/1000).toFixed(2) + 'km, landing site ' + (point.distanceFrom(new GLatLng(<?php echo $land_lat . ',' . $land_lon ?>))/1000).toFixed(2) + 'km';
-	//window.status='Wgs84 - '+point.toUrlValue();
-});
-
-var apogeeIcon = new GIcon(baseIcon);
-apogeeIcon.image = "icons/balloon.png";
-markerOptions = { icon:apogeeIcon };
-var apogeeMarker = new GMarker(new GLatLng(<?php echo $apogee_lat . "," . $apogee_lon ?>), markerOptions);
-GEvent.addListener(apogeeMarker, "click", function() {
-	apogeeMarker.openInfoWindowHtml("<b>Balloon Burst</b><br /><?php echo $maxalt . " km<br />" . $apogee_lat . ", " . $apogee_lon . " - " . $bursttime ?>");
-});
-map.addOverlay(apogeeMarker)
-
-//var pointSW = new GLatLng(48,-4.5);
-//var pointNE = new GLatLng(57,4.5);
-//var groundOverlay = new GGroundOverlay(
-//   "http://www.srcf.ucam.org/~cuspaceflight/predict/graph-out.png", 
-//   new GLatLngBounds(pointSW, pointNE));
-
-var windOverlay = new GGroundOverlay("", map.getBounds());
-
-var hour = <?php echo $time_into_model; ?>;
-var modelrun = "<?php echo $gribyear . $gribmonth . $gribday . $gribhour; ?>";
-
-function update_wind_overlay() {
-	var bounds = map.getBounds();
-	var size = map.getSize();
-
-	var imgurl = "http://modelmaps.wunderground.com/php/run.php?model=GFS&script=" 	
-		+ document.wind_overlay.mbar.options[document.wind_overlay.mbar.selectedIndex].value +
-		"&hour="+hour+"&modelrun="+modelrun+"&maxlat=" 
-		+ bounds.getNorthEast().lat() + 
-		"&maxlon=" + bounds.getNorthEast().lng() + 
-		"&minlat=" + bounds.getSouthWest().lat() + 
-		"&minlon=" + bounds.getSouthWest().lng() + 
-		"&width=" + size.width + "&height=" + size.height;
-		
-	window.status = imgurl;
-
-	map.removeOverlay(windOverlay);
-	if (document.wind_overlay.wind_overlay_enabled.checked) {
-		windOverlay = new GGroundOverlay(imgurl, bounds);
-		map.addOverlay(windOverlay);
-	}
+if ( isset($_POST['submit'])) { // form was submitted, let's run a pred!
+    runPred();
 }
 
-GEvent.addListener(map, "moveend", update_wind_overlay );
+function runPred() {
+    // do things
+    $form_submitted = 1;
+    $pred_uuid = $_POST['uuid'];
+    $pred_software = $_POST['software'];
+    // check the software requested is available
+    if (!in_array($pred_software, $software_available)) {
+        die("Invalid software selected");
+    }
 
-update_wind_overlay();
+    // make a timestamp of the form data
+    $timestamp = mktime($_POST['hour'], $_POST['min'], $_POST['sec'], (int)$_POST['month'] + 1, $_POST['day'], (int)$_POST['year'] - 2000);
+    // and check that it's within range
+    if ($timestamp > (time() + 180*3600)) {
+        die("The time was too far in the future, 180 days max");
+    }
 
-var polyline = new GPolyline([
-<?php echo $gmapsdata; ?>
-],"#ff0000", 2, 1);
-map.addOverlay(polyline);
+    // SANITY CHECK ALL POST VARS HERE
 
-//]]>
+    if ( $pred_software == $software_available[0] ) { // using grib
+        //
+    } else if ( $pred_software == $software_available[1] ) { // using dap
+        //
+    } else {
+        die("We couldn't find the software you asked for");
+    }
+}
+
+?>
+
+<html>
+    <head>
+        <title>CUSF Landing Prediction 2 - GUI test</title>
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+<link href="css/pred.css" type="text/css" rel="stylesheet">
+<script src="js/jquery.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+var form_submitted = <?php echo $form_submitted; ?>;
+
+// launch site dropdown switcher
+function UpdateLaunchSite(id) {
+        txtLat = document.getElementById("lat");
+        txtLon = document.getElementById("lon");
+        switch (id) {
+                case 0: // Churchill
+                        txtLat.value = "52.2135";
+                        txtLon.value = "0.0964";
+                        break;
+                case 1: // EARS
+                        txtLat.value = "52.2511";
+                        txtLon.value = "-0.0927";
+                        break;
+                case 2: // Glenrothes (SpeedEvil)
+                        txtLat.value = "56.13";
+                        txtLon.value = "-3.06";
+                        break;
+                case 3: // Bujaraloz, Monegros (gerard)
+                        txtLat.value = "41.495773";
+                        txtLon.value = "-0.157968";
+                        break;
+                case 4: // Adelaide (Juxta)
+                        txtLat.value = "-34.9499";
+                        txtLon.value = "138.5194";
+
+        }
+}
+
+function SetSiteOther() {
+        optOther = document.getElementById("other");
+        //cmbSite = document.getElementById("site");
+        //cmbSite.selectedIndex = 1;
+        optOther.selected = true;
+}
+
+function handlePred() {
+    $("#debuginfo").html("form subd");
+}
+
+var map;
+var launch_img = "images/marker-sm-red.png";
+var land_img = "images/marker-sm-red.png";
+var burst_img = "images/pop-marker.png";
+
+function initialize() {
+    //$("#scenario_template").hide();
+    // make the map and set center
+    var latlng = new google.maps.LatLng(52, 0);
+    var myOptions = {
+      zoom: 8,
+      center: latlng,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+    parseCSV("new.csv"); // debug remove
+    if ( form_submitted ) handlePred();
+}
+
+function parseCSV(csv_name) {
+    $.get(csv_name, null, function(data, textStatus) {
+        var lines = data.split('\n');
+        var path = [];
+        var max_height = -10; //just any -ve number
+        var max_point = null;
+        var launch_pt;
+        var land_pt;
+            $.each(lines, function(idx, line) {
+                entry = line.split(',');
+                if(entry.length >= 4) { // check valid entry length
+                    var point = new google.maps.LatLng( parseFloat(entry[1]), parseFloat(entry[2]) );
+                    if ( idx == 0 ) { // get the launch lat/long for marker
+                        var launch_lat = entry[1];
+                        var launch_lon = entry[2];
+                        launch_pt = point;
+                    }
+
+                    // set on every iteration, last valid entry
+                    // gives landing position
+                    var land_lat = entry[1];
+                    var land_lon = entry[2];
+                    land_pt = point;
+                    
+                    if(parseFloat(entry[3]) > max_height) {
+                            max_height = parseFloat(entry[3]);
+                            max_point = point;
+                    }
+                    path.push(point);
+                }
+            });
+
+        // make some nice icons
+        var launch_icon = new google.maps.MarkerImage(launch_img,
+            new google.maps.Size(16,16),
+            new google.maps.Point(0, 0),
+            new google.maps.Point(8, 8)
+        );
+        
+        var land_icon = new google.maps.MarkerImage(land_img,
+            new google.maps.Size(16,16),
+            new google.maps.Point(0, 0),
+            new google.maps.Point(8, 8)
+        );
+          
+        var launch_marker = new google.maps.Marker({
+            position: launch_pt,
+            map: map,
+            icon: launch_icon,
+            title: 'Balloon launch'
+        });
+
+        var land_marker = new google.maps.Marker({
+            position: land_pt,
+            map:map,
+            icon: land_icon,
+            title: 'Predicted Landing'
+        });
+
+        // now add the launch/land markers to map
+        launch_marker.setMap(map);
+        land_marker.setMap(map);
+
+        var path_polyline = new google.maps.Polyline({
+            path:path,
+            strokeColor: '#000000',
+            strokeWeight: 3,
+            strokeOpacity: 0.75
+    });
+
+        path_polyline.setMap(map);
+        
+        var pop_marker = new google.maps.Marker({
+                position: max_point,
+                map: map,
+                icon: burst_img,
+                title: 'Balloon burst (max. altitude: ' + max_height + 'm)',
+        });
+
+    });
+}
+
 </script>
+</head>
+<body onload="initialize()">
+  <div id="map_canvas" style="width:100%; height:100%"></div>
+<div id="scenario_template" class="box">
+<h1>Debug Window</h1>
+<span id="debuginfo">No Messages</span>
+</div>
+
+<div id="input_form" class="box"> 
+<form action="index.php" method="POST">
+<table>
+	<tr>
+		<td>Launch Site:</td>
+		<td>
+			<select id="site" name="launchsite" onchange="UpdateLaunchSite(this.selectedIndex)">
+				<option value="Churchill">Churchill</option>
+				<option value="EARS">EARS</option>
+				<option value="Glenrothes">Glenrothes</option>
+				<option value="Bujaraloz, Monegros">Bujaraloz, Monegros</option>
+				<option value="Adelaide Airport">Adelaide Airport</option>
+				<option id="other" value="other">Other</option>
+			</select>
+		</td>
+	<tr>
+		<td>Latitude:</td>
+		<td><input id="lat" type="text" name="lat" value="52.2135" onKeyDown="SetSiteOther()"></td>
+	</tr>
+    <tr>
+        <td>Longitude:</td>
+        <td><input id="lon" type="text" name="lon" value="0.0964" onKeyDown="SetSiteOther()"></td>
+    </tr>
+    <tr>
+        <td>Launch altitude (m):</td>
+        <td><input type="text" name="initial_alt" value="0"></td>
+    </tr>
+	<tr>
+		<td>Launch Time:</td>
+		<td>
+			<input type="text" name="hour" value="<?php printf("%02d", $time['tm_hour']+1); ?>" maxlength="2" size="2"> :
+			<input type="text" name="min" value="<?php printf("%02d", $time['tm_min']); ?>" maxlength="2" size="2">
+			<input type="hidden" name="sec" value="0"></td></tr>
+			<tr><td>Launch Date:</td><td>
+			<input type="text" name="day" value="<?php echo $time['tm_mday']; ?>" maxlength="2" size="2">
+			<select name="month">
+				<option value="0"<?php if ($time['tm_mon'] == 0) echo " selected"; ?>>Jan</option>
+				<option value="1"<?php if ($time['tm_mon'] == 1) echo " selected"; ?>>Feb</option>
+				<option value="2"<?php if ($time['tm_mon'] == 2) echo " selected"; ?>>Mar</option>
+				<option value="3"<?php if ($time['tm_mon'] == 3) echo " selected"; ?>>Apr</option>
+				<option value="4"<?php if ($time['tm_mon'] == 4) echo " selected"; ?>>May</option>
+				<option value="5"<?php if ($time['tm_mon'] == 5) echo " selected"; ?>>Jun</option>
+				<option value="6"<?php if ($time['tm_mon'] == 6) echo " selected"; ?>>Jul</option>
+				<option value="7"<?php if ($time['tm_mon'] == 7) echo " selected"; ?>>Aug</option>
+				<option value="8"<?php if ($time['tm_mon'] == 8) echo " selected"; ?>>Sep</option>
+				<option value="9"<?php if ($time['tm_mon'] == 9) echo " selected"; ?>>Oct</option>
+				<option value="10"<?php if ($time['tm_mon'] == 10) echo " selected"; ?>>Nov</option>
+				<option value="11"<?php if ($time['tm_mon'] == 11) echo " selected"; ?>>Dec</option>
+			</select>
+			<input type="text" name="year" value="<?php echo $time['tm_year']+1900; ?>" maxlength="4" size="4">
+		</td>
+    <tr>
+        <td>Ascent Rate (m/s):</td>
+        <td><input type="text" name="ascent" value="3"></td>
+    </tr>
+    <tr>
+        <td>Descent Rate (sea level m/s):</td>
+        <td><input type="text" name="drag" value="5"></td>
+    </tr>
+    <tr>
+        <td>Burst Altitude (m):</td>
+        <td><input type="text" name="burst" value="30000"></td>
+    </tr>
+    <tr>
+        <td>Float time at apogee (s):</td>
+        <td><input type="text" name="float_time" value="0"></td>
+    </tr>
+    <tr>
+        <td>Landing prediction software: <td>
+        <select name="software">
+            <option value="grib" selected="selected">GRIB (fast, less accurate)</option>
+            <option value="dap">GFS/DAP (slow, more accurate)</option>
+        </select>
+	<tr>
+                <td>
+                <input type="hidden" value="<?php echo $uuid; ?>" name="uuid">
+                </td>
+		<td><input type="submit" name="submit" value="Run Prediction!"></td>
+	</tr>
+</table>
+</form>
+</div>
+
 
 </body>
 </html>
-
