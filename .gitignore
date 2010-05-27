@@ -4,3 +4,4 @@
 flight_path.*
 landing-prediction-data/
 lock
+decoded_gribs/
