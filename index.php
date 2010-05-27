@@ -159,10 +159,18 @@ function predSub() {
     appendDebug("Downloading GRIB data for tile, this could take some time...");
 }
 
-function handlePred() {
+function handlePred(pred_uuid) {
     appendDebug("Prediction running with uuid: " + running_uuid);
     appendDebug("Prediction done for uuid: " + running_uuid);
     // now go get the prediction data from the server
+    getCSV(pred_uuid);
+}
+
+function getCSV(pred_uuid) {
+    $.get("ajax.php", { "action":"getCSV", "uuid":pred_uuid }, function(data) {
+       //alert(data.length); 
+        parseCSV(data);
+    }, 'json');
 }
 
 function appendDebug(appendage) {
@@ -187,13 +195,12 @@ function initialize() {
       mapTypeId: google.maps.MapTypeId.ROADMAP
     };
     map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
-    parseCSV("new.csv"); // debug remove
-    if ( form_submitted ) handlePred();
+    //parseCSV("new.csv"); // debug remove
+    if ( form_submitted ) handlePred(running_uuid);
 }
 
-function parseCSV(csv_name) {
-    $.get(csv_name, null, function(data, textStatus) {
-        var lines = data.split('\n');
+function parseCSV(lines) {
+        alert(lines[0]);
         var path = [];
         var max_height = -10; //just any -ve number
         var max_point = null;
@@ -259,7 +266,7 @@ function parseCSV(csv_name) {
             strokeColor: '#000000',
             strokeWeight: 3,
             strokeOpacity: 0.75
-    });
+        });
 
         path_polyline.setMap(map);
         
@@ -270,7 +277,6 @@ function parseCSV(csv_name) {
                 title: 'Balloon burst (max. altitude: ' + max_height + 'm)',
         });
 
-    });
 }
 
 </script>
