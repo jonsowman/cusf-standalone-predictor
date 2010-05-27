@@ -155,28 +155,41 @@ function SetSiteOther() {
 }
 
 function predSub() {
+    appendDebug(null, 1);
     appendDebug("Sending data to server for uuid: " + document.form1.uuid.value);
     appendDebug("Downloading GRIB data for tile, this could take some time...");
+    appendDebug("Do NOT stop or refresh your browser.");
 }
 
 function handlePred(pred_uuid) {
+    appendDebug(null, 1);
     appendDebug("Prediction running with uuid: " + running_uuid);
     appendDebug("Prediction done for uuid: " + running_uuid);
     // now go get the prediction data from the server
+    appendDebug("Getting flight path from server....");
     getCSV(pred_uuid);
 }
 
 function getCSV(pred_uuid) {
     $.get("ajax.php", { "action":"getCSV", "uuid":pred_uuid }, function(data) {
-       //alert(data.length); 
-        parseCSV(data);
+        //alert(data.length); 
+        appendDebug("Got JSON response from server for flight path, parsing...");
+        if (parseCSV(data) ) {
+            appendDebug("Parsing function returned all OK - DONE");
+        } else {
+            appendDebug("The parsing function failed");
+        }
     }, 'json');
 }
 
-function appendDebug(appendage) {
-    var curr = $("#debuginfo").html();
-    curr += "<br>" + appendage;
-    $("#debuginfo").html(curr);
+function appendDebug(appendage, clear) {
+    if ( clear == null ){
+        var curr = $("#debuginfo").html();
+        curr += "<br>" + appendage;
+        $("#debuginfo").html(curr);
+    } else {
+        $("#debuginfo").html("");
+    }
 }
 
 
@@ -200,82 +213,85 @@ function initialize() {
 }
 
 function parseCSV(lines) {
-        alert(lines[0]);
-        var path = [];
-        var max_height = -10; //just any -ve number
-        var max_point = null;
-        var launch_pt;
-        var land_pt;
-            $.each(lines, function(idx, line) {
-                entry = line.split(',');
-                if(entry.length >= 4) { // check valid entry length
-                    var point = new google.maps.LatLng( parseFloat(entry[1]), parseFloat(entry[2]) );
-                    if ( idx == 0 ) { // get the launch lat/long for marker
-                        var launch_lat = entry[1];
-                        var launch_lon = entry[2];
-                        launch_pt = point;
-                    }
-
-                    // set on every iteration, last valid entry
-                    // gives landing position
-                    var land_lat = entry[1];
-                    var land_lon = entry[2];
-                    land_pt = point;
-                    
-                    if(parseFloat(entry[3]) > max_height) {
-                            max_height = parseFloat(entry[3]);
-                            max_point = point;
-                    }
-                    path.push(point);
+    var path = [];
+    var max_height = -10; //just any -ve number
+    var max_point = null;
+    var launch_pt;
+    var land_pt;
+        $.each(lines, function(idx, line) {
+            entry = line.split(',');
+            if(entry.length >= 4) { // check valid entry length
+                var point = new google.maps.LatLng( parseFloat(entry[1]), parseFloat(entry[2]) );
+                if ( idx == 0 ) { // get the launch lat/long for marker
+                    var launch_lat = entry[1];
+                    var launch_lon = entry[2];
+                    launch_pt = point;
                 }
-            });
 
-        // make some nice icons
-        var launch_icon = new google.maps.MarkerImage(launch_img,
-            new google.maps.Size(16,16),
-            new google.maps.Point(0, 0),
-            new google.maps.Point(8, 8)
-        );
-        
-        var land_icon = new google.maps.MarkerImage(land_img,
-            new google.maps.Size(16,16),
-            new google.maps.Point(0, 0),
-            new google.maps.Point(8, 8)
-        );
-          
-        var launch_marker = new google.maps.Marker({
-            position: launch_pt,
+                // set on every iteration, last valid entry
+                // gives landing position
+                var land_lat = entry[1];
+                var land_lon = entry[2];
+                land_pt = point;
+                
+                if(parseFloat(entry[3]) > max_height) {
+                        max_height = parseFloat(entry[3]);
+                        max_point = point;
+                }
+                path.push(point);
+            }
+        });
+
+    appendDebug("Flight data parsed, creating map plot...");
+
+    // make some nice icons
+    var launch_icon = new google.maps.MarkerImage(launch_img,
+        new google.maps.Size(16,16),
+        new google.maps.Point(0, 0),
+        new google.maps.Point(8, 8)
+    );
+    
+    var land_icon = new google.maps.MarkerImage(land_img,
+        new google.maps.Size(16,16),
+        new google.maps.Point(0, 0),
+        new google.maps.Point(8, 8)
+    );
+      
+    var launch_marker = new google.maps.Marker({
+        position: launch_pt,
+        map: map,
+        icon: launch_icon,
+        title: 'Balloon launch'
+    });
+
+    var land_marker = new google.maps.Marker({
+        position: land_pt,
+        map:map,
+        icon: land_icon,
+        title: 'Predicted Landing'
+    });
+
+    // now add the launch/land markers to map
+    launch_marker.setMap(map);
+    land_marker.setMap(map);
+
+    var path_polyline = new google.maps.Polyline({
+        path:path,
+        strokeColor: '#000000',
+        strokeWeight: 3,
+        strokeOpacity: 0.75
+    });
+
+    path_polyline.setMap(map);
+    
+    var pop_marker = new google.maps.Marker({
+            position: max_point,
             map: map,
-            icon: launch_icon,
-            title: 'Balloon launch'
-        });
+            icon: burst_img,
+            title: 'Balloon burst (max. altitude: ' + max_height + 'm)',
+    });
 
-        var land_marker = new google.maps.Marker({
-            position: land_pt,
-            map:map,
-            icon: land_icon,
-            title: 'Predicted Landing'
-        });
-
-        // now add the launch/land markers to map
-        launch_marker.setMap(map);
-        land_marker.setMap(map);
-
-        var path_polyline = new google.maps.Polyline({
-            path:path,
-            strokeColor: '#000000',
-            strokeWeight: 3,
-            strokeOpacity: 0.75
-        });
-
-        path_polyline.setMap(map);
-        
-        var pop_marker = new google.maps.Marker({
-                position: max_point,
-                map: map,
-                icon: burst_img,
-                title: 'Balloon burst (max. altitude: ' + max_height + 'm)',
-        });
+    return true;
 
 }
 
