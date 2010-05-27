@@ -1,6 +1,6 @@
 # CUSF standalone predictor
 
-Working on improving the Cambridge University Spaceflight landing predictor, used for predicting the flight path and landing location of latex balloon.  
+Working on improving the Cambridge University Spaceflight landing predictor, used for predicting the flight path and landing location of latex balloons.  
 
 ## Install
 
@@ -10,9 +10,9 @@ The webserver needs to have a connection timeout of 30+. The GFS data needs to b
 
 Credit as detailed in individual files, but notably:  
 * Rich Wareham - The new predictor and the hourly predictor system
-* Rob Anderson - The GRIB predictor
-* And Fergus Noble, Ed Moore and many others
+* Rob Anderson - The GRIB predictor  
+* And Fergus Noble, Ed Moore and many others  
 
 Jon Sowman 2010  
 [http://www.hexoc.com](http://www.hexoc.com)  
-[mailto:jon@hexoc.com](jon@hexoc.com)  
+[jon@hexoc.com](mailto:jon@hexoc.com)  
