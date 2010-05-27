@@ -9,20 +9,40 @@
 $time = localtime(time(), true);
 $uuid = md5(uniqid());
 $form_submitted = 0;
-$software_available = array('grib', 'dap');
+
+$pred_model = array();
+
+$pred_model['hour'] = $_POST['hour'];
+$pred_model['min'] = $_POST['min'];
+$pred_model['sec'] = $_POST['sec'];
+
+$pred_model['month'] = $_POST['month'];
+$pred_model['day'] = $_POST['day'];
+$pred_model['year'] = $_POST['year'];
+
+$pred_model['lat'] = $_POST['lat'];
+$pred_model['lon'] = $_POST['lon'];
+$pred_model['asc'] = (float)$_POST['ascent'];
+$pred_model['alt'] = $_POST['initial_alt'];
+$pred_model['des'] = $_POST['drag'];
+$pred_model['burst'] = $_POST['burst'];
+$pred_model['float'] = $_POST['float_time'];
+
+$pred_model['wind_error'] = 0;
 
 if ( isset($_POST['submit'])) { // form was submitted, let's run a pred!
-    runPred();
+    runPred($pred_model);
 }
 
-function runPred() {
+function runPred($pred_model) {
     // do things
     $form_submitted = 1;
     $pred_uuid = $_POST['uuid'];
     $pred_software = $_POST['software'];
     // check the software requested is available
+    $software_available = array('grib', 'dap');
     if (!in_array($pred_software, $software_available)) {
-        die("Invalid software selected");
+        die("Invalid software selected: " . $pred_software);
     }
 
     // make a timestamp of the form data
@@ -33,14 +53,44 @@ function runPred() {
     }
 
     // SANITY CHECK ALL POST VARS HERE
+    //
+    // make in INI file
+    makePredDir($pred_uuid);
+    makeINI($pred_uuid, $pred_model);
 
     if ( $pred_software == $software_available[0] ) { // using grib
-        //
+       //runGRIB(); 
     } else if ( $pred_software == $software_available[1] ) { // using dap
-        //
+        //runDAP();
     } else {
         die("We couldn't find the software you asked for");
     }
+}
+
+function makePredDir($pred_uuid) {
+    shell_exec("mkdir preds/" . $pred_uuid); //make sure we use the POSTed uuid
+}
+
+function makeINI($pred_uuid, $pred_model) { // makes an ini file
+    $fh = fopen("preds/" . $pred_uuid . "/scenario.ini", "a"); //append
+
+    $w_string = "[launch-site]\nlatitude = " . $pred_model['lat'] . "\naltitude = " . $pred_model['alt'] . "\n";
+    $w_string .= "longitude = " . $pred_model['lon'] . "\n[atmosphere]\nwind-error = ";
+    $w_string .= $pred_model['wind_error'] . "\n[altitude-model]\nascent-rate = " . $pred_model['asc'] . "\n";
+    $w_string .= "descent-rate  = " . $pred_model['des'] . "\nburst-altitude = ";
+    $w_string .= $pred_model['burst'] . "\n[launch-time]\nhour = " . $pred_model['hour'] . "\n";
+    $w_string .= "month = " . $pred_model['month'] . "\nsecond = " . $pred_model['sec'] . "\n";
+    $w_string .= "year = " . $pred_model['year'] . "\nday = " . $pred_model['day'] . "\nminute = ";
+    $w_string .= $pred_model['min'] . "\n";
+
+    fwrite($fh, $w_string);
+    fclose($fh);
+
+}
+
+
+function runGRIB() { // runs the grib predictor
+
 }
 
 ?>
