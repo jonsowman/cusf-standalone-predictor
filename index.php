@@ -75,16 +75,17 @@ function runPred($pred_model) {
     makeINI($pred_model);
 
     if ( $pred_software == $software_available[0] ) { // using GFS
-       runGRIB($pred_model); 
+        // call the python grib_grabber and then predictor
+        // then PHP can safely die and let AJAX take over
     } else if ( $pred_software == $software_available[1] ) { // using GFS-HD
-        //runDAP();
+        //
     } else {
         die("We couldn't find the software you asked for");
     }
 }
 
 function makePredDir($pred_model) {
-    shell_exec("mkdir preds/" . $pred_model['uuid']); //make sure we use the POSTed uuid
+    shell_exec("mkdir preds/" . $pred_model['uuid']); //make sure we use the uuid from model
 }
 
 function makeINI($pred_model) { // makes an ini file
@@ -167,16 +168,23 @@ function SetSiteOther() {
 }
 
 function predSub() {
-    appendDebug(null, 1);
-    appendDebug("Sending data to server for uuid: " + document.form1.uuid.value);
+    appendDebug(null, 1); // clear debug window
+    appendDebug("Sending data to server");
     appendDebug("Downloading GRIB data for tile, this could take some time...");
     appendDebug("Do NOT stop or refresh your browser.");
 }
 
 function handlePred(pred_uuid) {
+    // Clear the debug window
     appendDebug(null, 1);
     appendDebug("Prediction running with uuid: " + running_uuid);
-    appendDebug("Prediction done for uuid: " + running_uuid);
+    appendDebug("Attempting to download GFS data for prediction");
+    // ajax to poll for progress
+    appendDebug("Downloading GFS data complete");
+    // call the predictor, check if running
+    appendDebug("Predictor is now running...");
+    // wait for JSON to indicate prediction complete
+    appendDebug("Predictor exited, prediction complete.");
     // now go get the prediction data from the server
     appendDebug("Getting flight path from server....");
     getCSV(pred_uuid);
@@ -220,7 +228,6 @@ function initialize() {
       mapTypeId: google.maps.MapTypeId.ROADMAP
     };
     map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
-    // parseCSV("http://www.hexoc.com/hab/predict/websitepred/flight_path.csv"); // debug remove
     if ( form_submitted ) handlePred(running_uuid);
 }
 
