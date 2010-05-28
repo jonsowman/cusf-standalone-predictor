@@ -8,6 +8,7 @@
 // 6. make the ini and the csv/kml available for download
 $time = localtime(time(), true);
 $form_submitted = 0;
+$software_available = array("gfs", "gfs_hd");
 
 $pred_model = array();
 
@@ -19,8 +20,6 @@ if ( isset($_POST['submit'])) { // form was submitted, let's run a pred!
     $pred_model['hour'] = $_POST['hour'];
     $pred_model['min'] = $_POST['min'];
     $pred_model['sec'] = $_POST['sec'];
-
-    $pred_model['uuid'] = $_POST['uuid'];
 
     $pred_model['month'] = $_POST['month'];
     $pred_model['day'] = $_POST['day'];
@@ -39,8 +38,9 @@ if ( isset($_POST['submit'])) { // form was submitted, let's run a pred!
     $pred_model['software'] = $_POST['software'];
 
     // verify the model here
+    if ( !verifyModel($pred_model, $software_available) ) die ("The model verification failed");
 
-    $pred_model['uuid'] = $makesha1hash($pred_model); // make a sha1 hash of the model for uuid
+    $pred_model['uuid'] = makesha1hash($pred_model); // make a sha1 hash of the model for uuid
 
     // make a timestamp of the form data
     $pred_model['timestamp'] = mktime($_pred_model['hour'], $_pred_model['min'], $_pred_model['sec'], (int)$_pred_model['month'] + 1, $_pred_model['day'], (int)$_pred_model['year'] - 2000);
@@ -61,27 +61,30 @@ function makesha1hash($pred_model) {
     return $uuid;
 }
 
-function runPred($pred_model) {
-    // do things
-    $pred_software = $pred_model['software'];
-    // check the software requested is available
-    $software_available = array('gfs', 'gfs_hd');
-    if (!in_array($pred_software, $software_available)) {
-        die("Invalid software selected: " . $pred_software);
+function verifyModel($pred_model, $software_available) {
+    if(!isset($pred_model)) return false;
+    foreach($pred_model as $idx => $value) {
+        if ($idx == "software") {
+            if (!in_array($value, $software_available)) return false;
+        } else if ($idx == "uuid") {
+        
+        } else {
+            if (!is_numeric($value)) {
+                return false;
+            }
+        }
     }
-    
+    return true;
+}
+
+function runPred($pred_model) {
     // make in INI file
     makePredDir($pred_model);
     makeINI($pred_model);
 
-    if ( $pred_software == $software_available[0] ) { // using GFS
-        // call the python grib_grabber and then predictor
-        // then PHP can safely die and let AJAX take over
-    } else if ( $pred_software == $software_available[1] ) { // using GFS-HD
-        //
-    } else {
-        die("We couldn't find the software you asked for");
-    }
+    // if we're using --hd, then append it to the exec string
+    $sh_str = "./pred_src/pred";
+
 }
 
 function makePredDir($pred_model) {
@@ -131,6 +134,7 @@ function runGRIB($pred_model) { // runs the grib predictor
 
 var form_submitted = <?php echo $form_submitted; ?>;
 var running_uuid = '<?php echo $pred_model['uuid']; ?>';
+var ajaxEventHandle;
 
 // launch site dropdown switcher
 function UpdateLaunchSite(id) {
@@ -180,19 +184,14 @@ function handlePred(pred_uuid) {
     appendDebug("Prediction running with uuid: " + running_uuid);
     appendDebug("Attempting to download GFS data for prediction");
     // ajax to poll for progress
-    appendDebug("Downloading GFS data complete");
-    // call the predictor, check if running
-    appendDebug("Predictor is now running...");
-    // wait for JSON to indicate prediction complete
-    appendDebug("Predictor exited, prediction complete.");
-    // now go get the prediction data from the server
+
+    //ajaxEventHandle = setInterval("getJSONProgress('"+pred_uuid+"')", 3000);
     appendDebug("Getting flight path from server....");
-    getCSV(pred_uuid);
+    //getCSV(pred_uuid);
 }
 
 function getCSV(pred_uuid) {
     $.get("ajax.php", { "action":"getCSV", "uuid":pred_uuid }, function(data) {
-        //alert(data.length); 
         appendDebug("Got JSON response from server for flight path, parsing...");
         if (parseCSV(data) ) {
             appendDebug("Parsing function returned all OK - DONE");
@@ -200,6 +199,33 @@ function getCSV(pred_uuid) {
             appendDebug("The parsing function failed");
         }
     }, 'json');
+}
+
+function getJSONProgress(pred_uuid) {
+    $.ajax({
+        url:"preds/"+pred_uuid+"/progress.json",
+        dataType:'json',
+        timeout: 500,
+        success: function(progress) {
+            if ( progress.error != '' ) {
+                appendDebug("There was an error in running the prediction: "+progress.error);
+            } else {
+                // get the progress of the wind data
+                if ( progress.gfs_complete == true ) {
+                    if ( progress.pred_complete == true ) { // pred has finished
+                        alert("ALL DONE"); // debug
+                        clearInterval(ajaxEventHandle); // clear calling this function
+                    } else if ( progress.pred_started != true ) {
+                        appendDebug("Predictor not yet running...");
+                    } else if ( progress.pred_started == true ) {
+                        appendDebug("Predictor currently running");
+                    }
+                } else {
+                    appendDebug("Downloaded " + progress.gfs_percent + "%");
+                }
+            }
+        }
+    });
 }
 
 function appendDebug(appendage, clear) {

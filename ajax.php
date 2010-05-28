@@ -15,6 +15,15 @@ case "getCSV":
     echo $returned;
     break;
 
+case "JSONexists":
+    $uuid = $_GET['uuid'];
+    if(file_exists("preds/$uuid/progress.json")) {
+        echo true;
+    } else {
+        echo false;
+    }
+    break;
+
 }
 
 ?>
