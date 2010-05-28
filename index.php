@@ -6,7 +6,9 @@
 // 4. start ajax server poller
 // 5. display the prediction data when run is complete
 // 6. make the ini and the csv/kml available for download
-$time = localtime(time(), true);
+//
+// get the time for populating the form
+$time = time() + 3600;
 $form_submitted = 0;
 $software_available = array("gfs", "gfs_hd");
 
@@ -332,26 +334,26 @@ function parseCSV(lines) {
 	<tr>
 		<td>Launch Time:</td>
 		<td>
-			<input type="text" name="hour" value="<?php printf("%02d", $time['tm_hour']+1); ?>" maxlength="2" size="2"> :
-			<input type="text" name="min" value="<?php printf("%02d", $time['tm_min']); ?>" maxlength="2" size="2">
+			<input type="text" name="hour" value="<?php echo date("H", $time); ?>" maxlength="2" size="2"> :
+			<input type="text" name="min" value="<?php echo date("i", $time); ?>" maxlength="2" size="2">
 			<input type="hidden" name="sec" value="0"></td></tr>
 			<tr><td>Launch Date:</td><td>
-			<input type="text" name="day" value="<?php echo $time['tm_mday']; ?>" maxlength="2" size="2">
+			<input type="text" name="day" value="<?php echo date("d", $time); ?>" maxlength="2" size="2">
 			<select name="month">
-				<option value="0"<?php if ($time['tm_mon'] == 0) echo " selected"; ?>>Jan</option>
-				<option value="1"<?php if ($time['tm_mon'] == 1) echo " selected"; ?>>Feb</option>
-				<option value="2"<?php if ($time['tm_mon'] == 2) echo " selected"; ?>>Mar</option>
-				<option value="3"<?php if ($time['tm_mon'] == 3) echo " selected"; ?>>Apr</option>
-				<option value="4"<?php if ($time['tm_mon'] == 4) echo " selected"; ?>>May</option>
-				<option value="5"<?php if ($time['tm_mon'] == 5) echo " selected"; ?>>Jun</option>
-				<option value="6"<?php if ($time['tm_mon'] == 6) echo " selected"; ?>>Jul</option>
-				<option value="7"<?php if ($time['tm_mon'] == 7) echo " selected"; ?>>Aug</option>
-				<option value="8"<?php if ($time['tm_mon'] == 8) echo " selected"; ?>>Sep</option>
-				<option value="9"<?php if ($time['tm_mon'] == 9) echo " selected"; ?>>Oct</option>
-				<option value="10"<?php if ($time['tm_mon'] == 10) echo " selected"; ?>>Nov</option>
-				<option value="11"<?php if ($time['tm_mon'] == 11) echo " selected"; ?>>Dec</option>
+				<option value="0"<?php if (date("n", $time) == 0) echo " selected"; ?>>Jan</option>
+				<option value="1"<?php if (date("n", $time) == 1) echo " selected"; ?>>Feb</option>
+				<option value="2"<?php if (date("n", $time) == 2) echo " selected"; ?>>Mar</option>
+				<option value="3"<?php if (date("n", $time) == 3) echo " selected"; ?>>Apr</option>
+				<option value="4"<?php if (date("n", $time) == 4) echo " selected"; ?>>May</option>
+				<option value="5"<?php if (date("n", $time) == 5) echo " selected"; ?>>Jun</option>
+				<option value="6"<?php if (date("n", $time) == 6) echo " selected"; ?>>Jul</option>
+				<option value="7"<?php if (date("n", $time) == 7) echo " selected"; ?>>Aug</option>
+				<option value="8"<?php if (date("n", $time) == 8) echo " selected"; ?>>Sep</option>
+				<option value="9"<?php if (date("n", $time) == 9) echo " selected"; ?>>Oct</option>
+				<option value="10"<?php if (date("n", $time) == 10) echo " selected"; ?>>Nov</option>
+				<option value="11"<?php if (date("n", $time) == 11) echo " selected"; ?>>Dec</option>
 			</select>
-			<input type="text" name="year" value="<?php echo $time['tm_year']+1900; ?>" maxlength="4" size="4">
+			<input type="text" name="year" value="<?php echo date("Y", $time); ?>" maxlength="4" size="4">
 		</td>
     <tr>
         <td>Ascent Rate (m/s):</td>
