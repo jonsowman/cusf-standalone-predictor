@@ -7,7 +7,6 @@
 // 5. display the prediction data when run is complete
 // 6. make the ini and the csv/kml available for download
 $time = localtime(time(), true);
-$uuid = md5(uniqid());
 $form_submitted = 0;
 
 $pred_model = array();
@@ -36,9 +35,15 @@ if ( isset($_POST['submit'])) { // form was submitted, let's run a pred!
     $pred_model['float'] = $_POST['float_time'];
 
     $pred_model['wind_error'] = 0;
+    
+    $pred_model['software'] = $_POST['software'];
+
+    // verify the model here
+
+    $pred_model['uuid'] = $makesha1hash($pred_model); // make a sha1 hash of the model for uuid
 
     // make a timestamp of the form data
-    $pred_model['timestamp'] = mktime($_POST['hour'], $_POST['min'], $_POST['sec'], (int)$_POST['month'] + 1, $_POST['day'], (int)$_POST['year'] - 2000);
+    $pred_model['timestamp'] = mktime($_pred_model['hour'], $_pred_model['min'], $_pred_model['sec'], (int)$_pred_model['month'] + 1, $_pred_model['day'], (int)$_pred_model['year'] - 2000);
         // and check that it's within range
     if ($pred_model['timestamp'] > (time() + 180*3600)) {
             die("The time was too far in the future, 180 days max");
@@ -47,25 +52,31 @@ if ( isset($_POST['submit'])) { // form was submitted, let's run a pred!
     runPred($pred_model);
 }
 
+function makesha1hash($pred_model) {
+    $sha1str;
+    foreach ( $pred_model as $idx => $value ){
+        $sha1str .= $idx . "=" . $value . ",";
+    }
+    $uuid = sha1($sha1str);
+    return $uuid;
+}
+
 function runPred($pred_model) {
     // do things
-    $pred_software = $_POST['software'];
+    $pred_software = $pred_model['software'];
     // check the software requested is available
-    $software_available = array('grib', 'dap');
+    $software_available = array('gfs', 'gfs_hd');
     if (!in_array($pred_software, $software_available)) {
         die("Invalid software selected: " . $pred_software);
     }
-
     
-    // SANITY CHECK ALL POST VARS HERE
-    //
     // make in INI file
     makePredDir($pred_model);
     makeINI($pred_model);
 
-    if ( $pred_software == $software_available[0] ) { // using grib
+    if ( $pred_software == $software_available[0] ) { // using GFS
        runGRIB($pred_model); 
-    } else if ( $pred_software == $software_available[1] ) { // using dap
+    } else if ( $pred_software == $software_available[1] ) { // using GFS-HD
         //runDAP();
     } else {
         die("We couldn't find the software you asked for");
@@ -375,8 +386,8 @@ function parseCSV(lines) {
     <tr>
         <td>Landing prediction software: <td>
         <select name="software">
-            <option value="grib" selected="selected">GRIB (fast, less accurate)</option>
-            <option value="dap">GFS/DAP (slow, more accurate)</option>
+            <option value="gfs" selected="selected">GFS (faster, less accurate)</option>
+            <option value="gfs_hd">GFS HD (slower, more accurate)</option>
         </select>
 	<tr>
                 <td>
