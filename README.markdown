@@ -4,14 +4,21 @@ Working on improving the Cambridge University Spaceflight landing predictor, use
 
 ## Install
 
-The source for the standalone predictor is somewhere where nobody can find it, that'll be here when I can get hold of it. The GFS/DAP predictor is in the pred_src directory and building instructions can be found there.  
+The source for the prediction software itself is in pred_src and instructions for building it can be found there.  
 
-The webserver needs to have a connection timeout of 30+. The GFS data needs to be updated regularly, that script is part of the hourly predictor [here](http://www.github.com/rjw57/cusf-landing-prediction).  
+The `./preds` directory needs to have rwx access by the PHP interpreter and the `get_wind_data.py` python script.  
+
+## Information
+
+A cronjob should be run to delete directories in the `preds` directory after a given number of days, perhaps 7 or 10.  
+
+The directory names are UUIDs comprised of an SHA1 hash of the launch parameters, and re-running predictions will overwrite data in the existing directory, rather than create a new one.  
+
+## Credits
 
 Credit as detailed in individual files, but notably:  
 * Rich Wareham - The new predictor and the hourly predictor system  
-* Rob Anderson - The GRIB predictor  
-* And Fergus Noble, Ed Moore and many others  
+* Fergus Noble, Ed Moore and many others  
 
 Jon Sowman 2010  
 [http://www.hexoc.com](http://www.hexoc.com)  
