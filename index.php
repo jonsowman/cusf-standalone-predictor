@@ -130,46 +130,13 @@ function runGRIB($pred_model) { // runs the grib predictor
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 <link href="css/pred.css" type="text/css" rel="stylesheet">
 <script src="js/jquery.js" type="text/javascript"></script>
+<script src="js/pred.js" type="text/javascript"></script>
 <script type="text/javascript">
 
 var form_submitted = <?php echo $form_submitted; ?>;
 var running_uuid = '<?php echo $pred_model['uuid']; ?>';
 var ajaxEventHandle;
 
-// launch site dropdown switcher
-function UpdateLaunchSite(id) {
-        txtLat = document.getElementById("lat");
-        txtLon = document.getElementById("lon");
-        switch (id) {
-                case 0: // Churchill
-                        txtLat.value = "52.2135";
-                        txtLon.value = "0.0964";
-                        break;
-                case 1: // EARS
-                        txtLat.value = "52.2511";
-                        txtLon.value = "-0.0927";
-                        break;
-                case 2: // Glenrothes (SpeedEvil)
-                        txtLat.value = "56.13";
-                        txtLon.value = "-3.06";
-                        break;
-                case 3: // Bujaraloz, Monegros (gerard)
-                        txtLat.value = "41.495773";
-                        txtLon.value = "-0.157968";
-                        break;
-                case 4: // Adelaide (Juxta)
-                        txtLat.value = "-34.9499";
-                        txtLon.value = "138.5194";
-
-        }
-}
-
-function SetSiteOther() {
-        optOther = document.getElementById("other");
-        //cmbSite = document.getElementById("site");
-        //cmbSite.selectedIndex = 1;
-        optOther.selected = true;
-}
 
 function predSub() {
     appendDebug(null, 1); // clear debug window
@@ -228,24 +195,12 @@ function getJSONProgress(pred_uuid) {
     });
 }
 
-function appendDebug(appendage, clear) {
-    if ( clear == null ){
-        var curr = $("#debuginfo").html();
-        curr += "<br>" + appendage;
-        $("#debuginfo").html(curr);
-    } else {
-        $("#debuginfo").html("");
-    }
-}
-
-
 var map;
 var launch_img = "images/marker-sm-red.png";
 var land_img = "images/marker-sm-red.png";
 var burst_img = "images/pop-marker.png";
 
 function initialize() {
-    //$("#scenario_template").hide();
     // make the map and set center
     var latlng = new google.maps.LatLng(52, 0);
     var myOptions = {
