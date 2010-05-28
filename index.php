@@ -66,8 +66,6 @@ function verifyModel($pred_model, $software_available) {
     foreach($pred_model as $idx => $value) {
         if ($idx == "software") {
             if (!in_array($value, $software_available)) return false;
-        } else if ($idx == "uuid") {
-        
         } else {
             if (!is_numeric($value)) {
                 return false;
@@ -182,9 +180,9 @@ function getJSONProgress(pred_uuid) {
                     if ( progress.pred_complete == true ) { // pred has finished
                         alert("ALL DONE"); // debug
                         clearInterval(ajaxEventHandle); // clear calling this function
-                    } else if ( progress.pred_started != true ) {
+                    } else if ( progress.pred_running != true ) {
                         appendDebug("Predictor not yet running...");
-                    } else if ( progress.pred_started == true ) {
+                    } else if ( progress.pred_running == true ) {
                         appendDebug("Predictor currently running");
                     }
                 } else {
