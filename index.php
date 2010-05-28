@@ -96,7 +96,8 @@ function makeINI($pred_model) { // makes an ini file
 function runGRIB($pred_model) { // runs the grib predictor
     $lockfile = fopen("lock", "w");
     $shellcmd = "./one_off_prediction " . $pred_model['lat'] . " " . $pred_model['lon'] . " " . $pred_model['alt'] ." " . (float)$pred_model['asc'] . " " . $pred_model['des']*1.1045 . " "  . $pred_model['burst'] . " " . $pred_model['timestamp']  . " " . $pred_model['float'] . " &";
-    shell_exec($shellcmd);
+    echo $shellcmd;
+    //shell_exec($shellcmd);
     if (!file_exists("flight_path.csv")) {
         unlink("lock");
         die("The predictor didn't write a file");
@@ -208,7 +209,7 @@ function initialize() {
       mapTypeId: google.maps.MapTypeId.ROADMAP
     };
     map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
-    //parseCSV("new.csv"); // debug remove
+    // parseCSV("http://www.hexoc.com/hab/predict/websitepred/flight_path.csv"); // debug remove
     if ( form_submitted ) handlePred(running_uuid);
 }
 
