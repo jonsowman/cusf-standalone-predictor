@@ -1,8 +1,1 @@
 *.swp
-*.swn
-*.swo
-lock
-decoded_gribs/
-preds/
-*.o
-
