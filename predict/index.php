@@ -83,7 +83,10 @@ function runPred($pred_model) {
     makeINI($pred_model);
 
     // if we're using --hd, then append it to the exec string
-    $sh_str = "./pred_src/pred";
+    $sh_str = "cd .. && ./predict.py -v --latdelta=3 --londelta=3 " . $pred_model['uuid'] . " &";
+    $output = shell_exec($sh_str);
+    flush();
+    ob_flush();
 
 }
 
@@ -152,7 +155,7 @@ function handlePred(pred_uuid) {
     appendDebug("Attempting to download GFS data for prediction");
     // ajax to poll for progress
 
-    //ajaxEventHandle = setInterval("getJSONProgress('"+pred_uuid+"')", 3000);
+    ajaxEventHandle = setInterval("getJSONProgress('"+pred_uuid+"')", 3000);
     appendDebug("Getting flight path from server....");
     //getCSV(pred_uuid);
 }
@@ -169,8 +172,9 @@ function getCSV(pred_uuid) {
 }
 
 function getJSONProgress(pred_uuid) {
+    var timestamp = (new Date().getTime()) / 1000;
     $.ajax({
-        url:"preds/"+pred_uuid+"/progress.json",
+        url:"preds/"+pred_uuid+"/progress.json?ts="+timestamp,
         dataType:'json',
         timeout: 500,
         success: function(progress) {

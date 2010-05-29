@@ -4,7 +4,8 @@
 pred_binary = './pred_src/pred'
 
 # Modules from the Python standard library.
-import datetime, math, sys, os, logging, calendar, optparse, json, subprocess
+import datetime, math, sys, os, logging, calendar, optparse, subprocess
+import simplejson as json
 
 # We use Pydap from http://pydap.org/.
 import pydap.exceptions, pydap.client, pydap.lib
@@ -127,7 +128,7 @@ def main():
         sys.exit(1)
     
     # Check the predictor binary exists
-    if not os.path.exists(options.predictor):
+    if not os.path.exists(pred_binary):
         log.error('Predictor binary does not exist.')
         sys.exit(1)
 
@@ -182,8 +183,6 @@ def main():
     log.info('      Latitude: %s -> %s' % (min(dataset.lat), max(dataset.lat)))
     log.info('     Longitude: %s -> %s' % (min(dataset.lon), max(dataset.lon)))
 
-    update_progress(gfs_percent=5)
-
 #    for dlat in range(0,options.lattiles):
 #        for dlon in range(0,options.lontiles):
     window = ( \
@@ -199,7 +198,7 @@ def main():
     
     update_progress(gfs_percent=100, gfs_timeremaining='Done', gfs_complete=True, pred_running=True)
     
-    subprocess.call([options.predictor, '-i../gfs/', '-v', '-o'+uuid_path+'flight_path.csv', uuid_path+'scenario.ini'])
+    subprocess.call([pred_binary, '-i../gfs/', '-v', '-o'+uuid_path+'flight_path.csv', uuid_path+'scenario.ini'])
 
     update_progress(pred_running=False, pred_complete=True)
 
