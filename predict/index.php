@@ -83,10 +83,11 @@ function runPred($pred_model) {
     makeINI($pred_model);
 
     // if we're using --hd, then append it to the exec string
-    $sh_str = "cd .. && ./predict.py -v --latdelta=3 --londelta=3 " . $pred_model['uuid'] . " &";
-    $output = shell_exec($sh_str);
-    flush();
-    ob_flush();
+
+    // use `at` to automatically background the task
+    $ph = popen("at now", "w");
+    fwrite($ph, "cd /var/www/hab/predict/ && ./predict.py -v --latdelta=3 --londelta=3 --lat=52 --lon=0 " . $pred_model['uuid']);
+    fclose($ph);
 
 }
 
@@ -172,31 +173,38 @@ function getCSV(pred_uuid) {
 }
 
 function getJSONProgress(pred_uuid) {
-    var timestamp = (new Date().getTime()) / 1000;
     $.ajax({
-        url:"preds/"+pred_uuid+"/progress.json?ts="+timestamp,
+        url:"preds/"+pred_uuid+"/progress.json",
         dataType:'json',
         timeout: 500,
-        success: function(progress) {
-            if ( progress.error != '' ) {
-                appendDebug("There was an error in running the prediction: "+progress.error);
-            } else {
-                // get the progress of the wind data
-                if ( progress.gfs_complete == true ) {
-                    if ( progress.pred_complete == true ) { // pred has finished
-                        alert("ALL DONE"); // debug
-                        clearInterval(ajaxEventHandle); // clear calling this function
-                    } else if ( progress.pred_running != true ) {
-                        appendDebug("Predictor not yet running...");
-                    } else if ( progress.pred_running == true ) {
-                        appendDebug("Predictor currently running");
-                    }
-                } else {
-                    appendDebug("Downloaded " + progress.gfs_percent + "%");
-                }
-            }
-        }
+        // complete: function(data, httpstatus) {
+        //     appendDebug(httpstatus);
+        // },
+        success: processProgress
     });
+}
+
+function processProgress(progress) {
+    if ( progress['error'] ) {
+        clearInterval(ajaxEventHandle);
+        appendDebug("There was an error in running the prediction: "+progress['error']);
+    } else {
+        // get the progress of the wind data
+        if ( progress['gfs_complete'] == true ) {
+            if ( progress['pred_complete'] == true ) { // pred has finished
+                appendDebug("The predictor finished running.");
+                clearInterval(ajaxEventHandle); // clear calling this function
+                getCSV(running_uuid);
+            } else if ( progress['pred_running'] != true ) {
+                appendDebug("Predictor not yet running...");
+            } else if ( progress['pred_running'] == true ) {
+                appendDebug("Predictor currently running");
+            }
+        } else {
+            appendDebug("Downloaded " + progress['gfs_percent'] + "%");
+        }
+    }
+    return true;
 }
 
 var map;
@@ -217,6 +225,10 @@ function initialize() {
 }
 
 function parseCSV(lines) {
+    if(lines.length <= 0) {
+        appendDebug("The server returned an empty CSV file");
+        return false;
+    }
     var path = [];
     var max_height = -10; //just any -ve number
     var max_point = null;
@@ -344,18 +356,18 @@ function parseCSV(lines) {
 			<tr><td>Launch Date:</td><td>
 			<input type="text" name="day" value="<?php echo date("d", $time); ?>" maxlength="2" size="2">
 			<select name="month">
-				<option value="0"<?php if (date("n", $time) == 0) echo " selected"; ?>>Jan</option>
-				<option value="1"<?php if (date("n", $time) == 1) echo " selected"; ?>>Feb</option>
-				<option value="2"<?php if (date("n", $time) == 2) echo " selected"; ?>>Mar</option>
-				<option value="3"<?php if (date("n", $time) == 3) echo " selected"; ?>>Apr</option>
-				<option value="4"<?php if (date("n", $time) == 4) echo " selected"; ?>>May</option>
-				<option value="5"<?php if (date("n", $time) == 5) echo " selected"; ?>>Jun</option>
-				<option value="6"<?php if (date("n", $time) == 6) echo " selected"; ?>>Jul</option>
-				<option value="7"<?php if (date("n", $time) == 7) echo " selected"; ?>>Aug</option>
-				<option value="8"<?php if (date("n", $time) == 8) echo " selected"; ?>>Sep</option>
-				<option value="9"<?php if (date("n", $time) == 9) echo " selected"; ?>>Oct</option>
-				<option value="10"<?php if (date("n", $time) == 10) echo " selected"; ?>>Nov</option>
-				<option value="11"<?php if (date("n", $time) == 11) echo " selected"; ?>>Dec</option>
+				<option value="1"<?php if (date("n", $time) == 1) echo " selected"; ?>>Jan</option>
+				<option value="2"<?php if (date("n", $time) == 2) echo " selected"; ?>>Feb</option>
+				<option value="3"<?php if (date("n", $time) == 3) echo " selected"; ?>>Mar</option>
+				<option value="4"<?php if (date("n", $time) == 4) echo " selected"; ?>>Apr</option>
+				<option value="5"<?php if (date("n", $time) == 5) echo " selected"; ?>>May</option>
+				<option value="6"<?php if (date("n", $time) == 6) echo " selected"; ?>>Jun</option>
+				<option value="7"<?php if (date("n", $time) == 7) echo " selected"; ?>>Jul</option>
+				<option value="8"<?php if (date("n", $time) == 8) echo " selected"; ?>>Aug</option>
+				<option value="9"<?php if (date("n", $time) == 9) echo " selected"; ?>>Sep</option>
+				<option value="10"<?php if (date("n", $time) == 10) echo " selected"; ?>>Oct</option>
+				<option value="11"<?php if (date("n", $time) == 11) echo " selected"; ?>>Nov</option>
+				<option value="12"<?php if (date("n", $time) == 12) echo " selected"; ?>>Dec</option>
 			</select>
 			<input type="text" name="year" value="<?php echo date("Y", $time); ?>" maxlength="4" size="4">
 		</td>

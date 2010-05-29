@@ -33,7 +33,8 @@ def update_progress(**kwargs):
         progress[arg] = kwargs[arg]
     try:
         progress_f.truncate(0)
-        progress_f.write(json.dumps([progress]))
+        progress_f.seek(0)
+        progress_f.write(json.dumps(progress))
         progress_f.flush()
         os.fsync(progress_f.fileno())
     except IOError:
@@ -186,8 +187,8 @@ def main():
 #    for dlat in range(0,options.lattiles):
 #        for dlon in range(0,options.lontiles):
     window = ( \
-            options.lat + options.latdelta*2, options.latdelta, \
-            options.lon + options.londelta*2, options.londelta)
+            options.lat, options.latdelta, \
+            options.lon, options.londelta)
 
     write_file(options.output, dataset, \
             window, \
@@ -198,7 +199,7 @@ def main():
     
     update_progress(gfs_percent=100, gfs_timeremaining='Done', gfs_complete=True, pred_running=True)
     
-    subprocess.call([pred_binary, '-i../gfs/', '-v', '-o'+uuid_path+'flight_path.csv', uuid_path+'scenario.ini'])
+    subprocess.call([pred_binary, '-i/var/www/hab/predict/gfs/', '-v', '-o'+uuid_path+'flight_path.csv', uuid_path+'scenario.ini'])
 
     update_progress(pred_running=False, pred_complete=True)
 
