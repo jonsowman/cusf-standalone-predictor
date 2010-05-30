@@ -122,6 +122,15 @@ def main():
     uuid = args[0]
     uuid_path = options.preds_path + "/" + uuid + "/"
 
+    # Check we're not already running with this UUID
+    for line in os.popen('ps xa'):
+        process = " ".join(line.split()[4:])
+        if process.find(uuid) > 0:
+            pid = int(line.split()[0])
+            if pid != os.getpid():
+                log.error('A process is already running for this UUID, quitting.')
+                sys.exit(1)
+
     # Make the UUID directory if non existant
     if not os.path.exists(uuid_path):
         os.mkdir(uuid_path, 0770)
