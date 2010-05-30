@@ -5,6 +5,7 @@ pred_binary = './pred_src/pred'
 
 # Modules from the Python standard library.
 import datetime
+import time as timelib
 import math
 import sys
 import os
@@ -312,7 +313,7 @@ def write_file(output_format, data, window, mintime, maxtime):
             time_per_var = time_elapsed / num_vars
             total_time = num_times * 3 * time_per_var
             time_left = total_time - time_elapsed
-            time_left = time.strftime('%M:%S', time.gmtime(time_left.seconds))
+            time_left = timelib.strftime('%M:%S', timelib.gmtime(time_left.seconds))
             
             update_progress(gfs_percent=int(
                 10 +
