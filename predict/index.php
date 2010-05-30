@@ -48,7 +48,7 @@ function predSub() {
 
 function handlePred(pred_uuid) {
     $("#prediction_status").html("Downloading wind data...");
-    appendDebug("Prediction running with uuid: " + pred_uuid);
+    appendDebug("Prediction running with uuid:<br>" + pred_uuid);
     appendDebug("Attempting to download GFS data for prediction");
     $("#input_form").hide("slide", { direction: "down" }, 500);
     $("#map_canvas").fadeTo(1000, 0.2);
@@ -154,6 +154,11 @@ function initialize() {
     });
     //$("#input_form").draggable({containment: '#map_canvas'});
     // if ( running_uuid != 0 ) handlePred(running_uuid);
+    $("#debuginfo").hide();
+    $("#showHideDebug").click(function() {
+        // $("#debuginfo").show("slide", { direction: "down" }, 500);
+        toggleDebugWindow();
+    });
 }
 
 
@@ -263,7 +268,9 @@ function clearMapItems() {
 <div id="map_canvas" style="width:100%; height:100%"></div>
 
 <div id="scenario_template" class="box">
-<h1>Debug Window</h1>
+<h1>Debug Window - 
+<a href='#'><span id="showHideDebug">Show</span></a></span>
+</h1>
 <span id="debuginfo">No Messages</span>
 </div>
 

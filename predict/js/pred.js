@@ -12,6 +12,16 @@ function appendDebug(appendage, clear) {
     }
 }
 
+function toggleDebugWindow() {
+        if( $("#debuginfo").css('display') != "none" ){
+                $("#debuginfo").hide("slide", { direction: "down" }, 500);
+                $("#showHideDebug").html("Show");
+        } else {
+                $("#debuginfo").show("slide", { direction: "down" }, 500);
+                $("#showHideDebug").html("Hide");
+        }
+}
+
 // launch site dropdown switcher
 function UpdateLaunchSite(id) {
         txtLat = document.getElementById("lat");
