@@ -271,7 +271,7 @@ function parseCSV(lines) {
 		</td>
     <tr>
         <td>Ascent Rate (m/s):</td>
-        <td><input id="ascent" type="text" name="ascent" value="3"></td>
+        <td><input id="ascent" type="text" name="ascent" value="5"></td>
     </tr>
     <tr>
         <td>Descent Rate (sea level m/s):</td>

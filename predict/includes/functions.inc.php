@@ -9,7 +9,7 @@ function createModel($post_array) {
     $pred_model = array();
 
     // first, populate the prediction model
-    $pred_model['hour'] = $post_array['hour'];
+    $pred_model['hour'] = $post_array['hour'] + 1; //adjust for GMT
     $pred_model['min'] = $post_array['min'];
     $pred_model['sec'] = $post_array['sec'];
 
@@ -28,6 +28,15 @@ function createModel($post_array) {
     $pred_model['wind_error'] = 0;
 
     $pred_model['software'] = $post_array['software'];
+
+    // make a timestamp of the form data
+    $pred_model['timestamp'] = mktime($pred_model['hour'], $pred_model['min'], $pred_model['sec'], (int)$pred_model['month'], $pred_model['day'], (int)$pred_model['year'] - 2000);
+
+    // and check that it's within range
+    if ($pred_model['timestamp'] > (time() + 180*3600)) {
+        return false;
+        break;
+    }
 
     return $pred_model;
 }
