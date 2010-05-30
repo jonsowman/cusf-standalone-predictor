@@ -4,7 +4,14 @@
 pred_binary = './pred_src/pred'
 
 # Modules from the Python standard library.
-import datetime, math, sys, os, logging, calendar, optparse, subprocess
+import datetime
+import math
+import sys
+import os
+import logging
+import calendar
+import optparse
+import subprocess
 import simplejson as json
 
 # We use Pydap from http://pydap.org/.
@@ -305,12 +312,13 @@ def write_file(output_format, data, window, mintime, maxtime):
             time_per_var = time_elapsed / num_vars
             total_time = num_times * 3 * time_per_var
             time_left = total_time - time_elapsed
+            time_left = time.strftime('%M:%S', time.gmtime(time_left.seconds))
             
             update_progress(gfs_percent=int(
                 10 +
                 (((current_time - 1) * 90) / num_times) +
                 ((current_var * 90) / (3 * num_times))
-                ), gfs_timeremaining=time_left.__str__())
+                ), gfs_timeremaining=time_left)
 
         # Check all the downloaded data has the same shape
         target_shape = downloaded_data['hgtprs']
