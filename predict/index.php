@@ -38,8 +38,7 @@ if ( isset($_GET['uuid']) ) {
 
 function predSub() {
     appendDebug(null, 1); // clear debug window
-    appendDebug("Sending data to server");
-    appendDebug("Attempting to start the predictor...");
+    appendDebug("Sending data to server...");
     // initialise progress bar
     $("#prediction_progress").progressbar({ value: 0 });
     $("#prediction_status").html("Sending data to server...");
@@ -47,14 +46,11 @@ function predSub() {
 }
 
 function handlePred(pred_uuid) {
-    $("#prediction_status").html("Downloading wind data...");
-    appendDebug("Prediction running with uuid:<br>" + pred_uuid);
-    appendDebug("Attempting to download GFS data for prediction");
+    $("#prediction_status").html("Searching for wind data...");
     $("#input_form").hide("slide", { direction: "down" }, 500);
     $("#map_canvas").fadeTo(1000, 0.2);
     // ajax to poll for progress
     ajaxEventHandle = setInterval("getJSONProgress('"+pred_uuid+"')", 2000);
-    appendDebug("Getting flight path from server....");
     //getCSV(pred_uuid);
 }
 
@@ -62,9 +58,10 @@ function getCSV(pred_uuid) {
     $.get("ajax.php", { "action":"getCSV", "uuid":pred_uuid }, function(data) {
         appendDebug("Got JSON response from server for flight path, parsing...");
         if (parseCSV(data) ) {
-            appendDebug("Parsing function returned all OK - DONE");
+            appendDebug("Parsing function returned successfully.");
+            appendDebug("Done, AJAX functions quitting.");
         } else {
-            appendDebug("The parsing function failed");
+            appendDebug("The parsing function failed.");
         }
     }, 'json');
 }
@@ -99,24 +96,27 @@ function processProgress(progress) {
                 $("#input_form").show("slide", { direction: "down" }, 500);
                 // un-fade the map canvas
                 $("#map_canvas").fadeTo(1500, 1);
-                appendDebug("The predictor finished running.");
+                appendDebug("Server says: the predictor finished running.");
+                appendDebug("Attemping to retrieve flight path from server");
                 // stop polling for JSON
                 clearInterval(ajaxEventHandle);
                 // parse the data
                 getCSV(running_uuid);
             } else if ( progress['pred_running'] != true ) {
                 $("#prediction_status").html("Waiting for predictor to run...");
-                appendDebug("Predictor not yet running...");
+                appendDebug("Server says: predictor not yet running...");
             } else if ( progress['pred_running'] == true ) {
                 $("#prediction_status").html("Predictor running...");
-                appendDebug("Predictor currently running");
+                appendDebug("Server says: predictor currently running");
             }
         } else {
+            $("#prediction_status").html("Downloading wind data");
             $("#prediction_progress").progressbar("option", "value",
                 progress['gfs_percent']);
             $("#prediction_percent").html(progress['gfs_percent'] + 
                 "% - Estimated time remaining: " + progress['gfs_timeremaining']);
-            appendDebug("Downloaded " + progress['gfs_percent'] + "%");
+            appendDebug("Server says: downloaded " +
+                progress['gfs_percent'] + "% of GFS files");
         }
     }
     return true;
@@ -145,9 +145,12 @@ function initialize() {
             predSub();
             var data_split = data.split("|");
             if ( data_split[0] == 0 ) {
-                alert("Server error");
+                appendDebug("The server rejected the submitted form data");
             } else {
+                appendDebug("The server accepted the form data");
                 running_uuid = data_split[1];
+                appendDebug("The server gave us uuid:<br>" + running_uuid);
+                appendDebug("Starting to poll for progress JSON");
                 handlePred(running_uuid);
             }
         }

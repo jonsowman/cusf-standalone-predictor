@@ -33,7 +33,7 @@ function createModel($post_array) {
     $pred_model['timestamp'] = mktime($pred_model['hour'], $pred_model['min'], $pred_model['sec'], (int)$pred_model['month'], $pred_model['day'], (int)$pred_model['year'] - 2000);
 
     // and check that it's within range
-    if ($pred_model['timestamp'] > (time() + 180*3600)) {
+    if ( $pred_model['timestamp'] > (time() + 180*3600) || $pred_model['timestamp'] < time() ) {
         return false;
         break;
     }
