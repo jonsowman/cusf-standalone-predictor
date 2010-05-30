@@ -135,6 +135,7 @@ function runGRIB($pred_model) { // runs the grib predictor
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 <link href="css/pred.css" type="text/css" rel="stylesheet">
 <script src="js/jquery.js" type="text/javascript"></script>
+<script src="js/jquery.form.js" type="text/javascript"></script>
 <script src="js/pred.js" type="text/javascript"></script>
 <script type="text/javascript">
 
@@ -222,8 +223,17 @@ function initialize() {
       mapTypeId: google.maps.MapTypeId.ROADMAP
     };
     map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+    // submit the form here
+    $("#modelForm").ajaxForm({
+        url: 'ajax.php?action=submitForm',
+        type: 'POST',
+        success: function(data) {
+            alert("Success: " + data);
+        }
+    });
     if ( form_submitted ) handlePred(running_uuid);
 }
+
 
 function parseCSV(lines) {
     if(lines.length <= 0) {
@@ -322,7 +332,7 @@ function parseCSV(lines) {
 </div>
 
 <div id="input_form" class="box"> 
-<form action="index.php" method="POST" name="form1">
+<form action="" id="modelForm" name="modelForm">
 <table>
 	<tr>
 		<td>Launch Site:</td>
@@ -346,17 +356,17 @@ function parseCSV(lines) {
     </tr>
     <tr>
         <td>Launch altitude (m):</td>
-        <td><input type="text" name="initial_alt" value="0"></td>
+        <td><input id="initial_alt" type="text" name="initial_alt" value="0"></td>
     </tr>
 	<tr>
 		<td>Launch Time:</td>
 		<td>
-			<input type="text" name="hour" value="<?php echo date("H", $time); ?>" maxlength="2" size="2"> :
-			<input type="text" name="min" value="<?php echo date("i", $time); ?>" maxlength="2" size="2">
-			<input type="hidden" name="sec" value="0"></td></tr>
+			<input id="hour" type="text" name="hour" value="<?php echo date("H", $time); ?>" maxlength="2" size="2"> :
+			<input id="min" type="text" name="min" value="<?php echo date("i", $time); ?>" maxlength="2" size="2">
+			<input id="sec" type="hidden" name="sec" value="0"></td></tr>
 			<tr><td>Launch Date:</td><td>
-			<input type="text" name="day" value="<?php echo date("d", $time); ?>" maxlength="2" size="2">
-			<select name="month">
+			<input id="day" type="text" name="day" value="<?php echo date("d", $time); ?>" maxlength="2" size="2">
+			<select id="month" name="month">
 				<option value="1"<?php if (date("n", $time) == 1) echo " selected"; ?>>Jan</option>
 				<option value="2"<?php if (date("n", $time) == 2) echo " selected"; ?>>Feb</option>
 				<option value="3"<?php if (date("n", $time) == 3) echo " selected"; ?>>Mar</option>
@@ -370,35 +380,34 @@ function parseCSV(lines) {
 				<option value="11"<?php if (date("n", $time) == 11) echo " selected"; ?>>Nov</option>
 				<option value="12"<?php if (date("n", $time) == 12) echo " selected"; ?>>Dec</option>
 			</select>
-			<input type="text" name="year" value="<?php echo date("Y", $time); ?>" maxlength="4" size="4">
+			<input id="year" type="text" name="year" value="<?php echo date("Y", $time); ?>" maxlength="4" size="4">
 		</td>
     <tr>
         <td>Ascent Rate (m/s):</td>
-        <td><input type="text" name="ascent" value="3"></td>
+        <td><input id="ascent" type="text" name="ascent" value="3"></td>
     </tr>
     <tr>
         <td>Descent Rate (sea level m/s):</td>
-        <td><input type="text" name="drag" value="5"></td>
+        <td><input id="drag" type="text" name="drag" value="5"></td>
     </tr>
     <tr>
         <td>Burst Altitude (m):</td>
-        <td><input type="text" name="burst" value="30000"></td>
+        <td><input id="burst" type="text" name="burst" value="30000"></td>
     </tr>
     <tr>
         <td>Float time at apogee (s):</td>
-        <td><input type="text" name="float_time" value="0"></td>
+        <td><input id="float" type="text" name="float_time" value="0"></td>
     </tr>
     <tr>
         <td>Landing prediction software: <td>
-        <select name="software">
+        <select id="software" name="software">
             <option value="gfs" selected="selected">GFS (faster, less accurate)</option>
             <option value="gfs_hd">GFS HD (slower, more accurate)</option>
         </select>
 	<tr>
                 <td>
-                <input type="hidden" value="<?php echo $uuid; ?>" name="uuid">
                 </td>
-		<td><input type="submit" name="submit" value="Run Prediction!" onClick="predSub();"></td>
+		<td><input type="submit" name="submit" id="run_pred_btn" value="Run Prediction!"></td>
 	</tr>
 </table>
 </form>

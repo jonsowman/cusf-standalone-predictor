@@ -24,6 +24,14 @@ case "JSONexists":
     }
     break;
 
+case "submitForm":
+    echo "Got a lat of: " . print_r($_POST);
+    break;
+
+default:
+    echo "Couldn't interpret 'action' variable";
+    break;
+
 }
 
 ?>
