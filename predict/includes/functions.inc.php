@@ -72,9 +72,12 @@ function runPred($pred_model) {
     // if we're using --hd, then append it to the exec string
     if ( $pred_model['software'] == "gfs_hd" ) $use_hd ="--hd ";
 
+    $predictor_lat = number_format($pred_model['lat'], 0);
+    $predictor_lon = number_format($pred_model['lon'], 0);
+
     // use `at` to automatically background the task
     $ph = popen("at now", "w");
-    fwrite($ph, "cd /var/www/hab/predict/ && ./predict.py -v --latdelta=3 --londelta=3 --lat=52 --lon=0 " . $use_hd . $pred_model['uuid']);
+    fwrite($ph, "cd /var/www/hab/predict/ && ./predict.py -v --latdelta=3 --londelta=3 -t ".$pred_model['timestamp']." --lat=".$predictor_lat." --lon=".$predictor_lon." " . $use_hd . $pred_model['uuid']);
     fclose($ph);
 
 }

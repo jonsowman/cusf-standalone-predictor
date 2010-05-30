@@ -90,8 +90,14 @@ function processProgress(progress) {
             if ( progress['pred_complete'] == true ) { // pred has finished
                 $("#prediction_status").html("Prediction finished.");
                 $("#status_message").fadeOut(500);
+                // now clear the status window
+                $("#prediction_status").html("");
+                $("#prediction_progress").progressbar("options", "value", 0);
+                $("#prediction_percent").html("");
                 appendDebug("The predictor finished running.");
-                clearInterval(ajaxEventHandle); // clear calling this function
+                // stop polling for JSON
+                clearInterval(ajaxEventHandle);
+                // parse the data
                 getCSV(running_uuid);
             } else if ( progress['pred_running'] != true ) {
                 $("#prediction_status").html("Waiting for predictor to run...");
