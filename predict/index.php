@@ -9,123 +9,6 @@
 //
 // get the time for populating the form
 $time = time() + 3600;
-$form_submitted = 0;
-$software_available = array("gfs", "gfs_hd");
-
-$pred_model = array();
-
-if ( isset($_POST['submit'])) { // form was submitted, let's run a pred!
-
-    $form_submitted = 1;
-
-    // first, populate the prediction model
-    $pred_model['hour'] = $_POST['hour'];
-    $pred_model['min'] = $_POST['min'];
-    $pred_model['sec'] = $_POST['sec'];
-
-    $pred_model['month'] = $_POST['month'];
-    $pred_model['day'] = $_POST['day'];
-    $pred_model['year'] = $_POST['year'];
-
-    $pred_model['lat'] = $_POST['lat'];
-    $pred_model['lon'] = $_POST['lon'];
-    $pred_model['asc'] = (float)$_POST['ascent'];
-    $pred_model['alt'] = $_POST['initial_alt'];
-    $pred_model['des'] = $_POST['drag'];
-    $pred_model['burst'] = $_POST['burst'];
-    $pred_model['float'] = $_POST['float_time'];
-
-    $pred_model['wind_error'] = 0;
-    
-    $pred_model['software'] = $_POST['software'];
-
-    // verify the model here
-    if ( !verifyModel($pred_model, $software_available) ) die ("The model verification failed");
-
-    $pred_model['uuid'] = makesha1hash($pred_model); // make a sha1 hash of the model for uuid
-
-    // make a timestamp of the form data
-    $pred_model['timestamp'] = mktime($_pred_model['hour'], $_pred_model['min'], $_pred_model['sec'], (int)$_pred_model['month'] + 1, $_pred_model['day'], (int)$_pred_model['year'] - 2000);
-        // and check that it's within range
-    if ($pred_model['timestamp'] > (time() + 180*3600)) {
-            die("The time was too far in the future, 180 days max");
-    }
-    // now we have a populated model, run the predictor
-    runPred($pred_model);
-}
-
-function makesha1hash($pred_model) {
-    $sha1str;
-    foreach ( $pred_model as $idx => $value ){
-        $sha1str .= $idx . "=" . $value . ",";
-    }
-    $uuid = sha1($sha1str);
-    return $uuid;
-}
-
-function verifyModel($pred_model, $software_available) {
-    if(!isset($pred_model)) return false;
-    foreach($pred_model as $idx => $value) {
-        if ($idx == "software") {
-            if (!in_array($value, $software_available)) return false;
-        } else {
-            if (!is_numeric($value)) {
-                return false;
-            }
-        }
-    }
-    return true;
-}
-
-function runPred($pred_model) {
-    // make in INI file
-    makePredDir($pred_model);
-    makeINI($pred_model);
-
-    // if we're using --hd, then append it to the exec string
-    if ( $pred_model['software'] == "gfs_hd" ) $use_hd ="--hd ";
-
-    // use `at` to automatically background the task
-    $ph = popen("at now", "w");
-    fwrite($ph, "cd /var/www/hab/predict/ && ./predict.py -v --latdelta=3 --londelta=3 --lat=52 --lon=0 " . $use_hd . $pred_model['uuid']);
-    fclose($ph);
-
-}
-
-function makePredDir($pred_model) {
-    shell_exec("mkdir preds/" . $pred_model['uuid']); //make sure we use the uuid from model
-}
-
-function makeINI($pred_model) { // makes an ini file
-    $fh = fopen("preds/" . $pred_model['uuid'] . "/scenario.ini", "a"); //append
-
-    $w_string = "[launch-site]\nlatitude = " . $pred_model['lat'] . "\naltitude = " . $pred_model['alt'] . "\n";
-    $w_string .= "longitude = " . $pred_model['lon'] . "\n[atmosphere]\nwind-error = ";
-    $w_string .= $pred_model['wind_error'] . "\n[altitude-model]\nascent-rate = " . $pred_model['asc'] . "\n";
-    $w_string .= "descent-rate  = " . $pred_model['des'] . "\nburst-altitude = ";
-    $w_string .= $pred_model['burst'] . "\n[launch-time]\nhour = " . $pred_model['hour'] . "\n";
-    $w_string .= "month = " . $pred_model['month'] . "\nsecond = " . $pred_model['sec'] . "\n";
-    $w_string .= "year = " . $pred_model['year'] . "\nday = " . $pred_model['day'] . "\nminute = ";
-    $w_string .= $pred_model['min'] . "\n";
-
-    fwrite($fh, $w_string);
-    fclose($fh);
-}
-
-
-function runGRIB($pred_model) { // runs the grib predictor
-    $lockfile = fopen("lock", "w");
-    $shellcmd = "./one_off_prediction " . $pred_model['lat'] . " " . $pred_model['lon'] . " " . $pred_model['alt'] ." " . (float)$pred_model['asc'] . " " . $pred_model['des']*1.1045 . " "  . $pred_model['burst'] . " " . $pred_model['timestamp']  . " " . $pred_model['float'] . " &";
-    echo $shellcmd;
-    //shell_exec($shellcmd);
-    if (!file_exists("flight_path.csv")) {
-        unlink("lock");
-        die("The predictor didn't write a file");
-    }
-    shell_exec("mv flight_path.* preds/".$pred_model['uuid']."/");
-    unlink("lock");
-}
-
 ?>
 
 <html>
@@ -139,10 +22,8 @@ function runGRIB($pred_model) { // runs the grib predictor
 <script src="js/pred.js" type="text/javascript"></script>
 <script type="text/javascript">
 
-var form_submitted = <?php echo $form_submitted; ?>;
-var running_uuid = '<?php echo $pred_model['uuid']; ?>';
 var ajaxEventHandle;
-
+var running_uuid;
 
 function predSub() {
     appendDebug(null, 1); // clear debug window
@@ -154,7 +35,7 @@ function predSub() {
 function handlePred(pred_uuid) {
     // Clear the debug window
     appendDebug(null, 1);
-    appendDebug("Prediction running with uuid: " + running_uuid);
+    appendDebug("Prediction running with uuid: " + pred_uuid);
     appendDebug("Attempting to download GFS data for prediction");
     // ajax to poll for progress
 
@@ -228,10 +109,16 @@ function initialize() {
         url: 'ajax.php?action=submitForm',
         type: 'POST',
         success: function(data) {
-            alert("Success: " + data);
+            var data_split = data.split("|");
+            if ( data_split[0] == 0 ) {
+                alert("Server error");
+            } else {
+                running_uuid = data_split[1];
+                handlePred(running_uuid);
+            }
         }
     });
-    if ( form_submitted ) handlePred(running_uuid);
+    //if ( form_submitted ) handlePred(running_uuid);
 }
 
 
