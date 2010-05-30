@@ -77,7 +77,7 @@ function runPred($pred_model) {
 
     // use `at` to automatically background the task
     $ph = popen("at now", "w");
-    fwrite($ph, "cd /var/www/hab/predict/ && ./predict.py -v --latdelta=3 --londelta=3 -t ".$pred_model['timestamp']." --lat=".$predictor_lat." --lon=".$predictor_lon." " . $use_hd . $pred_model['uuid']);
+    fwrite($ph, "cd /var/www/hab/predict/ && ./predict.py -v --latdelta=3 --londelta=3 -p1 -f5 -t ".$pred_model['timestamp']." --lat=".$predictor_lat." --lon=".$predictor_lon." " . $use_hd . $pred_model['uuid']);
     fclose($ph);
 
 }

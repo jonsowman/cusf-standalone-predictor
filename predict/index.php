@@ -50,8 +50,9 @@ function handlePred(pred_uuid) {
     $("#prediction_status").html("Downloading wind data...");
     appendDebug("Prediction running with uuid: " + pred_uuid);
     appendDebug("Attempting to download GFS data for prediction");
+    $("#input_form").hide("slide", { direction: "down" }, 500);
+    $("#map_canvas").fadeTo(1000, 0.2);
     // ajax to poll for progress
-
     ajaxEventHandle = setInterval("getJSONProgress('"+pred_uuid+"')", 2000);
     appendDebug("Getting flight path from server....");
     //getCSV(pred_uuid);
@@ -94,6 +95,10 @@ function processProgress(progress) {
                 $("#prediction_status").html("");
                 $("#prediction_progress").progressbar("options", "value", 0);
                 $("#prediction_percent").html("");
+                // bring the input form back up
+                $("#input_form").show("slide", { direction: "down" }, 500);
+                // un-fade the map canvas
+                $("#map_canvas").fadeTo(1500, 1);
                 appendDebug("The predictor finished running.");
                 // stop polling for JSON
                 clearInterval(ajaxEventHandle);
@@ -147,6 +152,7 @@ function initialize() {
             }
         }
     });
+    //$("#input_form").draggable({containment: '#map_canvas'});
     // if ( running_uuid != 0 ) handlePred(running_uuid);
 }
 
@@ -252,7 +258,7 @@ function clearMapItems() {
 
 </script>
 </head>
-<body onload="initialize()">
+<body onload="initialize()" bgcolor="#000000">
 
 <div id="map_canvas" style="width:100%; height:100%"></div>
 
