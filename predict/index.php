@@ -57,15 +57,24 @@ function initialize() {
             }
         }
     });
-    //$("#input_form").draggable({containment: '#map_canvas'});
+    $("#input_form").draggable({containment: '#map_canvas'});
     if ( current_uuid != '0' ) {
         appendDebug("Got an old UUID to plot:<br>" + current_uuid);
+        appendDebug("Trying to populate form with scenario data");
+        populateFormByUUID(current_uuid);
         appendDebug("Trying to get flight path from server...");
         getCSV(current_uuid);
     }
-    $("#debuginfo").hide();
+    $("#scenario_template").hide();
     $("#showHideDebug").click(function() {
-        toggleDebugWindow();
+        toggleWindow("scenario_template", "showHideDebug", "Show Debug", "Hide Debug");
+    });
+    $("#showHideDebug_status").click(function() {
+        toggleWindow("scenario_template", "showHideDebug", "Show Debug", "Hide Debug");
+    });
+    $("#showHideForm").click(function() {
+        toggleWindow("input_form", "showHideForm", "Show Launch Card",
+            "Hide Launch Card");
     });
 }
 
@@ -78,9 +87,7 @@ function initialize() {
 <div id="map_canvas" style="width:100%; height:100%"></div>
 
 <div id="scenario_template" class="box">
-<h1>Debug Window - 
-<a><span id="showHideDebug">Show</span></a></span>
-</h1>
+<h1>Debug Window</h1>
 <span id="debuginfo">No Messages</span>
 </div>
 
@@ -88,15 +95,17 @@ function initialize() {
 <div id="prediction_progress"></div>
 <div id="prediction_percent"></div>
 <br>
-<div id="prediction_status"></div>
+<span id="prediction_status"></span><br>
+<a><span id="showHideDebug_status">Toggle Debug</span></a></span>
 </div>
 
-<div id="bottom_right" class="box">
 <div id="scenario_info" class="box">
-info on scenario
+<h1>Scenario Information</h1>
+<a><span id="showHideDebug">Show Debug</span></a></span> | 
+<a><span id="showHideForm">Hide Launch Card</span></a></span>
 </div>
 
-<div id="input_form"> 
+<div id="input_form" class="box"> 
 <form action="" id="modelForm" name="modelForm">
 <table>
 	<tr>
@@ -176,8 +185,7 @@ info on scenario
 	</tr>
 </table>
 </form>
-</div></div>
-
+</div>
 
 </body>
 </html>

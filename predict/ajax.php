@@ -3,6 +3,8 @@ require_once("includes/functions.inc.php");
 
 $action = $_GET['action'];
 
+$software_available = array("gfs", "gfs_hd");
+
 switch($action) {
 case "getCSV":
     $uuid = $_GET['uuid'];
@@ -35,7 +37,7 @@ case "getModelByUUID":
     } else {
         // populate the array, JSON encode it and return
         $pred_model = parse_ini_file("preds/".$uuid."/scenario.ini");
-        if ( verifyModel($pred_model) ){
+        if ( verifyModel($pred_model, $software_available) ){
             $pred_model['valid'] == true;
         } else {
             $pred_model['valid'] == false;
@@ -46,8 +48,6 @@ case "getModelByUUID":
     break;
 
 case "submitForm":
-    $software_available = array("gfs", "gfs_hd");
-
     $pred_model = array();
 
     if ( isset($_POST['submit'])) {

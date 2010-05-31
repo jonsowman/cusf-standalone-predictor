@@ -69,6 +69,8 @@ a { text-decoration: underline; color: #333; cursor: pointer; }
 	left: 0; bottom: 0; 
 	border-left: none;
 	border-bottom: none;
+        max-height: 400px;
+        overflow: scroll;
 }
 
 #input_form {
@@ -77,24 +79,18 @@ a { text-decoration: underline; color: #333; cursor: pointer; }
     height:350px;
     width: 400px;
     padding: 5px;
+    bottom: 0; right: 0;
 }
 
 #scenario_info {
+    position: absolute;
+    top: 25px;
+    right: 0px;
     border-right: none;
-    height:100px;
+    height:70px;
     width: 400px;
-    padding: 5px;
-    top: -115px;
-    overflow: hidden;
 }
 
-
-#bottom_right {
-    right: 0;
-    bottom: 0;
-    width: 400px;
-    padding: 0px;
-}
 
 td.right-td {
 	text-align: right;

@@ -21,9 +21,22 @@ function predSub() {
     $("#status_message").fadeIn(250);
 }
 
+function populateFormByUUID(pred_uuid) {
+    $.get("ajax.php", { "action":"getModelByUUID", "uuid":pred_uuid }, function(data) {
+        if ( !data.valid ) {
+            appendDebug("Populating form by UUID failed");
+            appendDebug("The server said the model it made was invalid");
+        } else {
+            // we're good to go, populate the form
+            alert(data);
+        }
+    }, 'json');
+}
+
 function handlePred(pred_uuid) {
     $("#prediction_status").html("Searching for wind data...");
     $("#input_form").hide("slide", { direction: "down" }, 500);
+    $("#scenario_info").hide("slide", { direction: "up" }, 500);
     $("#map_canvas").fadeTo(1000, 0.2);
     // ajax to poll for progress
     ajaxEventHandle = setInterval("getJSONProgress('"+pred_uuid+"')", 2000);
@@ -70,6 +83,9 @@ function processProgress(progress) {
                 $("#prediction_percent").html("");
                 // bring the input form back up
                 $("#input_form").show("slide", { direction: "down" }, 500);
+                $("#scenario_info").show("slide", { direction: "up" }, 500);
+                toggleWindow("scenario_template", "showHideDebug", "Show Debug",
+                        "Hide Debug", "hide");
                 // un-fade the map canvas
                 $("#map_canvas").fadeTo(1500, 1);
                 appendDebug("Server says: the predictor finished running.");
@@ -205,16 +221,28 @@ function appendDebug(appendage, clear) {
     } else {
         $("#debuginfo").html("");
     }
+    // keep the debug window scrolled to bottom
+    $("#scenario_template").animate({scrollTop: $('#scenario_template')[0].scrollHeight});
 }
 
-function toggleDebugWindow() {
-        if( $("#debuginfo").css('display') != "none" ){
-                $("#debuginfo").hide("slide", { direction: "down" }, 500);
-                $("#showHideDebug").html("Show");
+function toggleWindow(window_name, linker, onhide, onshow, force) {
+    if ( force == null ) {
+        if( $("#"+window_name).css('display') != "none" ){
+            $("#"+window_name+"").hide("slide", { direction: "down" }, 500);
+            $("#"+linker).html(onhide);
         } else {
-                $("#debuginfo").show("slide", { direction: "down" }, 500);
-                $("#showHideDebug").html("Hide");
+            $("#"+window_name).show("slide", { direction: "down" }, 500);
+            $("#"+linker).html(onshow);
         }
+    } else if ( force == "hide" ) {
+        $("#"+window_name+"").hide("slide", { direction: "down" }, 500);
+        $("#"+linker).html(onhide);
+    } else if ( force == "show") {
+        $("#"+window_name).show("slide", { direction: "down" }, 500);
+        $("#"+linker).html(onshow);
+    } else {
+        appendDebug("toggleWindow force parameter unrecognised");
+    }
 }
 
 // launch site dropdown switcher
