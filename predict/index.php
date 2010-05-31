@@ -34,6 +34,8 @@ function initialize() {
     var latlng = new google.maps.LatLng(52, 0);
     var myOptions = {
       zoom: 8,
+      scaleControl: true,
+      scaleControlOptions: { position: google.maps.ControlPosition.BOTTOM_LEFT } ,
       center: latlng,
       mapTypeId: google.maps.MapTypeId.ROADMAP
     };
