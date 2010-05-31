@@ -4,14 +4,15 @@ $time = time() + 3600;
 ?>
 
 <html>
-    <head>
-        <title>CUSF Landing Prediction 2 - GUI test</title>
+<head>
+<title>CUSF Landing Prediction - Version 2</title>
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 <script type="text/javascript" src="http://www.google.com/jsapi?key=ABQIAAAAzpAeP4iTRyyvc3_y95bQZBSnyWegg1iFIOtWV3Ha3Qw-fH3UlBTg9lMAipYdJi6ac4b5hWAzBkkXgg"></script>
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 <link href="css/pred.css" type="text/css" rel="stylesheet">
 <link href="css/cupertino/jquery-ui-1.8.1.custom.css" type="text/css" rel="stylesheet">
 <script type="text/javascript">
+// load jquery and jqueryui before loading jquery.form.js later
 google.load("jquery", "1.4.2");
 google.load("jqueryui", "1.8.1");
 </script>
@@ -20,13 +21,7 @@ google.load("jqueryui", "1.8.1");
 <script type="text/javascript">
 
 var ajaxEventHandle;
-var running_uuid = '<?php
-if ( isset($_GET['uuid']) ) {
-    echo $_GET['uuid'];
-} else {
-    echo "0";
-}
-?>';
+var running_uuid = '<?php echo ( isset($_GET['uuid'])? $_GET['uuid'] : "0" ); ?>';
 
 var map;
 var map_items = [];
