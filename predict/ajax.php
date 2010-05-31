@@ -6,7 +6,7 @@ $action = $_GET['action'];
 switch($action) {
 case "getCSV":
     $uuid = $_GET['uuid'];
-    $fh = fopen("preds/".$uuid."/flight_path.csv", "r");
+    $fh = fopen("preds/".$uuid."/flight_path.csv", "r") or die("No CSV for UUID");
     $data = array();
     while (!feof($fh)) {
         $line = trim(fgets($fh));

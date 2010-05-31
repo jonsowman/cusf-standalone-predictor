@@ -21,7 +21,7 @@ google.load("jqueryui", "1.8.1");
 <script type="text/javascript">
 
 var ajaxEventHandle;
-var running_uuid = '<?php echo ( isset($_GET['uuid'])? $_GET['uuid'] : "0" ); ?>';
+var current_uuid = '<?php echo ( isset($_GET['uuid'])? $_GET['uuid'] : "0" ); ?>';
 
 var map;
 var map_items = [];
@@ -49,18 +49,22 @@ function initialize() {
                 appendDebug("The server rejected the submitted form data");
             } else {
                 appendDebug("The server accepted the form data");
-                running_uuid = data_split[1];
-                appendDebug("The server gave us uuid:<br>" + running_uuid);
+                // update the global current_uuid variable
+                current_uuid = data_split[1];
+                appendDebug("The server gave us uuid:<br>" + current_uuid);
                 appendDebug("Starting to poll for progress JSON");
-                handlePred(running_uuid);
+                handlePred(current_uuid);
             }
         }
     });
     //$("#input_form").draggable({containment: '#map_canvas'});
-    // if ( running_uuid != 0 ) handlePred(running_uuid);
+    if ( current_uuid != '0' ) {
+        appendDebug("Got an old UUID to plot:<br>" + current_uuid);
+        appendDebug("Trying to get flight path from server...");
+        getCSV(current_uuid);
+    }
     $("#debuginfo").hide();
     $("#showHideDebug").click(function() {
-        // $("#debuginfo").show("slide", { direction: "down" }, 500);
         toggleDebugWindow();
     });
 }

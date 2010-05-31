@@ -77,7 +77,7 @@ function processProgress(progress) {
                 // stop polling for JSON
                 clearInterval(ajaxEventHandle);
                 // parse the data
-                getCSV(running_uuid);
+                getCSV(current_uuid);
             } else if ( progress['pred_running'] != true ) {
                 $("#prediction_status").html("Waiting for predictor to run...");
                 appendDebug("Server says: predictor not yet running...");
@@ -188,8 +188,8 @@ function parseCSV(lines) {
 }
 
 function clearMapItems() {
+    if(map_items.length > 0) {
     appendDebug("Clearing previous map trace");
-    if(map_items) {
         for(i in map_items) {
             map_items[i].setMap(null);
         }
