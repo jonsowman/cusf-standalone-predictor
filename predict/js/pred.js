@@ -222,7 +222,11 @@ function appendDebug(appendage, clear) {
         $("#debuginfo").html("");
     }
     // keep the debug window scrolled to bottom
-    $("#scenario_template").animate({scrollTop: $('#scenario_template')[0].scrollHeight});
+    scrollToBottom("scenario_template");
+    }
+
+function scrollToBottom(div_id) {
+    $("#"+div_id).animate({scrollTop: $("#"+div_id)[0].scrollHeight});
 }
 
 function toggleWindow(window_name, linker, onhide, onshow, force) {
