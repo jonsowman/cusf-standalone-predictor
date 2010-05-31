@@ -8,10 +8,7 @@ body {
 	margin: 0; padding: 0;
 }
 
-a:link { text-decoration: underline; color: #333 }
-a:active { text-decoration: underline; color: #333; }
-a:hover { text-decoration: underline; color: #333; }
-a:visited { text-decoration: underline; color: #333; }
+a { text-decoration: underline; color: #333; cursor: pointer; }
 
 /* The whoppping map in the centre */
 #map_canvas { width: 100%; height: 100%; }
@@ -75,11 +72,28 @@ a:visited { text-decoration: underline; color: #333; }
 }
 
 #input_form {
-    right: 0; bottom: 0;
     border-right: none;
     border-bottom: none;
-    width: 400px;
     height:350px;
+    width: 400px;
+    padding: 5px;
+}
+
+#scenario_info {
+    border-right: none;
+    height:100px;
+    width: 400px;
+    padding: 5px;
+    top: -115px;
+    overflow: hidden;
+}
+
+
+#bottom_right {
+    right: 0;
+    bottom: 0;
+    width: 400px;
+    padding: 0px;
 }
 
 td.right-td {

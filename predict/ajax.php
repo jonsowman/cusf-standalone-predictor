@@ -25,6 +25,26 @@ case "JSONexists":
     }
     break;
 
+case "getModelByUUID":
+    $uuid = ( isset($_GET['uuid']) ? $_GET['uuid'] : false );
+    if( !uuid ) die ("No uuid given to getModelByUUID");
+    // make a new model
+    $pred_model = array();
+    if ( !file_exists("preds/".$uuid."/scenario.ini") ) {
+        $pred_model['valid'] = false;
+    } else {
+        // populate the array, JSON encode it and return
+        $pred_model = parse_ini_file("preds/".$uuid."/scenario.ini");
+        if ( verifyModel($pred_model) ){
+            $pred_model['valid'] == true;
+        } else {
+            $pred_model['valid'] == false;
+        }
+        $pred_model['uuid'] = $uuid;
+    }
+    echo json_encode($pred_model);
+    break;
+
 case "submitForm":
     $software_available = array("gfs", "gfs_hd");
 

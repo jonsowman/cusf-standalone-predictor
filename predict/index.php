@@ -79,7 +79,7 @@ function initialize() {
 
 <div id="scenario_template" class="box">
 <h1>Debug Window - 
-<a href='#'><span id="showHideDebug">Show</span></a></span>
+<a><span id="showHideDebug">Show</span></a></span>
 </h1>
 <span id="debuginfo">No Messages</span>
 </div>
@@ -91,7 +91,12 @@ function initialize() {
 <div id="prediction_status"></div>
 </div>
 
-<div id="input_form" class="box"> 
+<div id="bottom_right" class="box">
+<div id="scenario_info" class="box">
+info on scenario
+</div>
+
+<div id="input_form"> 
 <form action="" id="modelForm" name="modelForm">
 <table>
 	<tr>
@@ -161,8 +166,8 @@ function initialize() {
     <tr>
         <td>Landing prediction software: <td>
         <select id="software" name="software">
-            <option value="gfs" selected="selected">GFS (faster, less accurate)</option>
-            <option value="gfs_hd">GFS HD (slower, more accurate)</option>
+            <option value="gfs" selected="selected">GFS</option>
+            <option value="gfs_hd">GFS HD</option>
         </select>
 	<tr>
                 <td>
@@ -171,7 +176,7 @@ function initialize() {
 	</tr>
 </table>
 </form>
-</div>
+</div></div>
 
 
 </body>
