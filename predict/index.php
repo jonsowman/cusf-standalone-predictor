@@ -36,11 +36,11 @@ function initialize() {
       zoom: 8,
       scaleControl: true,
       scaleControlOptions: { position: google.maps.ControlPosition.BOTTOM_LEFT } ,
+      mapTypeId: google.maps.MapTypeId.TERRAIN,
       center: latlng,
-      mapTypeId: google.maps.MapTypeId.ROADMAP
     };
     map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
-    // submit the form here
+    // attach form submit event handler to launch card
     $("#modelForm").ajaxForm({
         url: 'ajax.php?action=submitForm',
         type: 'POST',
