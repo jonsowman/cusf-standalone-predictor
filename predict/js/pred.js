@@ -86,6 +86,8 @@ function processProgress(progress) {
                 $("#scenario_info").show("slide", { direction: "up" }, 500);
                 toggleWindow("scenario_template", "showHideDebug", "Show Debug",
                         "Hide Debug", "hide");
+                // move map to new location
+                // map.panTo(
                 // un-fade the map canvas
                 $("#map_canvas").fadeTo(1500, 1);
                 appendDebug("Server says: the predictor finished running.");
@@ -198,6 +200,9 @@ function parseCSV(lines) {
     map_items.push(land_marker);
     map_items.push(pop_marker);
     map_items.push(path_polyline);
+
+    // pan to the new position
+    map.panTo(launch_pt);
 
     return true;
 
