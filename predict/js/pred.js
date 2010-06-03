@@ -122,6 +122,10 @@ function parseCSV(lines) {
     var path = [];
     var max_height = -10; //just any -ve number
     var max_point = null;
+    var launch_lat;
+    var launch_lon;
+    var land_lat;
+    var land_lon;
     var launch_pt;
     var land_pt;
         $.each(lines, function(idx, line) {
@@ -129,15 +133,15 @@ function parseCSV(lines) {
             if(entry.length >= 4) { // check valid entry length
                 var point = new google.maps.LatLng( parseFloat(entry[1]), parseFloat(entry[2]) );
                 if ( idx == 0 ) { // get the launch lat/long for marker
-                    var launch_lat = entry[1];
-                    var launch_lon = entry[2];
+                    launch_lat = entry[1];
+                    launch_lon = entry[2];
                     launch_pt = point;
                 }
 
                 // set on every iteration, last valid entry
                 // gives landing position
-                var land_lat = entry[1];
-                var land_lon = entry[2];
+                land_lat = entry[1];
+                land_lon = entry[2];
                 land_pt = point;
                 
                 if(parseFloat(entry[3]) > max_height) {
@@ -168,14 +172,14 @@ function parseCSV(lines) {
         position: launch_pt,
         map: map,
         icon: launch_icon,
-        title: 'Balloon launch'
+        title: 'Balloon launch ('+launch_lat+', '+launch_lon+')'
     });
 
     var land_marker = new google.maps.Marker({
         position: land_pt,
         map:map,
         icon: land_icon,
-        title: 'Predicted Landing'
+        title: 'Predicted Landing ('+land_lat+', '+land_lon+')'
     });
 
     var path_polyline = new google.maps.Polyline({
@@ -204,6 +208,49 @@ function parseCSV(lines) {
     map.setZoom(8);
 
     return true;
+
+}
+
+function plotClick() {
+    // clear the old marker
+    clearMapItems();
+    // get the new values from the form
+    click_lat = parseFloat($("#lat").val());
+    click_lon = parseFloat($("#lon").val());
+    var click_pt = new google.maps.LatLng(click_lat, click_lon);
+    clickMarker = new google.maps.Marker({
+        position: click_pt,
+        map: map,
+        icon: 'images/target-1-sm.png',
+        title: 'Currently selected launch location ('+click_lat+', '+click_lon+')'
+    });
+    map_items.push(clickMarker);
+    map.panTo(click_pt);
+    map.setZoom(8);
+}
+    
+
+function setFormLatLon(GLatLng) {
+    $("#lat").val(GLatLng.lat().toFixed(4));
+    $("#lon").val(GLatLng.lng().toFixed(4));
+    // remove the event handler so another click doesn't register
+    setLatLonByClick(false);
+    // change the dropdown to read "other"
+    SetSiteOther();
+    // plot the new marker for launch location
+    plotClick();
+}
+
+function setLatLonByClick(state) {
+    if ( state == true ) {
+        clickListener = google.maps.event.addListener(map, 'click', function(event) {
+            setFormLatLon(event.latLng);
+        });
+    } else if ( state == false ) {
+        google.maps.event.removeListener(clickListener);
+    } else {
+        appendDebug("Unrecognised state for setLatLonByClick");
+    }
 
 }
 
@@ -299,8 +346,6 @@ function UpdateLaunchSite(id) {
 
 function SetSiteOther() {
         optOther = document.getElementById("other");
-        //cmbSite = document.getElementById("site");
-        //cmbSite.selectedIndex = 1;
         optOther.selected = true;
 }
 

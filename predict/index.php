@@ -25,9 +25,11 @@ var current_uuid = '<?php echo ( isset($_GET['uuid'])? $_GET['uuid'] : "0" ); ?>
 
 var map;
 var map_items = [];
-var launch_img = "images/marker-sm-red.png";
-var land_img = "images/marker-sm-red.png";
+var launch_img = "images/target-1-sm.png";
+var land_img = "images/target-8-sm.png";
 var burst_img = "images/pop-marker.png";
+var clickListener;
+var clickMarker;
 
 function initialize() {
     // make the map and set center
@@ -59,6 +61,20 @@ function initialize() {
             }
         }
     });
+    // activate the "Set with Map" link
+    $("#setWithClick").click(function() {
+        setLatLonByClick(true);
+    });
+    // attach onchange handlers to the lat/long boxes
+    $("#lat").change(function() {
+        plotClick();
+    });
+    $("#lon").change(function() {
+        plotClick();
+    });
+    $("#site").change(function() {
+        plotClick();
+    });
     $("#input_form").draggable({containment: '#map_canvas'});
     if ( current_uuid != '0' ) {
         appendDebug("Got an old UUID to plot:<br>" + current_uuid);
@@ -78,6 +94,8 @@ function initialize() {
         toggleWindow("input_form", "showHideForm", "Show Launch Card",
             "Hide Launch Card");
     });
+    // plot the initial launch location
+    plotClick();
 }
 
 
@@ -103,7 +121,7 @@ function initialize() {
 
 <div id="scenario_info" class="box">
 <h1>Scenario Information</h1>
-<span id="from_launch_lat">
+<span id="cursor_info">Lat: <span id="cursor_lat"></span> Lon: <span id="cursor_lon"></span></span><br />
 <a><span id="showHideDebug">Show Debug</span></a></span> | 
 <a><span id="showHideForm">Hide Launch Card</span></a></span>
 </div>
@@ -124,7 +142,7 @@ function initialize() {
 			</select>
 		</td>
 	<tr>
-		<td>Latitude:</td>
+		<td>Latitude: <a id="setWithClick">Set with map</a></td>
 		<td><input id="lat" type="text" name="lat" value="52.2135" onKeyDown="SetSiteOther()"></td>
 	</tr>
     <tr>
