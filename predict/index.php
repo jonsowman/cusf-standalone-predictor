@@ -96,6 +96,9 @@ function initialize() {
     });
     // plot the initial launch location
     plotClick();
+    google.maps.event.addListener(map, 'mousemove', function(event) {
+        showMousePos(event.latLng);
+    });
 }
 
 
@@ -121,7 +124,13 @@ function initialize() {
 
 <div id="scenario_info" class="box">
 <h1>Scenario Information</h1>
-<span id="cursor_info">Lat: <span id="cursor_lat"></span> Lon: <span id="cursor_lon"></span></span><br />
+<span id="cursor_info">Current mouse position: 
+Lat: <span id="cursor_lat">?</span> 
+Lon: <span id="cursor_lon">?</span>
+</span><br />
+<span id="cursor_pred">
+Put stuff here
+</span><br />
 <a><span id="showHideDebug">Show Debug</span></a></span> | 
 <a><span id="showHideForm">Hide Launch Card</span></a></span>
 </div>

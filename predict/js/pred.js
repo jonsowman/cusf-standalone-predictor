@@ -33,6 +33,11 @@ function populateFormByUUID(pred_uuid) {
     }, 'json');
 }
 
+function showMousePos(GLatLng) {
+    $("#cursor_lat").html(GLatLng.lat().toFixed(4));
+    $("#cursor_lon").html(GLatLng.lng().toFixed(4));
+}
+
 function handlePred(pred_uuid) {
     $("#prediction_status").html("Searching for wind data...");
     $("#input_form").hide("slide", { direction: "down" }, 500);
