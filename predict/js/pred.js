@@ -37,10 +37,10 @@ function handlePred(pred_uuid) {
     $("#prediction_status").html("Searching for wind data...");
     $("#input_form").hide("slide", { direction: "down" }, 500);
     $("#scenario_info").hide("slide", { direction: "up" }, 500);
+    // disable user control of the map canvas
     $("#map_canvas").fadeTo(1000, 0.2);
     // ajax to poll for progress
     ajaxEventHandle = setInterval("getJSONProgress('"+pred_uuid+"')", 2000);
-    //getCSV(pred_uuid);
 }
 
 function getCSV(pred_uuid) {
@@ -86,8 +86,6 @@ function processProgress(progress) {
                 $("#scenario_info").show("slide", { direction: "up" }, 500);
                 toggleWindow("scenario_template", "showHideDebug", "Show Debug",
                         "Hide Debug", "hide");
-                // move map to new location
-                // map.panTo(
                 // un-fade the map canvas
                 $("#map_canvas").fadeTo(1500, 1);
                 appendDebug("Server says: the predictor finished running.");
@@ -203,9 +201,26 @@ function parseCSV(lines) {
 
     // pan to the new position
     map.panTo(launch_pt);
+    map.setZoom(8);
 
     return true;
 
+}
+
+function enableMap(map, state) {
+    if ( state != false && state != true) {
+        appendDebug("Unrecognised map state");
+    } else if (state == false) {
+        map.draggable = false;
+        map.disableDoubleClickZoom = true;
+        map.scrollwheel = false;
+        map.navigationControl = false;
+    } else if (state == true ) {
+        map.draggable = true;
+        map.disableDoubleClickZoom = false;
+        map.scrollwheel = false;
+        map.navigationControl = true;
+    }
 }
 
 function clearMapItems() {

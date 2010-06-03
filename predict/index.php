@@ -103,6 +103,7 @@ function initialize() {
 
 <div id="scenario_info" class="box">
 <h1>Scenario Information</h1>
+<span id="from_launch_lat">
 <a><span id="showHideDebug">Show Debug</span></a></span> | 
 <a><span id="showHideForm">Hide Launch Card</span></a></span>
 </div>
@@ -175,11 +176,25 @@ function initialize() {
         <td><input id="float" type="text" name="float_time" value="0"></td>
     </tr>
     <tr>
-        <td>Landing prediction software: <td>
+        <td>Landing prediction software: </td><td>
         <select id="software" name="software">
             <option value="gfs" selected="selected">GFS</option>
             <option value="gfs_hd">GFS HD</option>
+        </select></td></tr>
+        <tr><td>Lat/Lon Deltas: </td>
+        <td>Lat: 
+        <select id="delta_lat" name="delta_lat">
+            <option value="3" selected="selected">3</option>
+            <option value="5">5</option>
+            <option value="10">10</option>
+        </select>&nbsp;Lon: 
+        <select id="delta_lon" name="delta_lon">
+            <option value="3" selected="selected">3</option>
+            <option value="5">5</option>
+            <option value="10">10</option>
         </select>
+        </td>
+        </tr>
 	<tr>
                 <td>
                 </td>
