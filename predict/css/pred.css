@@ -29,6 +29,19 @@ a { text-decoration: underline; color: #333; cursor: pointer; }
     display: none;
 }
 
+#error_window {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 400px;
+    height: 50px;
+    margin-left: -200px;
+    margin-top: -50px;
+    padding: 1em;
+    text-align: center;
+    display: none;
+}
+
 .box {
 	position: absolute; 
 	background-color: white; 

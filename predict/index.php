@@ -47,11 +47,13 @@ function initialize() {
         url: 'ajax.php?action=submitForm',
         type: 'POST',
         success: function(data) {
-            predSub();
             var data_split = data.split("|");
             if ( data_split[0] == 0 ) {
                 appendDebug("The server rejected the submitted form data");
+                throwError("The server rejected the submitted form data");
+                resetGUI();
             } else {
+                predSub();
                 appendDebug("The server accepted the form data");
                 // update the global current_uuid variable
                 current_uuid = data_split[1];
@@ -94,6 +96,9 @@ function initialize() {
         toggleWindow("input_form", "showHideForm", "Show Launch Card",
             "Hide Launch Card");
     });
+    $("#closeErrorWindow").click(function() {
+        $("#error_window").fadeOut();
+    });
     // plot the initial launch location
     plotClick();
     google.maps.event.addListener(map, 'mousemove', function(event) {
@@ -120,6 +125,12 @@ function initialize() {
 <br>
 <span id="prediction_status"></span><br>
 <a><span id="showHideDebug_status">Toggle Debug</span></a></span>
+</div>
+
+<div id="error_window" class="box">
+<span id="error_message">Nothing here!</span>
+<br /><br />
+<a id="closeErrorWindow">Close</a>
 </div>
 
 <div id="scenario_info" class="box">

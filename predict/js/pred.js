@@ -38,6 +38,11 @@ function showMousePos(GLatLng) {
     $("#cursor_lon").html(GLatLng.lng().toFixed(4));
 }
 
+function throwError(data) {
+    $("#error_message").html(data);
+    $("#error_window").fadeIn();
+}
+
 function handlePred(pred_uuid) {
     $("#prediction_status").html("Searching for wind data...");
     $("#input_form").hide("slide", { direction: "down" }, 500);
@@ -72,6 +77,20 @@ function getJSONProgress(pred_uuid) {
     });
 }
 
+function resetGUI() {
+    $("#status_message").fadeOut(500);
+    // now clear the status window
+    $("#prediction_status").html("");
+    $("#prediction_progress").progressbar("options", "value", 0);
+    $("#prediction_percent").html("");
+    // bring the input form back up
+    toggleWindow("input_form", null, null, null, "show");
+    toggleWindow("scenario_info", null, null, null, "show");
+    // un-fade the map canvas
+    $("#map_canvas").fadeTo(1500, 1);
+}
+
+
 function processProgress(progress) {
     if ( progress['error'] ) {
         clearInterval(ajaxEventHandle);
@@ -81,20 +100,10 @@ function processProgress(progress) {
         if ( progress['gfs_complete'] == true ) {
             if ( progress['pred_complete'] == true ) { // pred has finished
                 $("#prediction_status").html("Prediction finished.");
-                $("#status_message").fadeOut(500);
-                // now clear the status window
-                $("#prediction_status").html("");
-                $("#prediction_progress").progressbar("options", "value", 0);
-                $("#prediction_percent").html("");
-                // bring the input form back up
-                $("#input_form").show("slide", { direction: "down" }, 500);
-                $("#scenario_info").show("slide", { direction: "up" }, 500);
-                toggleWindow("scenario_template", "showHideDebug", "Show Debug",
-                        "Hide Debug", "hide");
-                // un-fade the map canvas
-                $("#map_canvas").fadeTo(1500, 1);
                 appendDebug("Server says: the predictor finished running.");
                 appendDebug("Attemping to retrieve flight path from server");
+                // reset the GUI
+                resetGUI();
                 // stop polling for JSON
                 clearInterval(ajaxEventHandle);
                 // parse the data
@@ -249,8 +258,10 @@ function setFormLatLon(GLatLng) {
 function setLatLonByClick(state) {
     if ( state == true ) {
         clickListener = google.maps.event.addListener(map, 'click', function(event) {
+            $("#error_window").fadeOut();
             setFormLatLon(event.latLng);
         });
+        throwError("Now click your desired launch location on the map");
     } else if ( state == false ) {
         google.maps.event.removeListener(clickListener);
     } else {
@@ -311,11 +322,15 @@ function toggleWindow(window_name, linker, onhide, onshow, force) {
             $("#"+linker).html(onshow);
         }
     } else if ( force == "hide" ) {
-        $("#"+window_name+"").hide("slide", { direction: "down" }, 500);
-        $("#"+linker).html(onhide);
+        if( $("#"+window_name).css('display') != "none" ){
+            $("#"+window_name+"").hide("slide", { direction: "down" }, 500);
+            $("#"+linker).html(onhide);
+        }
     } else if ( force == "show") {
-        $("#"+window_name).show("slide", { direction: "down" }, 500);
-        $("#"+linker).html(onshow);
+        if( $("#"+window_name).css('display') == "none" ){
+            $("#"+window_name).show("slide", { direction: "down" }, 500);
+            $("#"+linker).html(onshow);
+        }
     } else {
         appendDebug("toggleWindow force parameter unrecognised");
     }
