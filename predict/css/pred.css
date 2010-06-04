@@ -103,8 +103,9 @@ a { text-decoration: underline; color: #333; cursor: pointer; }
     top: 25px;
     right: 0px;
     border-right: none;
-    height:70px;
     width: 400px;
+    text-align:center;
+    padding: 10px;
 }
 
 

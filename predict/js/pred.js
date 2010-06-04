@@ -34,8 +34,21 @@ function populateFormByUUID(pred_uuid) {
 }
 
 function showMousePos(GLatLng) {
-    $("#cursor_lat").html(GLatLng.lat().toFixed(4));
-    $("#cursor_lon").html(GLatLng.lng().toFixed(4));
+    var curr_lat = GLatLng.lat().toFixed(4);
+    var curr_lon = GLatLng.lng().toFixed(4);
+    $("#cursor_lat").html(curr_lat);
+    $("#cursor_lon").html(curr_lon);
+    // if we have a prediction displayed
+    // show range from launch and land:
+    if ( current_uuid != 0 && map_items['launch_marker'] != null ) {
+        var launch_pt = map_items['launch_marker'].position;
+        var land_pt = map_items['land_marker'].position;
+        var range_launch = distHaversine(launch_pt, GLatLng);
+        var range_land = distHaversine(land_pt, GLatLng);
+        $("#cursor_pred_launchrange").html(range_launch);
+        $("#cursor_pred_landrange").html(range_land);
+    }
+    
 }
 
 function throwError(data) {
@@ -83,6 +96,7 @@ function resetGUI() {
     $("#prediction_status").html("");
     $("#prediction_progress").progressbar("options", "value", 0);
     $("#prediction_percent").html("");
+    $("#cursor_pred").hide();
     // bring the input form back up
     toggleWindow("input_form", null, null, null, "show");
     toggleWindow("scenario_info", null, null, null, "show");
@@ -142,6 +156,8 @@ function parseCSV(lines) {
     var land_lon;
     var launch_pt;
     var land_pt;
+    var launch_time;
+    var land_time;
         $.each(lines, function(idx, line) {
             entry = line.split(',');
             if(entry.length >= 4) { // check valid entry length
@@ -149,6 +165,7 @@ function parseCSV(lines) {
                 if ( idx == 0 ) { // get the launch lat/long for marker
                     launch_lat = entry[1];
                     launch_lon = entry[2];
+                    launch_time = entry[0];
                     launch_pt = point;
                 }
 
@@ -156,6 +173,7 @@ function parseCSV(lines) {
                 // gives landing position
                 land_lat = entry[1];
                 land_lon = entry[2];
+                land_time = entry[0];
                 land_pt = point;
                 
                 if(parseFloat(entry[3]) > max_height) {
@@ -168,6 +186,16 @@ function parseCSV(lines) {
 
     appendDebug("Flight data parsed, creating map plot...");
     clearMapItems();
+    
+    // calculate range and time of flight
+    var range = distHaversine(launch_pt, land_pt, 1);
+    var flighttime = land_time - launch_time;
+    var f_hours = Math.floor((flighttime % 86400) / 3600);
+    var f_minutes = Math.floor(((flighttime % 86400) % 3600) / 60);
+    flighttime = f_hours + "hr" + f_minutes;
+    $("#cursor_pred_range").html(range);
+    $("#cursor_pred_time").html(flighttime);
+    $("#cursor_pred").show();
     
     // make some nice icons
     var launch_icon = new google.maps.MarkerImage(launch_img,
@@ -212,10 +240,12 @@ function parseCSV(lines) {
     });
 
     // now add the launch/land markers to map
-    map_items.push(launch_marker);
-    map_items.push(land_marker);
-    map_items.push(pop_marker);
-    map_items.push(path_polyline);
+    // we might need these later, so push them
+    // associatively
+    map_items['launch_marker'] = launch_marker;
+    map_items['land_marker'] = land_marker;
+    map_items['pop_marker'] = pop_marker;
+    map_items['path_polyline'] = path_polyline;
 
     // pan to the new position
     map.panTo(launch_pt);
@@ -238,7 +268,7 @@ function plotClick() {
         icon: 'images/target-1-sm.png',
         title: 'Currently selected launch location ('+click_lat+', '+click_lon+')'
     });
-    map_items.push(clickMarker);
+    map_items['clickMarker'] = clickMarker;
     map.panTo(click_pt);
     map.setZoom(8);
 }
@@ -293,13 +323,22 @@ function enableMap(map, state) {
 }
 
 function clearMapItems() {
-    if(map_items.length > 0) {
+    $("#cursor_pred").hide();
+    if(getAssocSize(map_items) > 0) {
     appendDebug("Clearing previous map trace");
         for(i in map_items) {
             map_items[i].setMap(null);
         }
     }
     map_items = [];
+}
+
+function getAssocSize(arr) {
+    var i = 0;
+    for ( j in arr ) {
+        i++;
+    }
+    return i;
 }
 
 function appendDebug(appendage, clear) {
@@ -373,5 +412,23 @@ function UpdateLaunchSite(id) {
 function SetSiteOther() {
         optOther = document.getElementById("other");
         optOther.selected = true;
+}
+
+rad = function(x) {return x*Math.PI/180;}
+
+distHaversine = function(p1, p2, precision) {
+  var R = 6371; // earth's mean radius in km
+  var dLat  = rad(p2.lat() - p1.lat());
+  var dLong = rad(p2.lng() - p1.lng());
+
+  var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+          Math.cos(rad(p1.lat())) * Math.cos(rad(p2.lat())) * Math.sin(dLong/2) * Math.sin(dLong/2);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  var d = R * c;
+  if ( precision == null ) {
+      return d.toFixed(3);
+  } else {
+      return d.toFixed(precision);
+  }
 }
 
