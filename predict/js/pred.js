@@ -257,13 +257,19 @@ function setFormLatLon(GLatLng) {
 
 function setLatLonByClick(state) {
     if ( state == true ) {
-        clickListener = google.maps.event.addListener(map, 'click', function(event) {
-            $("#error_window").fadeOut();
-            setFormLatLon(event.latLng);
-        });
+        // check this listener doesn't already exist
+        if (!clickListener) {
+            clickListener = google.maps.event.addListener(map,
+                    'click', function(event) {
+                $("#error_window").fadeOut();
+                setFormLatLon(event.latLng);
+            });
+        }
+        // tell the user what to do next
         throwError("Now click your desired launch location on the map");
     } else if ( state == false ) {
         google.maps.event.removeListener(clickListener);
+        clickListener = null;
     } else {
         appendDebug("Unrecognised state for setLatLonByClick");
     }
