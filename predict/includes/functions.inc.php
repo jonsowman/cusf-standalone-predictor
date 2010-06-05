@@ -9,13 +9,13 @@ function createModel($post_array) {
     $pred_model = array();
 
     // first, populate the prediction model
-    $pred_model['hour'] = $post_array['hour']; //adjust for GMT
-    $pred_model['min'] = $post_array['min'];
-    $pred_model['sec'] = $post_array['sec'];
+    $pred_model['hour'] = (int)$post_array['hour']; //adjust for GMT
+    $pred_model['min'] = (int)$post_array['min'];
+    $pred_model['sec'] = (int)$post_array['sec'];
 
-    $pred_model['month'] = $post_array['month'];
-    $pred_model['day'] = $post_array['day'];
-    $pred_model['year'] = $post_array['year'];
+    $pred_model['month'] = (int)$post_array['month'];
+    $pred_model['day'] = (int)$post_array['day'];
+    $pred_model['year'] = (int)$post_array['year'];
 
     $pred_model['lat'] = $post_array['lat'];
     $pred_model['lon'] = $post_array['lon'];

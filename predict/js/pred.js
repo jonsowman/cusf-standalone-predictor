@@ -43,8 +43,8 @@ function showMousePos(GLatLng) {
     if ( current_uuid != 0 && map_items['launch_marker'] != null ) {
         var launch_pt = map_items['launch_marker'].position;
         var land_pt = map_items['land_marker'].position;
-        var range_launch = distHaversine(launch_pt, GLatLng);
-        var range_land = distHaversine(land_pt, GLatLng);
+        var range_launch = distHaversine(launch_pt, GLatLng, 1);
+        var range_land = distHaversine(land_pt, GLatLng, 1);
         $("#cursor_pred_launchrange").html(range_launch);
         $("#cursor_pred_landrange").html(range_land);
     }

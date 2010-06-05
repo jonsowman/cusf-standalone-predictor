@@ -136,9 +136,6 @@ function initialize() {
 <!-- scenario info -->
 <div id="scenario_info" class="box">
 <h1>Scenario Information</h1>
-<a><span id="showHideDebug">Show Debug</span></a></span> | 
-<a><span id="showHideForm">Hide Launch Card</span></a></span>
-<br />
 <span id="cursor_info">Current mouse position: 
 Lat: <span id="cursor_lat">?</span> 
 Lon: <span id="cursor_lon">?</span>
@@ -149,6 +146,9 @@ Flight Time: <span id="cursor_pred_time"></span><br />
 Cursor range from launch: <span id="cursor_pred_launchrange">?</span>km, 
 land: <span id="cursor_pred_landrange">?</span>km
 </span>
+<br />
+<a><span id="showHideDebug">Show Debug</span></a></span> | 
+<a><span id="showHideForm">Hide Launch Card</span></a></span>
 </div>
 
 <div id="input_form" class="box"> 
