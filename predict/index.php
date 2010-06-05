@@ -173,7 +173,9 @@ land: <span id="cursor_pred_landrange">?</span>km
 				<option value="Glenrothes">Glenrothes</option>
 				<option value="Bujaraloz, Monegros">Bujaraloz, Monegros</option>
 				<option value="Adelaide Airport">Adelaide Airport</option>
-				<option id="other" value="other">Other</option>
+                                <option id="other" value="other"<?php
+                                if ($current_uuid !=0) echo " selected=\"selected\"";
+                                ?>>Other</option>
 			</select>
 		</td>
 	<tr>
