@@ -42,6 +42,10 @@ var clickListener;
 var clickMarker;
 
 function initialize() {
+    if(window.location.hash != "") {
+        var ln = window.location.hash.split("=");
+        current_uuid = ln[1];
+    }
     // make the map and set center
     var latlng = new google.maps.LatLng(52, 0);
     var myOptions = {

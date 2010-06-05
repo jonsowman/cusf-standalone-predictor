@@ -33,6 +33,11 @@ function populateFormByUUID(pred_uuid) {
     }, 'json');
 }
 
+function addHashLink(link) {
+   var ln = "#!/" + link;
+   window.location = ln;
+}
+
 function showMousePos(GLatLng) {
     var curr_lat = GLatLng.lat().toFixed(4);
     var curr_lon = GLatLng.lng().toFixed(4);
@@ -122,6 +127,7 @@ function processProgress(progress) {
                 clearInterval(ajaxEventHandle);
                 // parse the data
                 getCSV(current_uuid);
+                addHashLink("uuid="+current_uuid);
             } else if ( progress['pred_running'] != true ) {
                 $("#prediction_status").html("Waiting for predictor to run...");
                 appendDebug("Server says: predictor not yet running...");
