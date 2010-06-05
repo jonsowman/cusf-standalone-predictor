@@ -167,12 +167,16 @@ land: <span id="cursor_pred_landrange">?</span>km
 			</select>
 		</td>
 	<tr>
-		<td>Latitude: <a id="setWithClick">Set with map</a></td>
+		<td>Latitude:</td>
 		<td><input id="lat" type="text" name="lat" value="52.2135" onKeyDown="SetSiteOther()"></td>
 	</tr>
     <tr>
         <td>Longitude:</td>
         <td><input id="lon" type="text" name="lon" value="0.0964" onKeyDown="SetSiteOther()"></td>
+    </tr>
+    <tr>
+    <td><a id="setWithClick">Set with map</a></td>
+    <td><a id="requestLocationSave">Request to save</a></td>
     </tr>
     <tr>
         <td>Launch altitude (m):</td>
@@ -213,10 +217,6 @@ land: <span id="cursor_pred_landrange">?</span>km
     <tr>
         <td>Burst Altitude (m):</td>
         <td><input id="burst" type="text" name="burst" value="30000"></td>
-    </tr>
-    <tr>
-        <td>Float time at apogee (s):</td>
-        <td><input id="float" type="text" name="float_time" value="0"></td>
     </tr>
     <tr>
         <td>Landing prediction software: </td><td>
