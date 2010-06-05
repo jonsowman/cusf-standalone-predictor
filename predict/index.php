@@ -1,6 +1,16 @@
 <?php
+require_once("includes/functions.inc.php");
 // get the time for pre-populating the form
 $time = time() + 3600;
+$current_uuid = ( isset($_GET['uuid'])? $_GET['uuid'] : "0" );
+// if we were given a UUID, try and construct its model
+if ( $current_uuid != 0 ) {
+    if ( $pred_model = getModelByUUID($current_uuid) ) {
+    } else {
+        // assume we weren't given a UUID (bad FIXME)
+        $current_uuid = 0;
+    }
+}
 ?>
 
 <html>
@@ -21,7 +31,7 @@ google.load("jqueryui", "1.8.1");
 <script type="text/javascript">
 
 var ajaxEventHandle;
-var current_uuid = '<?php echo ( isset($_GET['uuid'])? $_GET['uuid'] : "0" ); ?>';
+var current_uuid = '<?php echo $current_uuid ?>';
 
 var map;
 var map_items = [];
@@ -168,11 +178,15 @@ land: <span id="cursor_pred_landrange">?</span>km
 		</td>
 	<tr>
 		<td>Latitude:</td>
-		<td><input id="lat" type="text" name="lat" value="52.2135" onKeyDown="SetSiteOther()"></td>
+                <td><input id="lat" type="text" name="lat" value="<?php
+                    echo ($current_uuid!=0 ? $pred_model['latitude'] : "52.2135");
+                    ?>" onKeyDown="SetSiteOther()"></td>
 	</tr>
     <tr>
         <td>Longitude:</td>
-        <td><input id="lon" type="text" name="lon" value="0.0964" onKeyDown="SetSiteOther()"></td>
+        <td><input id="lon" type="text" name="lon" value="<?php
+            echo ($current_uuid!=0 ? $pred_model['longitude'] : "0.0964");
+            ?>" onKeyDown="SetSiteOther()"></td>
     </tr>
     <tr>
     <td><a id="setWithClick">Set with map</a></td>
@@ -180,43 +194,57 @@ land: <span id="cursor_pred_landrange">?</span>km
     </tr>
     <tr>
         <td>Launch altitude (m):</td>
-        <td><input id="initial_alt" type="text" name="initial_alt" value="0"></td>
+        <td><input id="initial_alt" type="text" name="initial_alt" value="<?php
+                echo ($current_uuid!=0 ? $pred_model['altitude'] : "0");?>"></td>
     </tr>
 	<tr>
 		<td>Launch Time:</td>
 		<td>
-			<input id="hour" type="text" name="hour" value="<?php echo date("H", $time); ?>" maxlength="2" size="2"> :
-			<input id="min" type="text" name="min" value="<?php echo date("i", $time); ?>" maxlength="2" size="2">
-			<input id="sec" type="hidden" name="sec" value="0"></td></tr>
+                        <input id="hour" type="text" name="hour" value="<?php
+                    echo ($current_uuid!=0 ? $pred_model['hour'] : date("H", $time));
+                    ?>" maxlength="2" size="2"> :
+                        <input id="min" type="text" name="min" value="<?php
+                    echo ($current_uuid!=0 ? $pred_model['minute'] : date("i", $time));
+                    ?>" maxlength="2" size="2">
+			<input id="sec" type="hidden" name="second" value="0"></td></tr>
 			<tr><td>Launch Date:</td><td>
-			<input id="day" type="text" name="day" value="<?php echo date("d", $time); ?>" maxlength="2" size="2">
-			<select id="month" name="month">
-				<option value="1"<?php if (date("n", $time) == 1) echo " selected"; ?>>Jan</option>
-				<option value="2"<?php if (date("n", $time) == 2) echo " selected"; ?>>Feb</option>
-				<option value="3"<?php if (date("n", $time) == 3) echo " selected"; ?>>Mar</option>
-				<option value="4"<?php if (date("n", $time) == 4) echo " selected"; ?>>Apr</option>
-				<option value="5"<?php if (date("n", $time) == 5) echo " selected"; ?>>May</option>
-				<option value="6"<?php if (date("n", $time) == 6) echo " selected"; ?>>Jun</option>
-				<option value="7"<?php if (date("n", $time) == 7) echo " selected"; ?>>Jul</option>
-				<option value="8"<?php if (date("n", $time) == 8) echo " selected"; ?>>Aug</option>
-				<option value="9"<?php if (date("n", $time) == 9) echo " selected"; ?>>Sep</option>
-				<option value="10"<?php if (date("n", $time) == 10) echo " selected"; ?>>Oct</option>
-				<option value="11"<?php if (date("n", $time) == 11) echo " selected"; ?>>Nov</option>
-				<option value="12"<?php if (date("n", $time) == 12) echo " selected"; ?>>Dec</option>
-			</select>
-			<input id="year" type="text" name="year" value="<?php echo date("Y", $time); ?>" maxlength="4" size="4">
+                        <input id="day" type="text" name="day" value="<?php
+                    echo ($current_uuid!=0 ? $pred_model['day'] : date("d", $time));
+                    ?>" maxlength="2" size="2">
+                        <select id="month" name="month"><?php
+                    // php enumeration
+                    for($i=1;$i<=12;$i++) {
+                        echo "<option value=\"" . $i . "\"";
+                        if ($i == date("n", $time) && $current_uuid==0 ) {
+                            echo " selected=\"selected\"";
+                        } else if ($current_uuid != 0 && $i == $pred_model['month']) {
+                            echo " selected=\"selected\"";
+                        }
+                        echo ">".date("M", mktime(0,0,0,$i,11,1978))."</option>\n";
+                    }
+
+                    ?></select>
+                        <input id="year" type="text" name="year" value="<?php
+                    echo ($current_uuid!=0 ? $pred_model['year'] : date("Y", $time));
+                    ?>" maxlength="4" size="4">
 		</td>
     <tr>
         <td>Ascent Rate (m/s):</td>
-        <td><input id="ascent" type="text" name="ascent" value="5"></td>
+        <td><input id="ascent" type="text" name="ascent" value="<?php
+                    echo ($current_uuid!=0 ? $pred_model['ascent-rate'] : "5");
+                    ?>"></td>
     </tr>
     <tr>
         <td>Descent Rate (sea level m/s):</td>
-        <td><input id="drag" type="text" name="drag" value="5"></td>
+        <td><input id="drag" type="text" name="drag" value="<?php
+                    echo ($current_uuid!=0 ? $pred_model['descent-rate'] : "5");
+                    ?>"></td>
     </tr>
     <tr>
         <td>Burst Altitude (m):</td>
-        <td><input id="burst" type="text" name="burst" value="30000"></td>
+        <td><input id="burst" type="text" name="burst" value="<?php
+                    echo ($current_uuid!=0 ? $pred_model['burst-altitude'] : "30000");
+                    ?>"></td>
     </tr>
     <tr>
         <td>Landing prediction software: </td><td>

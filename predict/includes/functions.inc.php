@@ -103,10 +103,22 @@ function makeINI($pred_model) { // makes an ini file
     $w_string .= "month = " . $pred_model['month'] . "\nsecond = " . $pred_model['sec'] . "\n";
     $w_string .= "year = " . $pred_model['year'] . "\nday = " . $pred_model['day'] . "\nminute = ";
     $w_string .= $pred_model['min'] . "\n";
+    // add our predictor stuff
+    $w_string .= "[predictor]\nlat-delta = " . $pred_model['delta_lat'] . "\n";
+    $w_string .= "lon-delta = " . $pred_model['delta_lon'] . "\nsoftware = ";
+    $w_string .= $pred_model['software'] . "\n";
 
     fwrite($fh, $w_string);
     fclose($fh);
 }
 
+function getModelByUUID($uuid) {
+    if ( file_exists("preds/".$uuid."/scenario.ini") ) {
+        $pred_model = parse_ini_file("preds/".$uuid."/scenario.ini");
+        return $pred_model;
+    } else {
+        return false;
+    }
+}
 
 ?>
