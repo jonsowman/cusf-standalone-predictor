@@ -9,7 +9,7 @@ function createModel($post_array) {
     $pred_model = array();
 
     // first, populate the prediction model
-    $pred_model['hour'] = $post_array['hour'] + 1; //adjust for GMT
+    $pred_model['hour'] = $post_array['hour']; //adjust for GMT
     $pred_model['min'] = $post_array['min'];
     $pred_model['sec'] = $post_array['sec'];
 

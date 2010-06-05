@@ -214,14 +214,14 @@ function parseCSV(lines) {
         position: launch_pt,
         map: map,
         icon: launch_icon,
-        title: 'Balloon launch ('+launch_lat+', '+launch_lon+')'
+        title: 'Balloon launch ('+launch_lat+', '+launch_lon+') at ' + POSIXtoHM(launch_time)
     });
 
     var land_marker = new google.maps.Marker({
         position: land_pt,
         map:map,
         icon: land_icon,
-        title: 'Predicted Landing ('+land_lat+', '+land_lon+')'
+        title: 'Predicted Landing ('+land_lat+', '+land_lon+') at ' + POSIXtoHM(land_time)
     });
 
     var path_polyline = new google.maps.Polyline({
@@ -379,6 +379,14 @@ function toggleWindow(window_name, linker, onhide, onshow, force) {
     } else {
         appendDebug("toggleWindow force parameter unrecognised");
     }
+}
+
+function POSIXtoHM(timestamp) {
+    var ts = new Date();
+    ts.setTime(timestamp*1000);
+    var adjHours = ts.getHours() + (ts.getTimezoneOffset()/60);
+    var str = adjHours + ":" + ts.getMinutes();
+    return str;
 }
 
 // launch site dropdown switcher
