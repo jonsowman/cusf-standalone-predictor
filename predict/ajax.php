@@ -41,9 +41,9 @@ case "getModelByUUID":
         // populate the array, JSON encode it and return
         $pred_model = parse_ini_file($c_preds_path.$uuid."/".$c_scenario_file);
         if ( verifyModel($pred_model, $software_available) ){
-            $pred_model['valid'] == true;
+            $pred_model['valid'] = true;
         } else {
-            $pred_model['valid'] == false;
+            $pred_model['valid'] = false;
         }
         $pred_model['uuid'] = $uuid;
     }

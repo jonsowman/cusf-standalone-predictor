@@ -28,7 +28,6 @@ function populateFormByUUID(pred_uuid) {
             appendDebug("The server said the model it made was invalid");
         } else {
             // we're good to go, populate the form
-            alert(data);
         }
     }, 'json');
 }
