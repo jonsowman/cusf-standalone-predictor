@@ -73,13 +73,19 @@ function handlePred(pred_uuid) {
 
 function getCSV(pred_uuid) {
     $.get("ajax.php", { "action":"getCSV", "uuid":pred_uuid }, function(data) {
-        appendDebug("Got JSON response from server for flight path, parsing...");
-        if (parseCSV(data) ) {
-            appendDebug("Parsing function returned successfully.");
-            appendDebug("Done, AJAX functions quitting.");
-        } else {
-            appendDebug("The parsing function failed.");
-        }
+            if(data != null) {
+                appendDebug("Got JSON response from server for flight path, parsing...");
+                if (parseCSV(data) ) {
+                    appendDebug("Parsing function returned successfully.");
+                    appendDebug("Done, AJAX functions quitting.");
+                } else {
+                    appendDebug("The parsing function failed.");
+                }
+            } else {
+                appendDebug("Server couldn't find a CSV for that UUID");
+                throwError("Sorry, we couldn't find the data for that UUID. "+
+                    "Please run another prediction.");
+            }
     }, 'json');
 }
 

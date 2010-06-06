@@ -34,7 +34,6 @@ a { text-decoration: underline; color: #333; cursor: pointer; }
     left: 50%;
     top: 50%;
     width: 400px;
-    height: 50px;
     margin-left: -200px;
     margin-top: -50px;
     padding: 1em;
