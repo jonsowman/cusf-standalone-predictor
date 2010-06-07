@@ -1,12 +1,17 @@
 <?php
 require_once("includes/functions.inc.php");
+require_once("includes/config.inc.php");
 
 $action = $_GET['action'];
+
+$software_available = array("gfs", "gfs_hd");
 
 switch($action) {
 case "getCSV":
     $uuid = $_GET['uuid'];
-    $fh = fopen("preds/".$uuid."/flight_path.csv", "r");
+    $tryfile = $c_preds_path.$uuid."/".$c_flight_csv;
+    if(!file_exists($tryfile)) return false;
+    $fh = fopen($tryfile, "r");
     $data = array();
     while (!feof($fh)) {
         $line = trim(fgets($fh));
@@ -18,16 +23,34 @@ case "getCSV":
 
 case "JSONexists":
     $uuid = $_GET['uuid'];
-    if(file_exists("preds/$uuid/progress.json")) {
+    if(file_exists($c_preds_path.$uuid."/".$c_progress_json)) {
         echo true;
     } else {
         echo false;
     }
     break;
 
-case "submitForm":
-    $software_available = array("gfs", "gfs_hd");
+case "getModelByUUID":
+    $uuid = ( isset($_GET['uuid']) ? $_GET['uuid'] : false );
+    if( !uuid ) die ("No uuid given to getModelByUUID");
+    // make a new model
+    $pred_model = array();
+    if ( !file_exists($c_preds_path.$uuid."/".$c_scenario_file) ) {
+        $pred_model['valid'] = false;
+    } else {
+        // populate the array, JSON encode it and return
+        $pred_model = parse_ini_file($c_preds_path.$uuid."/".$c_scenario_file);
+        if ( verifyModel($pred_model, $software_available) ){
+            $pred_model['valid'] = true;
+        } else {
+            $pred_model['valid'] = false;
+        }
+        $pred_model['uuid'] = $uuid;
+    }
+    echo json_encode($pred_model);
+    break;
 
+case "submitForm":
     $pred_model = array();
 
     if ( isset($_POST['submit'])) {

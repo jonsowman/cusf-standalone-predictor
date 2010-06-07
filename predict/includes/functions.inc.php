@@ -9,13 +9,13 @@ function createModel($post_array) {
     $pred_model = array();
 
     // first, populate the prediction model
-    $pred_model['hour'] = $post_array['hour'] + 1; //adjust for GMT
-    $pred_model['min'] = $post_array['min'];
-    $pred_model['sec'] = $post_array['sec'];
+    $pred_model['hour'] = (int)$post_array['hour']; //adjust for GMT
+    $pred_model['min'] = (int)$post_array['min'];
+    $pred_model['sec'] = (int)$post_array['sec'];
 
-    $pred_model['month'] = $post_array['month'];
-    $pred_model['day'] = $post_array['day'];
-    $pred_model['year'] = $post_array['year'];
+    $pred_model['month'] = (int)$post_array['month'];
+    $pred_model['day'] = (int)$post_array['day'];
+    $pred_model['year'] = (int)$post_array['year'];
 
     $pred_model['lat'] = $post_array['lat'];
     $pred_model['lon'] = $post_array['lon'];
@@ -23,7 +23,9 @@ function createModel($post_array) {
     $pred_model['alt'] = $post_array['initial_alt'];
     $pred_model['des'] = $post_array['drag'];
     $pred_model['burst'] = $post_array['burst'];
-    $pred_model['float'] = $post_array['float_time'];
+
+    $pred_model['delta_lat'] = $post_array['delta_lat'];
+    $pred_model['delta_lon'] = $post_array['delta_lon'];
 
     $pred_model['wind_error'] = 0;
 
@@ -55,10 +57,10 @@ function verifyModel($pred_model, $software_available) {
     foreach($pred_model as $idx => $value) {
         if ($idx == "software") {
             if (!in_array($value, $software_available)) return false;
-        } else {
-            if (!is_numeric($value)) {
-                return false;
-            }
+        } else if ($idx == "delta_lat" || $idx == "delta_lon") {
+            if ( $value < 1 || $value > 10 ) return false;
+        } else if (!is_numeric($value)) {
+            return false;
         }
     }
     return true;
@@ -77,7 +79,11 @@ function runPred($pred_model) {
 
     // use `at` to automatically background the task
     $ph = popen("at now", "w");
-    fwrite($ph, "cd /var/www/hab/predict/ && ./predict.py -v --latdelta=3 --londelta=3 -p1 -f5 -t ".$pred_model['timestamp']." --lat=".$predictor_lat." --lon=".$predictor_lon." " . $use_hd . $pred_model['uuid']);
+    fwrite($ph, "cd /var/www/hab/predict/ && ./predict.py -v --latdelta="
+        .$pred_model['delta_lat']." --londelta=".$pred_model['delta_lon']
+        ." -p1 -f5 -t ".$pred_model['timestamp']
+        ." --lat=".$predictor_lat." --lon=".$predictor_lon." " . $use_hd
+        . $pred_model['uuid']);
     fclose($ph);
 
 }
@@ -97,10 +103,22 @@ function makeINI($pred_model) { // makes an ini file
     $w_string .= "month = " . $pred_model['month'] . "\nsecond = " . $pred_model['sec'] . "\n";
     $w_string .= "year = " . $pred_model['year'] . "\nday = " . $pred_model['day'] . "\nminute = ";
     $w_string .= $pred_model['min'] . "\n";
+    // add our predictor stuff
+    $w_string .= "[predictor]\nlat-delta = " . $pred_model['delta_lat'] . "\n";
+    $w_string .= "lon-delta = " . $pred_model['delta_lon'] . "\nsoftware = ";
+    $w_string .= $pred_model['software'] . "\n";
 
     fwrite($fh, $w_string);
     fclose($fh);
 }
 
+function getModelByUUID($uuid) {
+    if ( file_exists("preds/".$uuid."/scenario.ini") ) {
+        $pred_model = parse_ini_file("preds/".$uuid."/scenario.ini");
+        return $pred_model;
+    } else {
+        return false;
+    }
+}
 
 ?>
