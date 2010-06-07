@@ -113,6 +113,12 @@ function initialize() {
     $("#closeErrorWindow").click(function() {
         $("#error_window").fadeOut();
     });
+    $("#about_window_close").click(function() {
+        $("#about_window").fadeOut();
+    });
+    $("#about_window_show").click(function() {
+        $("#about_window").fadeIn();
+    });
     // plot the initial launch location
     plotClick();
     google.maps.event.addListener(map, 'mousemove', function(event) {
@@ -163,6 +169,22 @@ land: <span id="cursor_pred_landrange">?</span>km
 <br />
 <a><span id="showHideDebug">Show Debug</span></a></span> | 
 <a><span id="showHideForm">Hide Launch Card</span></a></span>
+<br />
+<a style="font-size: 10px" id="about_window_show">About this software</a>
+</div>
+
+<!-- the about window -->
+<div id="about_window" class="box">
+<b>Cambridge University Spaceflight Landing Predictor</b>
+<br /><br />
+A tool to predict the flight path and landing location of latex sounding balloons based on wind data from the NOAA.
+<br /><br />
+Written by <a href="http://github.com/jonsowman" target="_blank">Jon Sowman</a> and <a href="http://github.com/randomskk" target="_blank">Adam Greig</a> for <a href="http://www.cuspaceflight.co.uk" target="_blank">CUSF</a>.
+Credit also to <a href="http://github.com/rjw57" target="_blank">Rich Wareham</a> for work on the predictor. Some parts of code taken from old landing prediction software, credit to Rob Anderson, Fergus Noble and Ed Moore.
+<br /><br />
+No guarantee is given for the accuracy, precision or relability of the data produced by this softare, and you use it at your own risk.
+<br /><br />
+<a id="about_window_close">Close</a>
 </div>
 
 <div id="input_form" class="box"> 
