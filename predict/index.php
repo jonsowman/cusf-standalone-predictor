@@ -182,7 +182,7 @@ A tool to predict the flight path and landing location of latex sounding balloon
 Written by <a href="http://github.com/jonsowman" target="_blank">Jon Sowman</a> and <a href="http://github.com/randomskk" target="_blank">Adam Greig</a> for <a href="http://www.cuspaceflight.co.uk" target="_blank">CUSF</a>.
 Credit also to <a href="http://github.com/rjw57" target="_blank">Rich Wareham</a> for work on the predictor. Some parts of code taken from old landing prediction software, credit to Rob Anderson, Fergus Noble and Ed Moore.
 <br /><br />
-No guarantee is given for the accuracy, precision or relability of the data produced by this softare, and you use it at your own risk.
+No guarantee is given for the accuracy, precision or reliability of the data produced by this softare, and you use it at your own risk.
 <br /><br />
 <a id="about_window_close">Close</a>
 </div>
