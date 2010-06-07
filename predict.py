@@ -140,7 +140,7 @@ def main():
     global progress
     try:
         progress_f = open(uuid_path+"progress.json", "w")
-        update_progress(gfs_percent=0)
+        update_progress(gfs_percent=0, gfs_timeremaining="Please wait...")
     except IOError:
         log.error('Error opening progress.json file')
         sys.exit(1)
@@ -262,7 +262,7 @@ def write_file(output_format, data, window, mintime, maxtime):
     latitudes = filter(lambda x: math.fabs(x[1] - window[0]) <= window[1] ,
                         enumerate(hgtprs_global.maps['lat']))
 
-    update_progress(gfs_percent=10)
+    update_progress(gfs_percent=10, gfs_timeremaining="Please wait...")
 
     starttime = datetime.datetime.now()
 
