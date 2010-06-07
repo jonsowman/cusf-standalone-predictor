@@ -167,6 +167,10 @@ function parseCSV(lines) {
     var land_lon;
     var launch_pt;
     var land_pt;
+    var burst_lat;
+    var burst_lon;
+    var burst_pt;
+    var burst_time;
     var launch_time;
     var land_time;
         $.each(lines, function(idx, line) {
@@ -189,7 +193,10 @@ function parseCSV(lines) {
                 
                 if(parseFloat(entry[3]) > max_height) {
                         max_height = parseFloat(entry[3]);
-                        max_point = point;
+                        burst_pt = point;
+                        burst_lat = entry[1];
+                        burst_lon = entry[2];
+                        burst_time = entry[0];
                 }
                 path.push(point);
             }
@@ -244,10 +251,10 @@ function parseCSV(lines) {
     });
 
     var pop_marker = new google.maps.Marker({
-            position: max_point,
+            position: burst_pt,
             map: map,
             icon: burst_img,
-            title: 'Balloon burst (max. altitude: ' + max_height + 'm)',
+            title: 'Balloon burst ('+burst_lat+', '+burst_lon+' at altitude ' + max_height + 'm) at ' + POSIXtoHM(burst_time)
     });
 
     // now add the launch/land markers to map
@@ -393,10 +400,14 @@ function toggleWindow(window_name, linker, onhide, onshow, force) {
 }
 
 function POSIXtoHM(timestamp) {
+    // using JS port of PHP's date()
     var ts = new Date();
     ts.setTime(timestamp*1000);
-    var adjHours = ts.getHours() + (ts.getTimezoneOffset()/60);
-    var str = adjHours + ":" + ts.getMinutes();
+    // account for DST
+    if ( ts.format("I") ==  1 ) {
+        ts.setTime((timestamp-3600)*1000);
+    }
+    var str = ts.format("H:i");
     return str;
 }
 
