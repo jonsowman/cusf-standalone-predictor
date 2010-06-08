@@ -1,6 +1,7 @@
 <?php
 
 $c_admin_email = "jon@hexoc.com";
+$c_location_save_enable = true;
 
 $c_preds_path = "preds/";
 

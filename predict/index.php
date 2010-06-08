@@ -119,10 +119,10 @@ land: <span id="cursor_pred_landrange">?</span>km
 <div id="location_save" class="box">
 <h1>Request Location Save</h1><br />
 <form name="location_save_form" id="location_save_form">
-Latitude: <input type="text" name="req_lat" id="req_lat"><br />
-Longitude: <input type="text" name="req_lon" id="req_lon"><br />
-Altitude: <input type="text" name="req_alt" id="req_alt"><br />
-Name: <input type="text" name="req_name" id="req_name"><br />
+Latitude: <input type="text" name="req_lat" id="req_lat" size="10"><br />
+Longitude: <input type="text" name="req_lon" id="req_lon" size="10"><br />
+Altitude: <input type="text" name="req_alt" id="req_alt" size="10"><br />
+Name: <input type="text" name="req_name" id="req_name" size="10"><br />
 <input type="submit" value="Request" name="submit" id="req_sub_btn">
 </form><br />
 <a id="req_close">Close this window</a>

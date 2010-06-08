@@ -35,15 +35,16 @@ case "locationSave":
     $lon = $_POST['req_lon'];
     $alt = $_POST['req_alt'];
     $locname = $_POST['req_name'];
-    if ( $locname == '' ) {
-        echo "false  ".$locname;
+    if ( $locname == '' || !$c_location_save_enable ) {
+        echo "false";
         return;
     }
     $str = "Latitude: " . $lat . "\n" .
         "Longitude: " . $lon . "\n" .
         "Altitude: " . $alt . "\n" .
         "Name: " . $locname . "\n";
-    if ( mail($c_admin_email, "Location Request Save", $str) ) {
+    $headers = "From: jon@hexoc.com\r\nReply-To:blackhole@hexoc.com\r\nX-Mailer: PHP/".phpversion();
+    if ( mail($c_admin_email, "Location Request Save", $str, $headers) ) {
         echo "true";
     } else {
         echo "false";

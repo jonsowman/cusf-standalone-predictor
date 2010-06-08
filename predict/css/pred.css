@@ -57,8 +57,8 @@ a { text-decoration: underline; color: #333; cursor: pointer; }
     position: absolute;
     left: 50%;
     top: 50%;
-    width: 500px;
-    margin-left: -250px;
+    width: 300px;
+    margin-left: -150px;
     margin-top: -120px;
     padding: 1em;
     text-align: center;
