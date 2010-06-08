@@ -28,6 +28,21 @@ function populateFormByUUID(pred_uuid) {
             appendDebug("The server said the model it made was invalid");
         } else {
             // we're good to go, populate the form
+            $("#lat").val(data.latitude);
+            $("#lon").val(data.longitude);
+            $("#initial_alt").val(data.altitude);
+            $("#hour").val(data.hour);
+            $("#min").val(data.minute);
+            $("#second").val(data.second);
+            $("#day").val(data.day);
+            $("#month").attr("selectedIndex", data.month-1);
+            $("#year").val(data.year);
+            $("#ascent").val(data['ascent-rate']);
+            $("#drag").val(data['descent-rate']);
+            $("#burst").val(data.burst);
+            // now sort the map out
+            SetSiteOther();
+            plotClick();
         }
     }, 'json');
 }
