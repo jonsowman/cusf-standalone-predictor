@@ -37,9 +37,14 @@ function populateFormByUUID(pred_uuid) {
             $("#day").val(data.day);
             $("#month").attr("selectedIndex", data.month-1);
             $("#year").val(data.year);
+            // we have to use [] notation for
+            // values that have -s in them
             $("#ascent").val(data['ascent-rate']);
             $("#drag").val(data['descent-rate']);
             $("#burst").val(data.burst);
+            $("#software").val(data.software);
+            $("#delta_lat").val(data['lat-delta']);
+            $("#delta_lon").val(data['lon-delta']);
             // now sort the map out
             SetSiteOther();
             plotClick();
