@@ -1,0 +1,27 @@
+{
+    "Churchill": {
+        "latitude"  :   52.2135,
+        "longitude" :   0.0964,
+        "altitude"  :   0,
+    },
+    "EARS": {
+        "latitude"  :   52.2511,
+        "longitude" :   -0.0927,
+        "altitude"  :   0.
+    },
+    "Glenrothes": {
+        "latitude"  :   56.13,
+        "longitude" :   -3.06,
+        "altitude"  :   0,
+    },
+    "Bujaraloz, Monegros": {
+        "latitude"  :   41.4958,
+        "longitude" :   -0.15797,
+        "altitude"  :   0,
+    },
+    "Adelaide": {
+        "altitude"  :   0,
+        "latitude"  :   -34.9499,
+        "longitude" :   138.5194,
+    }
+}

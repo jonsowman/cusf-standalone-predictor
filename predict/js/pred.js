@@ -75,6 +75,29 @@ function showMousePos(GLatLng) {
     
 }
 
+function populateLaunchSite() {
+    $.getJSON("sites.json", function(sites) {
+        $.each(sites, function(sitename, site) {
+            $("#site").append($('<option></option>').val(sitename).html(sitename));
+        });
+        $("#site").append($('<option></option>').val("Other").html("Other"));
+    });
+}
+
+function changeLaunchSite() {
+    var selectedName = $("#site").val();
+    $.getJSON("sites.json", function(sites) {
+        $.each(sites, function(sitename, site) {
+           if ( selectedName == sitename ) {
+                $("#lat").val(site.latitude);
+                $("#lon").val(site.longitude);
+                $("#initial_alt").val(site.altitude);
+           }
+        });
+        plotClick();
+    });
+}
+
 function throwError(data) {
     $("#error_message").html(data);
     $("#error_window").fadeIn();
@@ -530,6 +553,9 @@ function setupEventHandlers() {
     $("#delta_lon").change(function() {
         drawDeltaSquare(map);
     });
+    $("#site").change(function() {
+        changeLaunchSite();
+    });
     google.maps.event.addListener(map, 'mousemove', function(event) {
         showMousePos(event.latLng);
     });
@@ -576,8 +602,7 @@ function UpdateLaunchSite(id) {
 }
 
 function SetSiteOther() {
-        optOther = document.getElementById("other");
-        optOther.selected = true;
+    $("#site").val("Other");
 }
 
 rad = function(x) {return x*Math.PI/180;}

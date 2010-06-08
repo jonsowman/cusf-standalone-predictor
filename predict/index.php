@@ -50,6 +50,7 @@ function initialize() {
     }
 
     initMap(52, 0, 8);
+    populateLaunchSite();
     setupEventHandlers();
     // make launch card draggable
     $("#input_form").draggable({containment: '#map_canvas'});
@@ -134,15 +135,7 @@ No guarantee is given for the accuracy, precision or reliability of the data pro
 	<tr>
 		<td>Launch Site:</td>
 		<td>
-			<select id="site" name="launchsite" onchange="UpdateLaunchSite(this.selectedIndex)">
-				<option value="Churchill">Churchill</option>
-				<option value="EARS">EARS</option>
-				<option value="Glenrothes">Glenrothes</option>
-				<option value="Bujaraloz, Monegros">Bujaraloz, Monegros</option>
-				<option value="Adelaide Airport">Adelaide Airport</option>
-                                <option id="other" value="other"<?php
-                                if ($current_uuid !=0) echo " selected=\"selected\"";
-                                ?>>Other</option>
+			<select id="site" name="launchsite">
 			</select>
 		</td>
 	<tr>
