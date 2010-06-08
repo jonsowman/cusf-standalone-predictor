@@ -115,6 +115,19 @@ land: <span id="cursor_pred_landrange">?</span>km
 <a style="font-size: 10px" id="about_window_show">About this software</a>
 </div>
 
+<!-- save location -->
+<div id="location_save" class="box">
+<h1>Request Location Save</h1><br />
+<form name="location_save_form" id="location_save_form">
+Latitude: <input type="text" name="req_lat" id="req_lat"><br />
+Longitude: <input type="text" name="req_lon" id="req_lon"><br />
+Altitude: <input type="text" name="req_alt" id="req_alt"><br />
+Name: <input type="text" name="req_name" id="req_name"><br />
+<input type="submit" value="Request" name="submit" id="req_sub_btn">
+</form><br />
+<a id="req_close">Close this window</a>
+</div>
+
 <!-- the about window -->
 <div id="about_window" class="box">
 <b>Cambridge University Spaceflight Landing Predictor (<a href="http://github.com/jonsowman/cusf-standalone-predictor" target="_blank">github</a>)</b>
@@ -152,7 +165,7 @@ No guarantee is given for the accuracy, precision or reliability of the data pro
     </tr>
     <tr>
     <td><a id="setWithClick">Set with map</a></td>
-    <td><a id="requestLocationSave">Request to save</a></td>
+    <td><a id="req_open">Request to save</a></td>
     </tr>
     <tr>
         <td>Launch altitude (m):</td>

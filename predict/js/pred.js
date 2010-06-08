@@ -514,6 +514,19 @@ function setupEventHandlers() {
             }
         }
     });
+    $("#location_save_form").ajaxForm({
+        url: 'ajax.php?action=locationSave',
+        type: 'POST',
+        success: function(data) {
+            if (data == "true") {
+                appendDebug("Server returned OK - closing window");
+                $("#location_save").fadeOut();
+            } else {
+                alert("The server rejected the request for location save");
+                appendDebug("Failed to request location save from server");
+            }
+        }
+    });
     // activate the "Set with Map" link
     $("#setWithClick").click(function() {
         setLatLonByClick(true);
@@ -555,6 +568,17 @@ function setupEventHandlers() {
     });
     $("#site").change(function() {
         changeLaunchSite();
+    });
+    $("#req_close").click(function() {
+            $("#location_save").fadeOut();
+    });
+    $("#req_open").click(function() {
+            $("#req_lat").val($("#lat").val());
+            $("#req_lon").val($("#lon").val());
+            $("#req_alt").val($("#initial_alt").val());
+            // this is bad, use a geocoder to guess it
+            $("#req_name").val("Unnamed");
+            $("#location_save").fadeIn();
     });
     google.maps.event.addListener(map, 'mousemove', function(event) {
         showMousePos(event.latLng);

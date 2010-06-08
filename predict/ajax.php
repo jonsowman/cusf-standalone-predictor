@@ -30,6 +30,26 @@ case "JSONexists":
     }
     break;
 
+case "locationSave":
+    $lat = $_POST['req_lat'];
+    $lon = $_POST['req_lon'];
+    $alt = $_POST['req_alt'];
+    $locname = $_POST['req_name'];
+    if ( $locname == '' ) {
+        echo "false  ".$locname;
+        return;
+    }
+    $str = "Latitude: " . $lat . "\n" .
+        "Longitude: " . $lon . "\n" .
+        "Altitude: " . $alt . "\n" .
+        "Name: " . $locname . "\n";
+    if ( mail($c_admin_email, "Location Request Save", $str) ) {
+        echo "true";
+    } else {
+        echo "false";
+    }
+    break;
+
 case "getModelByUUID":
     $uuid = ( isset($_GET['uuid']) ? $_GET['uuid'] : false );
     if( !uuid ) die ("No uuid given to getModelByUUID");

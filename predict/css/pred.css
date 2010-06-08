@@ -53,6 +53,18 @@ a { text-decoration: underline; color: #333; cursor: pointer; }
     display: none;
 }
 
+#location_save {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 500px;
+    margin-left: -250px;
+    margin-top: -120px;
+    padding: 1em;
+    text-align: center;
+    display: none;
+}
+
 .box {
 	position: absolute; 
 	background-color: white; 

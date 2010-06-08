@@ -1,5 +1,7 @@
 <?php
 
+$c_admin_email = "jon@hexoc.com";
+
 $c_preds_path = "preds/";
 
 $c_scenario_file = "scenario.ini";
