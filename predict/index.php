@@ -95,12 +95,11 @@ function initialize() {
     $("#input_form").draggable({containment: '#map_canvas'});
     if ( current_uuid != '0' ) {
         appendDebug("Got an old UUID to plot:<br>" + current_uuid);
-        appendDebug("Trying to populate form with scenario data");
+        appendDebug("Trying to populate form with scenario data...");
         populateFormByUUID(current_uuid);
         appendDebug("Trying to get flight path from server...");
         getCSV(current_uuid);
     }
-    $("#scenario_template").hide();
     $("#showHideDebug").click(function() {
         toggleWindow("scenario_template", "showHideDebug", "Show Debug", "Hide Debug");
     });

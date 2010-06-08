@@ -98,6 +98,7 @@ a { text-decoration: underline; color: #333; cursor: pointer; }
 	border-bottom: none;
         max-height: 400px;
         overflow: scroll;
+        display: none;
 }
 
 #input_form {

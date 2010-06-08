@@ -285,6 +285,10 @@ function parseCSV(lines) {
     map_items['pop_marker'] = pop_marker;
     map_items['path_polyline'] = path_polyline;
 
+    // we wiped off the old delta square,
+    // and it may have changed anyway, so re-plot
+    drawDeltaSquare(map);
+    
     // pan to the new position
     map.panTo(launch_pt);
     map.setZoom(8);
