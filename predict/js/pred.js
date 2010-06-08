@@ -293,6 +293,19 @@ function parseCSV(lines) {
 
 }
 
+function drawPolygon(points, gmap_object) {
+    var newPoly = new google.maps.Polygon({
+        paths: points,
+        strokeColor: "#FF0000",
+        strokeOpacity: 0.4,
+        fillColor: "#FFFFFF",
+        fillOpacity: 0,
+        strokeWeight: 2,
+    });
+    map_items['delta_square'] = newPoly;
+    newPoly.setMap(gmap_object);
+}
+
 function plotClick() {
     // clear the old marker
     clearMapItems();
@@ -307,10 +320,30 @@ function plotClick() {
         title: 'Currently selected launch location ('+click_lat+', '+click_lon+')'
     });
     map_items['clickMarker'] = clickMarker;
+    // redraw the delta square
+    drawDeltaSquare(map);
     map.panTo(click_pt);
     map.setZoom(8);
 }
     
+function drawDeltaSquare(map) {
+    // clear any old squares
+    if ( map_items['delta_square'] ) map_items['delta_square'].setMap(null);
+    // get the values from the form
+    var lat = parseFloat($("#lat").val());
+    var lon = parseFloat($("#lon").val());
+    var dlon = parseFloat($("#delta_lat").val());
+    var dlat = parseFloat($("#delta_lon").val());
+    // make a rectange of points
+    var points = [
+    new google.maps.LatLng(lat+dlat, lon+dlon),
+    new google.maps.LatLng(lat-dlat, lon+dlon),
+    new google.maps.LatLng(lat-dlat, lon-dlon),
+    new google.maps.LatLng(lat+dlat, lon-dlon)
+    ]
+    // write the poly to the map
+    drawPolygon(points, map);
+}
 
 function setFormLatLon(GLatLng) {
     $("#lat").val(GLatLng.lat().toFixed(4));

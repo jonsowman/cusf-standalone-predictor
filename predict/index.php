@@ -120,6 +120,12 @@ function initialize() {
     $("#about_window_show").click(function() {
         $("#about_window").fadeIn();
     });
+    $("#delta_lat").change(function() {
+        drawDeltaSquare(map);
+    });
+    $("#delta_lon").change(function() {
+        drawDeltaSquare(map);
+    });
     // plot the initial launch location
     plotClick();
     google.maps.event.addListener(map, 'mousemove', function(event) {
