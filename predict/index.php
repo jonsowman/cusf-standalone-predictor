@@ -43,56 +43,18 @@ var clickListener;
 var clickMarker;
 
 function initialize() {
+    // are we trying to display an old prediction?
     if(window.location.hash != "") {
         var ln = window.location.hash.split("=");
         current_uuid = ln[1];
     }
-    // make the map and set center
-    var latlng = new google.maps.LatLng(52, 0);
-    var myOptions = {
-      zoom: 8,
-      scaleControl: true,
-      scaleControlOptions: { position: google.maps.ControlPosition.BOTTOM_LEFT } ,
-      mapTypeId: google.maps.MapTypeId.TERRAIN,
-      center: latlng,
-    };
-    map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
-    // attach form submit event handler to launch card
-    $("#modelForm").ajaxForm({
-        url: 'ajax.php?action=submitForm',
-        type: 'POST',
-        success: function(data) {
-            var data_split = data.split("|");
-            if ( data_split[0] == 0 ) {
-                appendDebug("The server rejected the submitted form data");
-                throwError("The server rejected the submitted form data");
-                resetGUI();
-            } else {
-                predSub();
-                appendDebug("The server accepted the form data");
-                // update the global current_uuid variable
-                current_uuid = data_split[1];
-                appendDebug("The server gave us uuid:<br>" + current_uuid);
-                appendDebug("Starting to poll for progress JSON");
-                handlePred(current_uuid);
-            }
-        }
-    });
-    // activate the "Set with Map" link
-    $("#setWithClick").click(function() {
-        setLatLonByClick(true);
-    });
-    // attach onchange handlers to the lat/long boxes
-    $("#lat").change(function() {
-        plotClick();
-    });
-    $("#lon").change(function() {
-        plotClick();
-    });
-    $("#site").change(function() {
-        plotClick();
-    });
+
+    initMap(52, 0, 8);
+    setupEventHandlers();
+    // make launch card draggable
     $("#input_form").draggable({containment: '#map_canvas'});
+
+    // see if we want an old prediction displayed
     if ( current_uuid != '0' ) {
         appendDebug("Got an old UUID to plot:<br>" + current_uuid);
         appendDebug("Trying to populate form with scenario data...");
@@ -100,36 +62,9 @@ function initialize() {
         appendDebug("Trying to get flight path from server...");
         getCSV(current_uuid);
     }
-    $("#showHideDebug").click(function() {
-        toggleWindow("scenario_template", "showHideDebug", "Show Debug", "Hide Debug");
-    });
-    $("#showHideDebug_status").click(function() {
-        toggleWindow("scenario_template", "showHideDebug", "Show Debug", "Hide Debug");
-    });
-    $("#showHideForm").click(function() {
-        toggleWindow("input_form", "showHideForm", "Show Launch Card",
-            "Hide Launch Card");
-    });
-    $("#closeErrorWindow").click(function() {
-        $("#error_window").fadeOut();
-    });
-    $("#about_window_close").click(function() {
-        $("#about_window").fadeOut();
-    });
-    $("#about_window_show").click(function() {
-        $("#about_window").fadeIn();
-    });
-    $("#delta_lat").change(function() {
-        drawDeltaSquare(map);
-    });
-    $("#delta_lon").change(function() {
-        drawDeltaSquare(map);
-    });
+
     // plot the initial launch location
     plotClick();
-    google.maps.event.addListener(map, 'mousemove', function(event) {
-        showMousePos(event.latLng);
-    });
 }
 
 
