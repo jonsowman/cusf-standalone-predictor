@@ -42,37 +42,9 @@ var burst_img = "images/pop-marker.png";
 var clickListener;
 var clickMarker;
 
-function initialize() {
-    // are we trying to display an old prediction?
-    if(window.location.hash != "") {
-        var ln = window.location.hash.split("=");
-        current_uuid = ln[1];
-    }
-
-    initMap(52, 0, 8);
-    populateLaunchSite();
-    setupEventHandlers();
-    // make launch card draggable
-    $("#input_form").draggable({containment: '#map_canvas'});
-
-    // see if we want an old prediction displayed
-    if ( current_uuid != '0' ) {
-        appendDebug("Got an old UUID to plot:<br>" + current_uuid);
-        appendDebug("Trying to populate form with scenario data...");
-        populateFormByUUID(current_uuid);
-        appendDebug("Trying to get flight path from server...");
-        getCSV(current_uuid);
-    }
-
-    // plot the initial launch location
-    plotClick();
-}
-
-
-
 </script>
 </head>
-<body onload="initialize()" bgcolor="#000000">
+<body bgcolor="#000000">
 
 <div id="map_canvas" style="width:100%; height:100%"></div>
 

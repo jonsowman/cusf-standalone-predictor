@@ -9,7 +9,35 @@
  */
 
 $(document).ready(function() {
-        // do nothing
+    // are we trying to display an old prediction?
+    if(window.location.hash != "") {
+        var ln = window.location.hash.split("=");
+        var posteq = ln[1];
+        if ( posteq.length != 40 ) {
+            throwError("The supplied hashstring was not a valid UUID.");
+            appendDebug("The hashstring was not the expected length");
+        } else {
+            current_uuid = posteq;
+        }
+    }
+
+    initMap(52, 0, 8);
+    populateLaunchSite();
+    setupEventHandlers();
+    // make launch card draggable
+    $("#input_form").draggable({containment: '#map_canvas'});
+
+    // see if we want an old prediction displayed
+    if ( current_uuid != '0' ) {
+        appendDebug("Got an old UUID to plot:<br>" + current_uuid);
+        appendDebug("Trying to populate form with scenario data...");
+        populateFormByUUID(current_uuid);
+        appendDebug("Trying to get flight path from server...");
+        getCSV(current_uuid);
+    }
+
+    // plot the initial launch location
+    plotClick();
 });
 
 function predSub() {
