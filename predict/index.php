@@ -94,7 +94,7 @@ land: <span id="cursor_pred_landrange">?</span>km
 Latitude: <input type="text" name="req_lat" id="req_lat" size="10"><br />
 Longitude: <input type="text" name="req_lon" id="req_lon" size="10"><br />
 Altitude: <input type="text" name="req_alt" id="req_alt" size="10"><br />
-Name: <input type="text" name="req_name" id="req_name" size="10"><br />
+Site Name: <input type="text" name="req_name" id="req_name" size="10"><br />
 <input type="submit" value="Request" name="submit" id="req_sub_btn">
 </form><br />
 <a id="req_close">Close this window</a>
@@ -216,7 +216,7 @@ No guarantee is given for the accuracy, precision or reliability of the data pro
 	<tr>
                 <td>
                 </td>
-		<td><input type="submit" name="submit" id="run_pred_btn" value="Run Prediction!"></td>
+		<td><input type="submit" name="submit" id="run_pred_btn" value="Run Prediction"></td>
 	</tr>
 </table>
 </form>
