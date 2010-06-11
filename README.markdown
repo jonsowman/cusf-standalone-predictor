@@ -4,11 +4,11 @@ Working on improving the Cambridge University Spaceflight landing predictor, use
 
 ## Install
 
-The source for the prediction software itself is in pred_src and instructions for building it can be found there.  
+The source for the prediction software itself is in `pred_src` and instructions for building it can be found there.  
 
 The `predict/preds/` directory needs to have rwx access by the PHP interpreter and the `predict.py` python script. You will need to install the following python packages: pydap, numpy, json, simple-json.  
 
-Other than that, just clone this repo to a non web-accessible folder and create symlinks to the `predict/` and `hourly-predictions/` directorys in the repo.  
+Other than that, just clone this repo to a non web-accessible folder and create symlinks to the `predict/` and `hourly-predictions/` directories in the repo.  
 
 ## Information
 
