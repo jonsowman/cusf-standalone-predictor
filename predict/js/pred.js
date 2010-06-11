@@ -76,6 +76,7 @@ function showMousePos(GLatLng) {
 }
 
 function populateLaunchSite() {
+    $("#site > option").remove();
     $.getJSON("sites.json", function(sites) {
         $.each(sites, function(sitename, site) {
             $("#site").append($('<option></option>').val(sitename).html(sitename));
