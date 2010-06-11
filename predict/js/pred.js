@@ -497,20 +497,23 @@ function setupEventHandlers() {
     $("#modelForm").ajaxForm({
         url: 'ajax.php?action=submitForm',
         type: 'POST',
+        dataType: 'json',
         success: function(data) {
-            var data_split = data.split("|");
-            if ( data_split[0] == 0 ) {
+            if ( data.valid == "false" ) {
                 appendDebug("The server rejected the submitted form data");
-                throwError("The server rejected the submitted form data");
+                throwError("The server rejected the submitted form data: \n" +
+                    data.error);
                 resetGUI();
-            } else {
+            } else if ( data.valid == "true" ) {
                 predSub();
                 appendDebug("The server accepted the form data");
                 // update the global current_uuid variable
-                current_uuid = data_split[1];
+                current_uuid = data.uuid;
                 appendDebug("The server gave us uuid:<br>" + current_uuid);
                 appendDebug("Starting to poll for progress JSON");
                 handlePred(current_uuid);
+            } else {
+                appendDebug("data.valid was not a recognised state: " + data.valid);
             }
         }
     });
