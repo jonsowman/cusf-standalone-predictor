@@ -60,7 +60,10 @@ function populateFormByUUID(pred_uuid) {
             $("#lon").val(data.longitude);
             $("#initial_alt").val(data.altitude);
             $("#hour").val(data.hour);
-            $("#min").val(data.minute);
+            // we need to make minutes be "04" instead of "4"
+            var scenario_minute = data.minute;
+            if ( scenario_minute < 10 ) scenario_minute = "0" + scenario_minute;
+            $("#min").val(scenario_minute);
             $("#second").val(data.second);
             $("#day").val(data.day);
             $("#month").attr("selectedIndex", data.month-1);
@@ -288,6 +291,7 @@ function parseCSV(lines) {
     var flighttime = land_time - launch_time;
     var f_hours = Math.floor((flighttime % 86400) / 3600);
     var f_minutes = Math.floor(((flighttime % 86400) % 3600) / 60);
+    if ( f_minutes < 10 ) f_minutes = "0"+f_minutes;
     flighttime = f_hours + "hr" + f_minutes;
     $("#cursor_pred_range").html(range);
     $("#cursor_pred_time").html(flighttime);
