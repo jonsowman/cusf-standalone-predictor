@@ -23,5 +23,10 @@
         "altitude"  :   0,
         "latitude"  :   -34.9499,
         "longitude" :   138.5194,
+    },
+    "Elvington": {
+        "altitude"  :   0,
+        "latitude"  :   53.9231,
+        "longitude" :   -0.9935,
     }
 }
