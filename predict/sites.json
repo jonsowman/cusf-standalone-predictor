@@ -28,5 +28,10 @@
         "altitude"  :   0,
         "latitude"  :   53.9231,
         "longitude" :   -0.9935,
+    },
+    "Boston Spa": { 
+        "latitude"  :   53.8997,
+        "longitude" :   -1.3629,
+        "altitude"  :   0,
     }
 }
