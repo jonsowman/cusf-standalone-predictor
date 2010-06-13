@@ -106,11 +106,17 @@ function showMousePos(GLatLng) {
 function populateLaunchSite() {
     $("#site > option").remove();
     $.getJSON("sites.json", function(sites) {
+        alert("Trying to populate launch sites...");
         $.each(sites, function(sitename, site) {
-            $("#site").append($('<option></option>').val(sitename).html(sitename));
+            //$("#site").append($('<option></option>').val(sitename).html(sitename));
+            $("<option>").attr("value", sitename).text(sitename).appendTo("#site");
         });
-        $("#site").append($('<option></option>').val("Other").html("Other"));
+        //$("#site").append($('<option></option>').val("Other").html("Other"));
+        $("<option>").attr("value", "Other").text("Other").appendTo("#site");
+        alert("Done populating list");
+        return true;
     });
+    return true;
 }
 
 function changeLaunchSite() {

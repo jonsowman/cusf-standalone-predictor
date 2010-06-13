@@ -58,7 +58,7 @@ var clickMarker;
 <div id="prediction_percent"></div>
 <br>
 <span id="prediction_status"></span><br>
-<a><span id="showHideDebug_status">Toggle Debug</span></a></span>
+<a><span id="showHideDebug_status">Toggle Debug</span></a>
 </div>
 
 <div id="error_window" class="box">
@@ -81,8 +81,8 @@ Cursor range from launch: <span id="cursor_pred_launchrange">?</span>km,
 land: <span id="cursor_pred_landrange">?</span>km
 </span>
 <br />
-<a><span id="showHideDebug">Show Debug</span></a></span> | 
-<a><span id="showHideForm">Hide Launch Card</span></a></span>
+<a><span id="showHideDebug">Show Debug</span></a> | 
+<a><span id="showHideForm">Hide Launch Card</span></a>
 <br />
 <a style="font-size: 10px" id="about_window_show">About this software</a>
 </div>
