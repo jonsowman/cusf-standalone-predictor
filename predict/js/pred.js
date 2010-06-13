@@ -173,7 +173,7 @@ function getJSONProgress(pred_uuid) {
     $.ajax({
         url:"preds/"+pred_uuid+"/progress.json",
         dataType:'json',
-        timeout: 500,
+        timeout: 1000,
         // complete: function(data, httpstatus) {
         //     appendDebug(httpstatus);
         // },

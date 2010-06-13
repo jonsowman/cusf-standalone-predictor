@@ -33,5 +33,10 @@
         "latitude"  :   53.8997,
         "longitude" :   -1.3629,
         "altitude"  :   0
+    },
+    "Wistow": {
+        "altitude"  :   0,
+        "latitude"  :   -35.1217,
+        "longitude" :   138.8503
     }
 }
