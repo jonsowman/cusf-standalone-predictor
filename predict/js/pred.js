@@ -28,6 +28,7 @@ $(document).ready(function() {
     $("#input_form").draggable({containment: '#map_canvas', handle: 'img.handle', snap: '#map_canvas'});
     $("#scenario_info").draggable({containment: '#map_canvas', handle: 'img.handle', snap: '#map_canvas'});
     $("#run_pred_btn").button();
+    $("#req_sub_btn").button();
 
     // see if we want an old prediction displayed
     if ( current_uuid != '0' ) {
@@ -598,11 +599,16 @@ function setupEventHandlers() {
     $("#closeErrorWindow").click(function() {
         $("#error_window").fadeOut();
     });
-    $("#about_window_close").click(function() {
-        $("#about_window").fadeOut();
-    });
     $("#about_window_show").click(function() {
-        $("#about_window").fadeIn();
+        $("#about_window").dialog({
+            modal:true,
+            width:400,
+            buttons: {
+                Close: function() {
+                        $(this).dialog('close');
+                    }
+            }
+        });
     });
     $("#delta_lat").change(function() {
         drawDeltaSquare(map);
