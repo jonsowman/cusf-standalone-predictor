@@ -25,7 +25,8 @@ $(document).ready(function() {
     populateLaunchSite();
     setupEventHandlers();
     // make launch card draggable
-    $("#input_form").draggable({containment: '#map_canvas'});
+    $("#input_form").draggable({containment: '#map_canvas', handle: 'img.handle', snap: '#map_canvas'});
+    $("#scenario_info").draggable({containment: '#map_canvas', handle: 'img.handle', snap: '#map_canvas'});
 
     // see if we want an old prediction displayed
     if ( current_uuid != '0' ) {

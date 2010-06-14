@@ -69,6 +69,7 @@ var clickMarker;
 
 <!-- scenario info -->
 <div id="scenario_info" class="box">
+<img src="images/drag_handle.png" class="handle" />
 <h1>Scenario Information</h1>
 <span id="cursor_info">Current mouse position: 
 Lat: <span id="cursor_lat">?</span> 
@@ -115,6 +116,7 @@ No guarantee is given for the accuracy, precision or reliability of the data pro
 </div>
 
 <div id="input_form" class="box"> 
+<img class="handle" src="images/drag_handle.png" />
 <form action="" id="modelForm" name="modelForm">
 <table>
 	<tr>

@@ -114,7 +114,8 @@ a { text-decoration: underline; color: #333; cursor: pointer; }
 }
 
 #input_form {
-    height:370px;
+    max-height:370px;
+    overflow: auto;
     width: 400px;
     padding: 5px;
     bottom: 0; right: 0;
@@ -124,12 +125,18 @@ a { text-decoration: underline; color: #333; cursor: pointer; }
     position: absolute;
     top: 25px;
     right: 0px;
-    border-right: none;
     width: 400px;
     text-align:center;
     padding: 10px;
 }
 
+img.handle {
+    position: relative;
+    float:left;
+    top:0px;
+    left:0px;
+    z-index:100;
+}
 
 td.right-td {
 	text-align: right;
