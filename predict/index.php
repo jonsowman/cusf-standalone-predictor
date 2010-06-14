@@ -102,7 +102,7 @@ Site Name: <input type="text" name="req_name" id="req_name" size="10"><br />
 </div>
 
 <!-- the about window -->
-<div id="about_window">
+<div id="about_window" style="display:none">
 <b>Cambridge University Spaceflight Landing Predictor (<a href="http://github.com/jonsowman/cusf-standalone-predictor" target="_blank">github</a>)</b>
 <br /><br />
 A tool to predict the flight path and landing location of latex sounding balloons.
