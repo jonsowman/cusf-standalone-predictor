@@ -4,9 +4,9 @@ Working on improving the Cambridge University Spaceflight landing predictor, a w
 
 ## Install
 
-The source for the predictor itself is in `pred_src` and instructions for building it can be found there.  
+The source for the predictor itself is in `pred_src/` and instructions for building it can be found there.  
 
-The `predict/preds/` and `gfs` directories needs to have rwx access by the PHP interpreter and the `predict.py` python script. You will need to install the following python packages: pydap, numpy, json, simple-json. We use `at` to automatically background the predictor, so you will need that installed.  
+The `predict/preds/` and `gfs/` directories need to have rwx access by the PHP interpreter and the `predict.py` python script. You will need to install the following python packages: pydap, numpy, json, simple-json. We use `at` to automatically background the predictor, so you will need that installed.  
 
 Other than that, just clone this repo to a non web-accessible folder and create symlinks to the `predict/` and `hourly-predictions/` directories in the repo.  
 
@@ -18,7 +18,7 @@ A cronjob should be run to delete directories in the `preds/` directory after a 
 
 The directory names are UUIDs comprised of an SHA1 hash of the launch parameters, and re-running predictions will overwrite data in the existing directory, rather than create a new one.  
 
-## Credits
+## Credits & Acknowledgments
 
 Credit as detailed in individual files, but notably:  
 * Rich Wareham - The new predictor and the hourly predictor system  
