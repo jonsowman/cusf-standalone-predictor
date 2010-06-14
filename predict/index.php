@@ -2,15 +2,6 @@
 require_once("includes/functions.inc.php");
 // get the time for pre-populating the form
 $time = time() + 3600;
-$current_uuid = ( isset($_GET['uuid'])? $_GET['uuid'] : "0" );
-// if we were given a UUID, try and construct its model
-if ( $current_uuid != 0 ) {
-    if ( $pred_model = getModelByUUID($current_uuid) ) {
-    } else {
-        // assume we weren't given a UUID (bad FIXME)
-        $current_uuid = 0;
-    }
-}
 ?>
 
 <html>
@@ -32,7 +23,7 @@ google.load("jqueryui", "1.8.1");
 <script type="text/javascript">
 
 var ajaxEventHandle;
-var current_uuid = '<?php echo $current_uuid ?>';
+var current_uuid = '0';
 
 var map;
 var map_items = [];
@@ -44,15 +35,18 @@ var clickMarker;
 
 </script>
 </head>
-<body bgcolor="#000000">
+<body>
 
-<div id="map_canvas" style="width:100%; height:100%"></div>
+<!-- map canvas -->
+<div id="map_canvas"></div>
 
+<!-- debug window -->
 <div id="scenario_template" class="box">
 <h1>Debug Window</h1>
 <span id="debuginfo">No Messages</span>
 </div>
 
+<!-- prediction progress window -->
 <div id="status_message" class="box">
 <div id="prediction_progress"></div>
 <div id="prediction_percent"></div>
@@ -61,6 +55,7 @@ var clickMarker;
 <a><span id="showHideDebug_status">Toggle Debug</span></a>
 </div>
 
+<!-- error window -->
 <div id="error_window" class="box">
 <span id="error_message">Nothing here!</span>
 <br /><br />
@@ -102,7 +97,7 @@ Site Name: <input type="text" name="req_name" id="req_name" size="10"><br />
 </div>
 
 <!-- the about window -->
-<div id="about_window" style="display:none">
+<div id="about_window">
 <b>Cambridge University Spaceflight Landing Predictor (<a href="http://github.com/jonsowman/cusf-standalone-predictor" target="_blank">github</a>)</b>
 <br /><br />
 A tool to predict the flight path and landing location of latex sounding balloons.
@@ -113,6 +108,7 @@ Credit also to <a href="http://github.com/rjw57" target="_blank">Rich Wareham</a
 No guarantee is given for the accuracy, precision or reliability of the data produced by this software, and you use it entirely at your own risk. For more information, see #highaltitude on irc.freenode.net.
 </div>
 
+<!-- launch card form -->
 <div id="input_form" class="box"> 
 <img class="handle" src="images/drag_handle.png" />
 <form action="" id="modelForm" name="modelForm">
@@ -125,15 +121,11 @@ No guarantee is given for the accuracy, precision or reliability of the data pro
 		</td>
 	<tr>
 		<td>Latitude:</td>
-                <td><input id="lat" type="text" name="lat" value="<?php
-                    echo ($current_uuid!=0 ? $pred_model['latitude'] : "52.2135");
-                    ?>" onKeyDown="SetSiteOther()"></td>
+                <td><input id="lat" type="text" name="lat" value="52.2135" onKeyDown="SetSiteOther()"></td>
 	</tr>
     <tr>
         <td>Longitude:</td>
-        <td><input id="lon" type="text" name="lon" value="<?php
-            echo ($current_uuid!=0 ? $pred_model['longitude'] : "0.0964");
-            ?>" onKeyDown="SetSiteOther()"></td>
+        <td><input id="lon" type="text" name="lon" value="0.0964" onKeyDown="SetSiteOther()"></td>
     </tr>
     <tr>
     <td><a id="setWithClick">Set with map</a></td>
@@ -141,30 +133,27 @@ No guarantee is given for the accuracy, precision or reliability of the data pro
     </tr>
     <tr>
         <td>Launch altitude (m):</td>
-        <td><input id="initial_alt" type="text" name="initial_alt" value="<?php
-                echo ($current_uuid!=0 ? $pred_model['altitude'] : "0");?>"></td>
+        <td><input id="initial_alt" type="text" name="initial_alt" value="0"></td>
     </tr>
 	<tr>
 		<td>Launch Time:</td>
 		<td>
                         <input id="hour" type="text" name="hour" value="<?php
-                    echo ($current_uuid!=0 ? $pred_model['hour'] : date("H", $time));
+                    echo date("H", $time);
                     ?>" maxlength="2" size="2"> :
                         <input id="min" type="text" name="min" value="<?php
-                    echo ($current_uuid!=0 ? $pred_model['minute'] : date("i", $time));
+                    echo date("i", $time);
                     ?>" maxlength="2" size="2">
 			<input id="sec" type="hidden" name="second" value="0"></td></tr>
 			<tr><td>Launch Date:</td><td>
                         <input id="day" type="text" name="day" value="<?php
-                    echo ($current_uuid!=0 ? $pred_model['day'] : date("d", $time));
+                    echo date("d", $time);
                     ?>" maxlength="2" size="2">
                         <select id="month" name="month"><?php
                     // php enumeration
                     for($i=1;$i<=12;$i++) {
                         echo "<option value=\"" . $i . "\"";
-                        if ($i == date("n", $time) && $current_uuid==0 ) {
-                            echo " selected=\"selected\"";
-                        } else if ($current_uuid != 0 && $i == $pred_model['month']) {
+                        if ($i == date("n", $time) ) {
                             echo " selected=\"selected\"";
                         }
                         echo ">".date("M", mktime(0,0,0,$i,11,1978))."</option>\n";
@@ -172,26 +161,20 @@ No guarantee is given for the accuracy, precision or reliability of the data pro
 
                     ?></select>
                         <input id="year" type="text" name="year" value="<?php
-                    echo ($current_uuid!=0 ? $pred_model['year'] : date("Y", $time));
+                    echo date("Y", $time);
                     ?>" maxlength="4" size="4">
 		</td>
     <tr>
         <td>Ascent Rate (m/s):</td>
-        <td><input id="ascent" type="text" name="ascent" value="<?php
-                    echo ($current_uuid!=0 ? $pred_model['ascent-rate'] : "5");
-                    ?>"></td>
+        <td><input id="ascent" type="text" name="ascent" value="5"></td>
     </tr>
     <tr>
         <td>Descent Rate (sea level m/s):</td>
-        <td><input id="drag" type="text" name="drag" value="<?php
-                    echo ($current_uuid!=0 ? $pred_model['descent-rate'] : "5");
-                    ?>"></td>
+        <td><input id="drag" type="text" name="drag" value="5"></td>
     </tr>
     <tr>
         <td>Burst Altitude (m):</td>
-        <td><input id="burst" type="text" name="burst" value="<?php
-                    echo ($current_uuid!=0 ? $pred_model['burst-altitude'] : "30000");
-                    ?>"></td>
+        <td><input id="burst" type="text" name="burst" value="30000"></td>
     </tr>
     <tr>
         <td>Landing prediction software: </td><td>
