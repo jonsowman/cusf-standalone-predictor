@@ -1,4 +1,19 @@
 <?
+
+/*
+ * Code to generate a KML flight path given the UUID
+ * and serve it to the user as a download.
+ *
+ * CU Spaceflight Landing Prediction Software
+ * http://www.cuspaceflight.co.uk
+ * 
+ * http://github.com/jonsowman/cusf-standalone-predictor
+ *
+ * Jon Sowman 2010
+ * jon@hexoc.com
+ *
+ */
+
 require_once("includes/config.inc.php");
 require_once("includes/functions.inc.php");
 if ( !isset($_GET['uuid']) || $_GET['uuid'] == "0" ) die("Invalid UUID");
