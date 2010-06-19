@@ -1,4 +1,17 @@
 <?php
+
+/*
+ * CUSF Landing Prediction Version 2
+ * http://www.cuspaceflight.co.uk
+ *
+ * Jon Sowman 2010
+ * jon@hexoc.com
+ * http://www.hexoc.com
+ *
+ * http://github.com/jonsowman/cusf-standalone-predictor
+ *
+ */
+
 require_once("includes/functions.inc.php");
 // get the time for pre-populating the form
 $time = time() + 3600;
@@ -32,6 +45,9 @@ var land_img = "images/target-8-sm.png";
 var burst_img = "images/pop-marker.png";
 var clickListener;
 var clickMarker;
+var ajaxTimeout = 500;
+var maxAjaxTimeout = 2000;
+var deltaAjaxTimeout = 100;
 
 </script>
 </head>

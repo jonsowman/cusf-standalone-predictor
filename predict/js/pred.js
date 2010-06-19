@@ -172,10 +172,26 @@ function getJSONProgress(pred_uuid) {
     $.ajax({
         url:"preds/"+pred_uuid+"/progress.json",
         dataType:'json',
-        timeout: 1000,
-        // complete: function(data, httpstatus) {
-        //     appendDebug(httpstatus);
-        // },
+        timeout: ajaxTimeout,
+        error: function(xhr, status, error) {
+            if ( status == "timeout" ) {
+                appendDebug("Polling for progress JSON timed out");
+                // check that we haven't reached maximum allowed timeout
+                if ( ajaxTimeout < maxAjaxTimeout ) {
+                    // if not, add the delta to the timeout value
+                    newTimeout = ajaxTimeout + deltaAjaxTimeout;
+                    appendDebug("Increasing AJAX timeout from " + ajaxTimeout
+                        + "ms to " + newTimeout + "ms");
+                    ajaxTimeout = newTimeout;
+                } else {
+                    // otherwise, throw an error and kill the poller
+                    clearInterval(ajaxEventHandle);
+                    appendDebug("Reached maximum ajaxTimeout value of " + maxAjaxTimeout);
+                    throwError("Tried increasing the AJAX polling timeout to "+maxAjaxTimeout
+                        +"ms but the request still timed out.");
+                }
+            }
+        },
         success: processProgress
     });
 }
