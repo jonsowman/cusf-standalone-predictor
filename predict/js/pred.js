@@ -299,6 +299,10 @@ function parseCSV(lines) {
     $("#cursor_pred_range").html(range);
     $("#cursor_pred_time").html(flighttime);
     $("#cursor_pred").show();
+
+    // populate the download links
+    $("#dlcsv").attr("href", "preds/"+current_uuid+"/flight_path.csv");
+    $("#dlkml").attr("href", "kml.php?uuid="+current_uuid);
     
     // make some nice icons
     var launch_icon = new google.maps.MarkerImage(launch_img,

@@ -75,6 +75,8 @@ Range: <span id="cursor_pred_range"></span>km,
 Flight Time: <span id="cursor_pred_time"></span><br />
 Cursor range from launch: <span id="cursor_pred_launchrange">?</span>km, 
 land: <span id="cursor_pred_landrange">?</span>km
+<br />
+Download data: <a id="dlcsv">CSV</a> <a id="dlkml">KML</a>
 </span>
 <br />
 <a><span id="showHideDebug">Show Debug</span></a> | 
