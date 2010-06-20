@@ -47,7 +47,7 @@ var clickListener;
 var clickMarker;
 var ajaxTimeout = 500;
 var maxAjaxTimeout = 2000;
-var deltaAjaxTimeout = 100;
+var deltaAjaxTimeout = 500;
 
 </script>
 </head>
