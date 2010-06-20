@@ -45,9 +45,14 @@ var land_img = "images/target-8-sm.png";
 var burst_img = "images/pop-marker.png";
 var clickListener;
 var clickMarker;
+
+// polling progress parameters
 var ajaxTimeout = 500;
 var maxAjaxTimeout = 2000;
 var deltaAjaxTimeout = 500;
+var stdPeriod = 2000; // standard
+var hlPeriod = 10000; // high latency
+var hlTimeout = 5000; // high latency
 
 </script>
 </head>

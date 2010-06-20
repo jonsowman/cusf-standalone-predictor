@@ -147,7 +147,7 @@ function handlePred(pred_uuid) {
     // disable user control of the map canvas
     $("#map_canvas").fadeTo(1000, 0.2);
     // ajax to poll for progress
-    ajaxEventHandle = setInterval("getJSONProgress('"+pred_uuid+"')", 2000);
+    ajaxEventHandle = setInterval("getJSONProgress('"+pred_uuid+"')", stdPeriod);
 }
 
 function getCSV(pred_uuid) {
@@ -183,12 +183,15 @@ function getJSONProgress(pred_uuid) {
                     appendDebug("Increasing AJAX timeout from " + ajaxTimeout
                         + "ms to " + newTimeout + "ms");
                     ajaxTimeout = newTimeout;
-                } else {
-                    // otherwise, throw an error and kill the poller
-                    clearInterval(ajaxEventHandle);
+                } else if ( ajaxTimeout != hlTimeout ) {
+                    // otherwise, increase poll delay and timeout
                     appendDebug("Reached maximum ajaxTimeout value of " + maxAjaxTimeout);
-                    throwError("Tried increasing the AJAX polling timeout to "+maxAjaxTimeout
-                        +"ms but the request still timed out.");
+                    clearInterval(ajaxEventHandle);
+                    appendDebug("Switching to high latency mode");
+                    appendDebug("Setting polling interval to "+hlPeriod+"ms");
+                    appendDebug("Setting progress JSON timeout to "+hlTimeout+"ms");
+                    ajaxTimeout = hlTimeout;
+                    ajaxEventHandle = setInterval("getJSONProgress('"+pred_uuid+"')", hlPeriod);
                 }
             }
         },
@@ -221,7 +224,7 @@ function processProgress(progress) {
             if ( progress['pred_complete'] == true ) { // pred has finished
                 $("#prediction_status").html("Prediction finished.");
                 appendDebug("Server says: the predictor finished running.");
-                appendDebug("Attemping to retrieve flight path from server");
+                appendDebug("Attempting to retrieve flight path from server");
                 // reset the GUI
                 resetGUI();
                 // stop polling for JSON
