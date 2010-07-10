@@ -75,7 +75,7 @@ function populateFormByUUID(pred_uuid) {
             // values that have -s in them
             $("#ascent").val(data['ascent-rate']);
             $("#drag").val(data['descent-rate']);
-            $("#burst").val(data.burst);
+            $("#burst").val(data['burst-altitude']);
             $("#software").val(data.software);
             $("#delta_lat").val(data['lat-delta']);
             $("#delta_lon").val(data['lon-delta']);
