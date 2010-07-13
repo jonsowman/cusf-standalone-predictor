@@ -43,5 +43,10 @@
     	"altitude"  :   0,
 	"latitude"  :   54.654118,
 	"longitude" :   -7.034914
+    },
+    "Agia Kiriaki": {
+        "altitude"  :   0,
+        "latitude"  :   40.0429,
+        "longitude" :   23.8125
     }
 }
