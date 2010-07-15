@@ -548,7 +548,7 @@ function initMap(centre_lat, centre_lon, zoom_level) {
       scaleControl: true,
       scaleControlOptions: { position: google.maps.ControlPosition.BOTTOM_LEFT } ,
       mapTypeId: google.maps.MapTypeId.TERRAIN,
-      center: latlng,
+      center: latlng
     };
     map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 }
