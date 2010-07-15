@@ -388,7 +388,7 @@ function drawPolygon(points, gmap_object) {
         strokeOpacity: 0.4,
         fillColor: "#FFFFFF",
         fillOpacity: 0,
-        strokeWeight: 2,
+        strokeWeight: 2
     });
     map_items['delta_square'] = newPoly;
     newPoly.setMap(gmap_object);
