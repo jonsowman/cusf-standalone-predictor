@@ -67,9 +67,12 @@ function verifyModel($pred_model, $software_available) {
 }
 
 function runPred($pred_model) {
-    // make in INI file
-    makePredDir($pred_model);
-    makeINI($pred_model);
+    // check if this is a re-run
+    if ( !file_exists("preds/" . $pred_model['uuid'] . "/scenario.ini") ) {
+        // if not, make a new directory and scenario file
+        makePredDir($pred_model);
+        makeINI($pred_model);
+    }
 
     // if we're using --hd, then append it to the exec string
     if ( $pred_model['software'] == "gfs_hd" ) $use_hd ="--hd ";
@@ -93,7 +96,7 @@ function makePredDir($pred_model) {
 }
 
 function makeINI($pred_model) { // makes an ini file
-    $fh = fopen("preds/" . $pred_model['uuid'] . "/scenario.ini", "a"); //append
+    $fh = fopen("preds/" . $pred_model['uuid'] . "/scenario.ini", "w"); //write
 
     $w_string = "[launch-site]\nlatitude = " . $pred_model['lat'] . "\naltitude = " . $pred_model['alt'] . "\n";
     $w_string .= "longitude = " . $pred_model['lon'] . "\n[atmosphere]\nwind-error = ";
