@@ -449,6 +449,7 @@ function drawDeltaSquare(map) {
 }
 
 function setFormLatLon(GLatLng) {
+    appendDebug("Trying to set the form lat long");
     $("#lat").val(GLatLng.lat().toFixed(4));
     $("#lon").val(GLatLng.lng().toFixed(4));
     // remove the event handler so another click doesn't register
@@ -456,6 +457,7 @@ function setFormLatLon(GLatLng) {
     // change the dropdown to read "other"
     SetSiteOther();
     // plot the new marker for launch location
+    appendDebug("Plotting the new launch location marker");
     plotClick();
 }
 
@@ -463,8 +465,10 @@ function setLatLonByClick(state) {
     if ( state == true ) {
         // check this listener doesn't already exist
         if (!clickListener) {
+            appendDebug("Enabling the set with click listener");
             clickListener = google.maps.event.addListener(map,
                     'click', function(event) {
+                appendDebug("Got a click from user, setting values into form");
                 $("#error_window").fadeOut();
                 setFormLatLon(event.latLng);
             });
@@ -472,6 +476,7 @@ function setLatLonByClick(state) {
         // tell the user what to do next
         throwError("Now click your desired launch location on the map");
     } else if ( state == false ) {
+        appendDebug("Removing the set with click listener");
         google.maps.event.removeListener(clickListener);
         clickListener = null;
     } else {
