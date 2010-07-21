@@ -231,6 +231,8 @@ function processProgress(progress) {
                 clearInterval(ajaxEventHandle);
                 // parse the data
                 getCSV(current_uuid);
+                appendDebug("Server gave a prediction run timestamp of "+progress['run_time']);
+                appendDebug("Server said it used the " + progress['gfs_timestamp'] + " GFS model");
                 addHashLink("uuid="+current_uuid);
             } else if ( progress['pred_running'] != true ) {
                 $("#prediction_status").html("Waiting for predictor to run...");
