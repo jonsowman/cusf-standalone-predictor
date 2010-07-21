@@ -99,7 +99,7 @@ land: <span id="cursor_pred_landrange">?</span>km
 <br />
 Download data: <a id="dlcsv">CSV <img src="images/csv.gif" border="0" /></a> <a id="dlkml">KML <img src="images/kml.png" border="0" /></a>
 <br />
-Prediction for scenario last run at <span id="run_time"></span> using the <span id="gfs_timestamp"> GFS model.
+Prediction for scenario last run at <span id="run_time">?</span> using the <span id="gfs_timestamp">?</span> GFS model.
 </span>
 <br />
 <a><span id="showHideDebug">Show Debug</span></a> | 
