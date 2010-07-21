@@ -26,6 +26,7 @@ log.addHandler(console)
 
 progress_f = ''
 progress = {
+    'run_time': '',
     'gfs_percent': 0,
     'gfs_timeremaining': '',
     'gfs_complete': False,
@@ -141,7 +142,10 @@ def main():
     global progress
     try:
         progress_f = open(uuid_path+"progress.json", "w")
-        update_progress(gfs_percent=0, gfs_timeremaining="Please wait...")
+        update_progress(
+            gfs_percent=0,
+            gfs_timeremaining="Please wait...",
+            run_time=str(int(timelib.time())))
     except IOError:
         log.error('Error opening progress.json file')
         sys.exit(1)
