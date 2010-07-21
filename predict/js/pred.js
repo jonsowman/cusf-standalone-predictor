@@ -35,8 +35,16 @@ $(document).ready(function() {
         appendDebug("Got an old UUID to plot:<br>" + current_uuid);
         appendDebug("Trying to populate form with scenario data...");
         populateFormByUUID(current_uuid);
-        appendDebug("Trying to get flight path from server...");
-        getCSV(current_uuid);
+        appendDebug("Trying to get progress JSON");
+        $.getJSON("preds/"+current_uuid+"/progress.json", function(progress) {
+            appendDebug("Got progress JSON from server for UUID");
+            if ( progress['error'] || !progress['pred_complete'] ) {
+                appendDebug("The prediction was not completed correctly, quitting");
+            } else {
+                writePredictionInfo(current_uuid, progress['run_time'], progress['gfs_timestamp']);
+                getCSV(current_uuid);
+            }
+        });
     }
 
     // plot the initial launch location
