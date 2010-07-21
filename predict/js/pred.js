@@ -397,12 +397,12 @@ function parseCSV(lines) {
 }
 
 function drawPolygon(points, gmap_object) {
-    var newPoly = new google.maps.Polygon({
-        paths: points,
+    var newPoly = new google.maps.Polyline({
+        path: points,
         strokeColor: "#FF0000",
         strokeOpacity: 0.4,
-        fillColor: "#FFFFFF",
-        fillOpacity: 0,
+        //fillColor: "#FFFFFF",
+        //fillOpacity: 0,
         strokeWeight: 2
     });
     map_items['delta_square'] = newPoly;
@@ -442,7 +442,8 @@ function drawDeltaSquare(map) {
     new google.maps.LatLng(lat+dlat, lon+dlon),
     new google.maps.LatLng(lat-dlat, lon+dlon),
     new google.maps.LatLng(lat-dlat, lon-dlon),
-    new google.maps.LatLng(lat+dlat, lon-dlon)
+    new google.maps.LatLng(lat+dlat, lon-dlon),
+    new google.maps.LatLng(lat+dlat, lon+dlon)
     ]
     // write the poly to the map
     drawPolygon(points, map);
@@ -466,8 +467,7 @@ function setLatLonByClick(state) {
         // check this listener doesn't already exist
         if (!clickListener) {
             appendDebug("Enabling the set with click listener");
-            clickListener = google.maps.event.addListener(map,
-                    'click', function(event) {
+            clickListener = google.maps.event.addListener(map, 'click', function(event) {
                 appendDebug("Got a click from user, setting values into form");
                 $("#error_window").fadeOut();
                 setFormLatLon(event.latLng);
