@@ -29,6 +29,7 @@ progress = {
     'gfs_percent': 0,
     'gfs_timeremaining': '',
     'gfs_complete': False,
+    'gfs_timestamp': '',
     'pred_running': False,
     'pred_complete': False,
     'progress_error': '',
@@ -185,7 +186,7 @@ def main():
     log.info('Looking for latest dataset which covers %s' % time_to_find.ctime())
     try:
         dataset = dataset_for_time(time_to_find, options.hd)
-    except: 
+    except:
         print('Could not locate a dataset for the requested time.')
         sys.exit(1)
 
@@ -492,6 +493,8 @@ def dataset_for_time(time, hd):
 
             if start_time <= time and end_time >= time:
                 log.info('Found good dataset at %s.' % url)
+                dataset_id = url.split("/")[5] + "_" + url.split("/")[6].split("_")[1]
+                update_progress(gfs_timestamp=dataset_id)
                 return dataset
         except pydap.exceptions.ServerError:
             # Skip server error.
