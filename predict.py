@@ -17,6 +17,18 @@ import simplejson as json
 
 # We use Pydap from http://pydap.org/.
 import pydap.exceptions, pydap.client, pydap.lib
+pydap.lib.CACHE = "/tmp/pydap-cache/"
+
+# horrid, horrid monkey patching to force
+# otherwise broken caching from dods server
+# this is really, really hacky
+import pydap.util.http
+def fresh(response_headers, request_headers):
+    cc = pydap.util.http.httplib2._parse_cache_control(response_headers)
+    if cc.has_key('no-cache'):
+        return 'STALE'
+    return 'FRESH'
+pydap.util.http.httplib2._entry_disposition = fresh
 
 # Output logger format
 log = logging.getLogger('main')
@@ -217,7 +229,7 @@ def main():
             time_to_find - datetime.timedelta(hours=options.past), \
             time_to_find + datetime.timedelta(hours=options.future))
 
-    purge_cache()
+    #purge_cache()
     
     update_progress(gfs_percent=100, gfs_timeremaining='Done', gfs_complete=True, pred_running=True)
     
