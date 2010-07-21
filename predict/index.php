@@ -97,7 +97,7 @@ Flight Time: <span id="cursor_pred_time"></span><br />
 Cursor range from launch: <span id="cursor_pred_launchrange">?</span>km, 
 land: <span id="cursor_pred_landrange">?</span>km
 <br />
-Last run at <span id="run_time">?</span> using the <span id="gfs_timestamp">?</span> GFS model.
+Last run at <span id="run_time">?</span> using model <span id="gfs_timestamp">?</span>
 <br />
 Download data: <a id="dlcsv">CSV <img src="images/csv.gif" border="0" /></a> <a id="dlkml">KML <img src="images/kml.png" border="0" /></a>
 </span>
