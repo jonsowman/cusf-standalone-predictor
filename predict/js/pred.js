@@ -140,6 +140,14 @@ function throwError(data) {
     $("#error_window").fadeIn();
 }
 
+function writePredictionInfo(current_uuid, run_time, gfs_timestamp) {
+    // populate the download links
+    $("#dlcsv").attr("href", "preds/"+current_uuid+"/flight_path.csv");
+    $("#dlkml").attr("href", "kml.php?uuid="+current_uuid);
+    $("#run_time").html(POSIXtoHM(run_time));
+    $("#gfs_timestamp").html(gfs_timestamp);
+}
+
 function handlePred(pred_uuid) {
     $("#prediction_status").html("Searching for wind data...");
     $("#input_form").hide("slide", { direction: "down" }, 500);
@@ -233,6 +241,7 @@ function processProgress(progress) {
                 getCSV(current_uuid);
                 appendDebug("Server gave a prediction run timestamp of "+progress['run_time']);
                 appendDebug("Server said it used the " + progress['gfs_timestamp'] + " GFS model");
+                writePredictionInfo(current_uuid, progress['run_time'], progress['gfs_timestamp']);
                 addHashLink("uuid="+current_uuid);
             } else if ( progress['pred_running'] != true ) {
                 $("#prediction_status").html("Waiting for predictor to run...");
@@ -316,10 +325,6 @@ function parseCSV(lines) {
     $("#cursor_pred_range").html(range);
     $("#cursor_pred_time").html(flighttime);
     $("#cursor_pred").show();
-
-    // populate the download links
-    $("#dlcsv").attr("href", "preds/"+current_uuid+"/flight_path.csv");
-    $("#dlkml").attr("href", "kml.php?uuid="+current_uuid);
     
     // make some nice icons
     var launch_icon = new google.maps.MarkerImage(launch_img,
@@ -656,7 +661,7 @@ function setupEventHandlers() {
     });
 }
 
-function POSIXtoHM(timestamp) {
+function POSIXtoHM(timestamp, format) {
     // using JS port of PHP's date()
     var ts = new Date();
     ts.setTime(timestamp*1000);
@@ -664,7 +669,8 @@ function POSIXtoHM(timestamp) {
     if ( ts.format("I") ==  1 ) {
         ts.setTime((timestamp-3600)*1000);
     }
-    var str = ts.format("H:i");
+    if ( format == null || format == "" ) format = "H:i";
+    var str = ts.format(format);
     return str;
 }
 
