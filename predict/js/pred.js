@@ -37,17 +37,12 @@ $(document).ready(function() {
         populateFormByUUID(current_uuid);
         appendDebug("Trying to get progress JSON");
         $.getJSON("preds/"+current_uuid+"/progress.json", function(progress) {
-            if ( progress != null ) {
-                appendDebug("Got progress JSON from server for UUID");
-                if ( progress['error'] || !progress['pred_complete'] ) {
-                    appendDebug("The prediction was not completed correctly, quitting");
-                } else {
-                    writePredictionInfo(current_uuid, progress['run_time'], progress['gfs_timestamp']);
-                    getCSV(current_uuid);
-                }
+            appendDebug("Got progress JSON from server for UUID");
+            if ( progress['error'] || !progress['pred_complete'] ) {
+                appendDebug("The prediction was not completed correctly, quitting");
             } else {
-                appendDebug("Couldn't find the progress JSON for the supplied UUID");
-                throwError("You requested a UUID that doesn't seem to exist on the server. Please re-run");
+                writePredictionInfo(current_uuid, progress['run_time'], progress['gfs_timestamp']);
+                getCSV(current_uuid);
             }
         });
     }
