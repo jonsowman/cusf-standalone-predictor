@@ -26,3 +26,5 @@ Credit as detailed in individual files, but notably:
 
 Adam Greig - [http://www.randomskk.net](http://www.randomskk.net) - [random@randomskk.net](mailto:random:randomskk.net)  
 Jon Sowman - [http://www.hexoc.com](http://www.hexoc.com)- [jon@hexoc.com](mailto:jon@hexoc.com)  
+
+Copyright CUSF 2010 - All Rights Reserved
