@@ -6,6 +6,12 @@ Working on improving the Cambridge University Spaceflight landing predictor, a w
 
 The source for the predictor itself is in `pred_src/` and instructions for building it can be found there.  
 
+The following items need to be executable by the user under which the predictor runs:  
+* `predict.py`
+* `pred_src/pred` (once compiled)
+* `cron/clear-pydap-cache-cronjob.sh`
+* `cron/purge-predictions-cronjob.sh`
+
 The `predict/preds/` and `gfs/` directories need to have rwx access by the PHP interpreter and the `predict.py` python script. You will need to install the following python packages: pydap, numpy, json, simple-json. We use `at` to automatically background the predictor, so you will need that installed.  
 
 Other than that, just clone this repo to a non web-accessible folder and create symlinks to the `predict/` and `hourly-predictions/` directories in the repo.  
@@ -14,7 +20,7 @@ There are useful configuration options in `predict/includes/config.inc.php`.
 
 ## Information
 
-A cronjob should be run to delete directories in the `preds/` directory after a given number of days, probably 7. Predictions older than 7 days are useless anyway.  
+The two bash scripts in the `cron/` directory should both be run daily. `clear-pydap-cache-cronjob.sh` clears the cache used by pydap so that old data does not build up. `purge-predictions-cronjob.sh` deletes scenarios and predictions not accessed or modified within the last 7 days.   
 
 The directory names are UUIDs comprised of an SHA1 hash of the launch parameters, and re-running predictions will overwrite data in the existing directory, rather than create a new one.  
 
