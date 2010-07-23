@@ -28,6 +28,7 @@ The directory names are UUIDs comprised of an SHA1 hash of the launch parameters
 ## Credits & Acknowledgments
 
 Credit as detailed in individual files, but notably:  
+
 * Rich Wareham - The new predictor and the hourly predictor system  
 * Fergus Noble, Ed Moore and many others  
 
