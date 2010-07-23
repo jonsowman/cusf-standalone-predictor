@@ -6,11 +6,11 @@ Working on improving the Cambridge University Spaceflight landing predictor, a w
 
 The source for the predictor itself is in `pred_src/` and instructions for building it can be found there.  
 
-The following items need to be executable by the user under which the predictor runs:  
-* `predict.py`
-* `pred_src/pred` (once compiled)
-* `cron/clear-pydap-cache-cronjob.sh`
-* `cron/purge-predictions-cronjob.sh`
+The following items need to be executable (`chmod +x ./predict.py`) by the user under which the predictor runs:  
+*   `predict.py`
+*   `pred_src/pred` (once compiled)
+*   `cron/clear-pydap-cache-cronjob.sh`
+*   `cron/purge-predictions-cronjob.sh`
 
 The `predict/preds/` and `gfs/` directories need to have rwx access by the PHP interpreter and the `predict.py` python script. You will need to install the following python packages: pydap, numpy, json, simple-json. We use `at` to automatically background the predictor, so you will need that installed.  
 
