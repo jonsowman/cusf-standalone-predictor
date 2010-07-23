@@ -21,7 +21,7 @@ There are useful configuration options in `predict/includes/config.inc.php`.
 
 ## Information
 
-The two bash scripts in the `cron/` directory should both be run daily. `clear-pydap-cache-cronjob.sh` clears the cache used by pydap so that old data does not build up. `purge-predictions-cronjob.sh` deletes scenarios and predictions not accessed or modified within the last 7 days.   
+The two bash scripts in the `cron/` directory should both be run daily. `clear-pydap-cache-cronjob.sh` clears the cache used by pydap so that old data does not build up. `purge-predictions-cronjob.sh` deletes scenarios and predictions not accessed or modified within the last 7 days. Re-running a prediction for a scenario will therefore reset its time to live to 7 more days.   
 
 The directory names are UUIDs comprised of an SHA1 hash of the launch parameters, and re-running predictions will overwrite data in the existing directory, rather than create a new one.  
 
