@@ -48,5 +48,10 @@
         "altitude"  :   0,
         "latitude"  :   40.0429,
         "longitude" :   23.8125
+    },
+    "Utrecht, NL": {
+        "altitude"  :   0,
+        "latitude"  :   52.1,
+        "longitude" :   5.2
     }
 }
