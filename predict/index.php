@@ -97,7 +97,7 @@ Flight Time: <span id="cursor_pred_time"></span><br />
 Cursor range from launch: <span id="cursor_pred_launchrange">?</span>km, 
 land: <span id="cursor_pred_landrange">?</span>km
 <br />
-Last run at <span id="run_time">?</span> using model <span id="gfs_timestamp">?</span>
+Last run at <span id="run_time">?</span> UTC using model <span id="gfs_timestamp">?</span>
 <br />
 Download data: <a id="dlcsv">CSV <img src="images/csv.gif" border="0" /></a> <a id="dlkml">KML <img src="images/kml.png" border="0" /></a>
 </span>
@@ -169,7 +169,7 @@ No guarantee is given for the accuracy, precision or reliability of the data pro
         <td><input id="initial_alt" type="text" name="initial_alt" value="0"></td>
     </tr>
 	<tr>
-		<td>Launch Time:</td>
+		<td>Launch Time (UTC):</td>
 		<td>
                         <input id="hour" type="text" name="hour" value="<?php
                     echo date("H", $time);
