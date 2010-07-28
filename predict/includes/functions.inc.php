@@ -21,7 +21,7 @@ function createModel($post_array) {
     $pred_model['lon'] = $post_array['lon'];
     $pred_model['asc'] = (float)$post_array['ascent'];
     $pred_model['alt'] = $post_array['initial_alt'];
-    $pred_model['des'] = $post_array['drag'];
+    $pred_model['des'] = (float)$post_array['drag'];
     $pred_model['burst'] = $post_array['burst'];
 
     $pred_model['delta_lat'] = $post_array['delta_lat'];
