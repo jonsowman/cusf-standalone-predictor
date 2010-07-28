@@ -641,7 +641,7 @@ function setupEventHandlers() {
     $("#about_window_show").click(function() {
         $("#about_window").dialog({
             modal:true,
-            width:400,
+            width:600,
             buttons: {
                 Close: function() {
                         $(this).dialog('close');

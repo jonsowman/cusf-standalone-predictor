@@ -99,13 +99,18 @@ land: <span id="cursor_pred_landrange">?</span>km
 <br />
 Last run at <span id="run_time">?</span> UTC using model <span id="gfs_timestamp">?</span>
 <br />
-Download data: <a id="dlcsv">CSV <img src="images/csv.gif" border="0" /></a> <a id="dlkml">KML <img src="images/kml.png" border="0" /></a>
+<span class="control_buttons">
+<a class="control_button" id="panto">Pan To</a> | 
+<a class="control_button" id="dlcsv">CSV</a> | 
+<a class="control_button" id="dlkml">KML</a
+</span>
 </span>
 <br />
-<a><span id="showHideDebug">Show Debug</span></a> | 
-<a><span id="showHideForm">Hide Launch Card</span></a>
-<br />
-<a style="font-size: 10px" id="about_window_show">About this software</a>
+<span class="control_buttons">
+<a class="control_button" id="showHideDebug">Show Debug</a> | 
+<a class="control_button" id="showHideForm">Hide Launch Card</a> |
+<a class="control_button" id="about_window_show">About</a>
+</span>
 </div>
 
 <!-- save location -->
