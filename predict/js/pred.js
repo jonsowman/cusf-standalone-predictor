@@ -152,6 +152,10 @@ function writePredictionInfo(current_uuid, run_time, gfs_timestamp) {
     // populate the download links
     $("#dlcsv").attr("href", "preds/"+current_uuid+"/flight_path.csv");
     $("#dlkml").attr("href", "kml.php?uuid="+current_uuid);
+    $("#panto").click(function() {
+            map.panTo(map_items['launch_marker'].position);
+            //map.setZoom(7);
+    });
     $("#run_time").html(POSIXtoHM(run_time, "H:i d/m/Y"));
     $("#gfs_timestamp").html(gfs_timestamp);
 }
