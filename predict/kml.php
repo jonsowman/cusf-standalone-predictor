@@ -16,8 +16,9 @@
 
 require_once("includes/config.inc.php");
 require_once("includes/functions.inc.php");
-if ( !isset($_GET['uuid']) || $_GET['uuid'] == "0" ) die("Invalid UUID");
+if ( !isset($_GET['uuid']) || $_GET['uuid'] == "0" ) die("No UUID supplied to KML generation script");
 $uuid = $_GET['uuid'];
+if ( strlen($uuid) != 40 || !ctype_alnum($uuid) ) die("The supplied UUID was not a valid SHA1 hash");
 $flight_csv = $c_preds_path . $uuid . "/" . $c_flight_csv;
 $scenario_file = $c_preds_path . $uuid . "/" . $c_scenario_file;
 if ( !file_exists( $flight_csv ) || !file_exists( $scenario_file ) ) die("No prediction data for UUID");
