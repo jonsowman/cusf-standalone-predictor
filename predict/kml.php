@@ -14,16 +14,23 @@
  *
  */
 
+// Include config and function files
 require_once("includes/config.inc.php");
 require_once("includes/functions.inc.php");
+
+// Check that we were given a UUID
 if ( !isset($_GET['uuid']) || $_GET['uuid'] == "0" ) die("No UUID supplied to KML generation script");
+
+// Now verify said UUID is a real SHA1 hash
 $uuid = $_GET['uuid'];
 if ( strlen($uuid) != 40 || !ctype_alnum($uuid) ) die("The supplied UUID was not a valid SHA1 hash");
+
+// Construct paths to required predictor files and check they exist
 $flight_csv = $c_preds_path . $uuid . "/" . $c_flight_csv;
 $scenario_file = $c_preds_path . $uuid . "/" . $c_scenario_file;
 if ( !file_exists( $flight_csv ) || !file_exists( $scenario_file ) ) die("No prediction data for UUID");
 
-// make the prediction moel
+// make the prediction model
 $scenario = parse_ini_file($scenario_file);
 
 $kml = array('<?xml version="1.0" encoding="UTF-8"?>');
