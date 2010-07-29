@@ -130,13 +130,13 @@ a { text-decoration: underline; color: #333; cursor: pointer; }
 .control_buttons {
     border: solid #ccc 1px;
     background-color: #deedf7;
-    padding: 2px;
+    padding: 3px;
     margin-top: 1em;
     color: #888;
     -webkit-user-select:none;
     -moz-user-select:none;
     cursor: default;
-    line-height: 200%;
+    line-height: 220%;
     font-size: 10px;
 }
 

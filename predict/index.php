@@ -99,14 +99,14 @@ land: <span id="cursor_pred_landrange">?</span>km
 <br />
 Last run at <span id="run_time">?</span> UTC using model <span id="gfs_timestamp">?</span>
 <br />
-<span class="control_buttons">
+<span class="ui-corner-all control_buttons">
 <a class="control_button" id="panto">Pan To</a> | 
 <a class="control_button" id="dlcsv">CSV</a> | 
 <a class="control_button" id="dlkml">KML</a
 </span>
 </span>
 <br />
-<span class="control_buttons">
+<span class="ui-corner-all control_buttons">
 <a class="control_button" id="showHideDebug">Show Debug</a> | 
 <a class="control_button" id="showHideForm">Hide Launch Card</a> |
 <a class="control_button" id="about_window_show">About</a>
