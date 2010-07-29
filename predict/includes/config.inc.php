@@ -3,6 +3,8 @@
 $c_admin_email = "jon@hexoc.com";
 $c_location_save_enable = true;
 
+define("DEBUG", true);
+
 $c_preds_path = "preds/";
 
 $c_scenario_file = "scenario.ini";

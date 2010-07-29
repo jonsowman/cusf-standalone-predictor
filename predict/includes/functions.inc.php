@@ -5,6 +5,8 @@
  * Jon Sowman 2010
  */
 
+require_once("config.inc.php");
+
 function createModel($post_array) {
     $pred_model = array();
 
@@ -82,11 +84,13 @@ function runPred($pred_model) {
 
     // use `at` to automatically background the task
     $ph = popen("at now", "w");
-    fwrite($ph, "cd /var/www/hab/predict/ && ./predict.py -v --latdelta="
+    $sh = "./predict.py -v --latdelta="
         .$pred_model['delta_lat']." --londelta=".$pred_model['delta_lon']
         ." -p1 -f5 -t ".$pred_model['timestamp']
         ." --lat=".$predictor_lat." --lon=".$predictor_lon." " . $use_hd
-        . $pred_model['uuid']);
+        . $pred_model['uuid'];
+    if (DEBUG) shell_exec("echo " . $sh . " > /tmp/pred_log");
+    fwrite($ph, "cd /var/www/hab/predict/ && " . $sh );
     fclose($ph);
 
 }
