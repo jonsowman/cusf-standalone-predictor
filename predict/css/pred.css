@@ -57,7 +57,7 @@ a { text-decoration: underline; color: #333; cursor: pointer; }
 .box {
 	position: absolute; 
 	background-color: white; 
-	border: 1px solid #6666ff; 
+	border: 1px solid #0070a3; 
 	padding: 0.5em;
 }
 
@@ -128,7 +128,7 @@ a { text-decoration: underline; color: #333; cursor: pointer; }
 
 /* the vehicle_button buttons from spacenear */
 .control_buttons {
-    border: solid #ccc 1px;
+    border: solid #aed0ea 1px;
     background-color: #deedf7;
     padding: 3px;
     margin-top: 1em;

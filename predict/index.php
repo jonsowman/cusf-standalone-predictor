@@ -62,13 +62,13 @@ var hlTimeout = 5000; // high latency
 <div id="map_canvas"></div>
 
 <!-- debug window -->
-<div id="scenario_template" class="box">
+<div id="scenario_template" class="box ui-corner-all">
 <h1>Debug Window</h1>
 <span id="debuginfo">No Messages</span>
 </div>
 
 <!-- prediction progress window -->
-<div id="status_message" class="box">
+<div id="status_message" class="box ui-corner-all">
 <div id="prediction_progress"></div>
 <div id="prediction_percent"></div>
 <br>
@@ -77,14 +77,14 @@ var hlTimeout = 5000; // high latency
 </div>
 
 <!-- error window -->
-<div id="error_window" class="box">
+<div id="error_window" class="box ui-corner-all">
 <span id="error_message">Nothing here!</span>
 <br /><br />
 <a id="closeErrorWindow">Close</a>
 </div>
 
 <!-- scenario info -->
-<div id="scenario_info" class="box">
+<div id="scenario_info" class="box ui-corner-all">
 <img src="images/drag_handle.png" class="handle" />
 <h1>Scenario Information</h1>
 <span id="cursor_info">Current mouse position: 
@@ -114,7 +114,7 @@ Last run at <span id="run_time">?</span> UTC using model <span id="gfs_timestamp
 </div>
 
 <!-- save location -->
-<div id="location_save" class="box">
+<div id="location_save" class="box ui-corner-all">
 <h1>Request Location Save</h1><br />
 <form name="location_save_form" id="location_save_form">
 <table name="req_table" id="req_table">
@@ -147,7 +147,7 @@ No guarantee is given for the accuracy, precision or reliability of the data pro
 </div>
 
 <!-- launch card form -->
-<div id="input_form" class="box"> 
+<div id="input_form" class="box ui-corner-all"> 
 <img class="handle" src="images/drag_handle.png" />
 <form action="" id="modelForm" name="modelForm">
 <table>
