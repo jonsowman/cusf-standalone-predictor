@@ -129,7 +129,7 @@ a { text-decoration: underline; color: #333; cursor: pointer; }
 /* the vehicle_button buttons from spacenear */
 .control_buttons {
     border: solid #ccc 1px;
-    background-color: #eee;
+    background-color: #deedf7;
     padding: 2px;
     margin-top: 1em;
     color: #888;
@@ -142,13 +142,13 @@ a { text-decoration: underline; color: #333; cursor: pointer; }
 
 .control_button {
     font-weight: bold;
-    color: #888;
+    color: #3096d0;
     cursor: pointer;
     text-decoration: none;
 }
 
 a.control_button:hover {
-    color: black;
+    color: #0070a3;
 }
 
 img.handle {
