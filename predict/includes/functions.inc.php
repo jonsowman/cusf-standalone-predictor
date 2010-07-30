@@ -70,7 +70,7 @@ function verifyModel($pred_model, $software_available) {
 
 function runPred($pred_model) {
     // check if this is a re-run
-    if ( !file_exists("preds/" . $pred_model['uuid'] . "/scenario.ini") ) {
+    if ( !file_exists(PREDS_PATH . $pred_model['uuid'] . SCENARIO_FILE) ) {
         // if not, make a new directory and scenario file
         makePredDir($pred_model);
         makeINI($pred_model);
@@ -90,17 +90,17 @@ function runPred($pred_model) {
         ." --lat=".$predictor_lat." --lon=".$predictor_lon." " . $use_hd
         . $pred_model['uuid'];
     if (DEBUG) shell_exec("echo " . $sh . " > " . AT_LOG);
-    fwrite($ph, "cd /var/www/hab/predict/ && " . $sh );
+    fwrite($ph, "cd " . ROOT . " && " . $sh );
     fclose($ph);
 
 }
 
 function makePredDir($pred_model) {
-    shell_exec("mkdir preds/" . $pred_model['uuid']); //make sure we use the uuid from model
+    shell_exec("mkdir " . PREDS_PATH . $pred_model['uuid']); //make sure we use the uuid from model
 }
 
 function makeINI($pred_model) { // makes an ini file
-    $fh = fopen("preds/" . $pred_model['uuid'] . "/scenario.ini", "w"); //write
+    $fh = fopen(PREDS_PATH . $pred_model['uuid'] . SCENARIO_FILE, "w"); //write
 
     $w_string = "[launch-site]\nlatitude = " . $pred_model['lat'] . "\naltitude = " . $pred_model['alt'] . "\n";
     $w_string .= "longitude = " . $pred_model['lon'] . "\n[atmosphere]\nwind-error = ";
@@ -120,8 +120,8 @@ function makeINI($pred_model) { // makes an ini file
 }
 
 function getModelByUUID($uuid) {
-    if ( file_exists("preds/".$uuid."/scenario.ini") ) {
-        $pred_model = parse_ini_file("preds/".$uuid."/scenario.ini");
+    if ( file_exists( PREDS_PATH . $uuid . "/" . SCENARIO_FILE ) ) {
+        $pred_model = parse_ini_file(PREDS_PATH . $uuid . "/" . SCENARIO_FILE);
         return $pred_model;
     } else {
         return false;
