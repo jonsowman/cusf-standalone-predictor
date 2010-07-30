@@ -70,13 +70,13 @@ function verifyModel($pred_model, $software_available) {
 
 function runPred($pred_model) {
     // check if this is a re-run
-    if ( !file_exists(PREDS_PATH . $pred_model['uuid'] . SCENARIO_FILE) ) {
+    if ( !file_exists(PREDS_PATH . $pred_model['uuid'] . "/" . SCENARIO_FILE) ) {
         // if not, make a new directory and scenario file
         makePredDir($pred_model);
         makeINI($pred_model);
     }
 
-    // if we're using --hd, then append it to the exec string
+    // if we're using GFS HD, then append --hd to the exec string
     if ( $pred_model['software'] == "gfs_hd" ) $use_hd ="--hd ";
 
     $predictor_lat = number_format($pred_model['lat'], 0);
@@ -100,7 +100,7 @@ function makePredDir($pred_model) {
 }
 
 function makeINI($pred_model) { // makes an ini file
-    $fh = fopen(PREDS_PATH . $pred_model['uuid'] . SCENARIO_FILE, "w"); //write
+    $fh = fopen(PREDS_PATH . $pred_model['uuid'] . "/" . SCENARIO_FILE, "w"); //write
 
     $w_string = "[launch-site]\nlatitude = " . $pred_model['lat'] . "\naltitude = " . $pred_model['alt'] . "\n";
     $w_string .= "longitude = " . $pred_model['lon'] . "\n[atmosphere]\nwind-error = ";
