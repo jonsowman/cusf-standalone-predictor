@@ -9,7 +9,7 @@ $software_available = array("gfs", "gfs_hd");
 switch($action) {
 case "getCSV":
     $uuid = $_GET['uuid'];
-    $tryfile = $c_preds_path.$uuid."/".$c_flight_csv;
+    $tryfile = PREDS_PATH . $uuid . "/" . FLIGHT_CSV;
     if(!file_exists($tryfile)) return false;
     $fh = fopen($tryfile, "r");
     $data = array();
@@ -23,7 +23,7 @@ case "getCSV":
 
 case "JSONexists":
     $uuid = $_GET['uuid'];
-    if(file_exists($c_preds_path.$uuid."/".$c_progress_json)) {
+    if(file_exists(PREDS_PATH . $uuid . "/" . PROGRESS_JSON)) {
         echo true;
     } else {
         echo false;
@@ -43,7 +43,7 @@ case "locationSave":
         "Longitude: " . $lon . "\n" .
         "Altitude: " . $alt . "\n" .
         "Name: " . $locname . "\n";
-    $headers = "From: jon@hexoc.com\r\nReply-To:blackhole@hexoc.com\r\nX-Mailer: PHP/".phpversion();
+    $headers = "From: ". $c_admin_email ."\r\nReply-To:blackhole@hexoc.com\r\nX-Mailer: PHP/".phpversion();
     if ( mail($c_admin_email, "Location Request Save", $str, $headers) ) {
         echo "true";
     } else {
@@ -56,11 +56,11 @@ case "getModelByUUID":
     if( !uuid ) die ("No uuid given to getModelByUUID");
     // make a new model
     $pred_model = array();
-    if ( !file_exists($c_preds_path.$uuid."/".$c_scenario_file) ) {
+    if ( !file_exists(PREDS_PATH . $uuid . "/" . SCENARIO_FILE ) ) {
         $pred_model['valid'] = false;
     } else {
         // populate the array, JSON encode it and return
-        $pred_model = parse_ini_file($c_preds_path.$uuid."/".$c_scenario_file);
+        $pred_model = parse_ini_file(PREDS_PATH . $uuid . "/" . SCENARIO_FILE);
         if ( verifyModel($pred_model, $software_available) ){
             $pred_model['valid'] = true;
         } else {
