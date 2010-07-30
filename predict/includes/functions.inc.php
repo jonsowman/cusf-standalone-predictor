@@ -89,7 +89,7 @@ function runPred($pred_model) {
         ." -p1 -f5 -t ".$pred_model['timestamp']
         ." --lat=".$predictor_lat." --lon=".$predictor_lon." " . $use_hd
         . $pred_model['uuid'];
-    if (DEBUG) shell_exec("echo " . $sh . " > /tmp/pred_log");
+    if (DEBUG) shell_exec("echo " . $sh . " > " . AT_LOG);
     fwrite($ph, "cd /var/www/hab/predict/ && " . $sh );
     fclose($ph);
 
