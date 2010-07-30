@@ -12,6 +12,7 @@
  *
  */
 
+require_once("includes/config.inc.php");
 require_once("includes/functions.inc.php");
 // get the time for pre-populating the form
 $time = time() + 3600;
