@@ -25,6 +25,8 @@ The two bash scripts in the `cron/` directory should both be run daily. `clear-p
 
 The directory names are UUIDs comprised of an SHA1 hash of the launch parameters, and re-running predictions will overwrite data in the existing directory, rather than create a new one.  
 
+We use GFS data provided by the NOAA, accessed via NDAP and their [NOMADS](http://nomads.ncep.noaa.gov) distribution system. The [1.0x1.0 degree data](http://nomads.ncep.noaa.gov/txt_descriptions/GFS_high_resolution_doc.shtml) (26 vertical pressure levels) is used for standard predictions , and the [0.5x0.5 degree data](http://nomads.ncep.noaa.gov/txt_descriptions/GFS_half_degree_doc.shtml) (47 vertical pressure levels) is used for the high definition (HD) predictions.  
+
 ## Credits & Acknowledgments
 
 Credit as detailed in individual files, but notably:  
