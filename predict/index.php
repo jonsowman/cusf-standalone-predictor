@@ -20,7 +20,7 @@ $time = time() + 3600;
 
 <html>
 <head>
-<title>CUSF Landing Predictor 2.0 BETA</title>
+<title>CUSF Landing Predictor 2.0</title>
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 <script type="text/javascript" src="http://www.google.com/jsapi?key=ABQIAAAAzpAeP4iTRyyvc3_y95bQZBSnyWegg1iFIOtWV3Ha3Qw-fH3UlBTg9lMAipYdJi6ac4b5hWAzBkkXgg"></script>
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
