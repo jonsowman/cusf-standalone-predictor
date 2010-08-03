@@ -70,81 +70,81 @@ var hlTimeout = 5000; // high latency
 
 <!-- prediction progress window -->
 <div id="status_message" class="box ui-corner-all">
-<div id="prediction_progress"></div>
-<div id="prediction_percent"></div>
-<br>
-<span id="prediction_status"></span><br>
-<a><span id="showHideDebug_status">Toggle Debug</span></a>
+    <div id="prediction_progress"></div>
+    <div id="prediction_percent"></div>
+    <br>
+    <span id="prediction_status"></span><br>
+    <a><span id="showHideDebug_status">Toggle Debug</span></a>
 </div>
 
 <!-- error window -->
 <div id="error_window" class="box ui-corner-all">
-<span id="error_message">Nothing here!</span>
-<br /><br />
-<a id="closeErrorWindow">Close</a>
+    <span id="error_message">Nothing here!</span>
+    <br /><br />
+    <a id="closeErrorWindow">Close</a>
 </div>
 
 <!-- scenario info -->
 <div id="scenario_info" class="box ui-corner-all">
-<img src="images/drag_handle.png" class="handle" />
-<h1>Scenario Information</h1>
-<span id="cursor_info">Current mouse position: 
-Lat: <span id="cursor_lat">?</span> 
-Lon: <span id="cursor_lon">?</span>
-</span><br />
-<span id="cursor_pred" style="display:none">
-Range: <span id="cursor_pred_range"></span>km, 
-Flight Time: <span id="cursor_pred_time"></span><br />
-Cursor range from launch: <span id="cursor_pred_launchrange">?</span>km, 
-land: <span id="cursor_pred_landrange">?</span>km
-<br />
-Last run at <span id="run_time">?</span> UTC using model <span id="gfs_timestamp">?</span>
-<br />
-<span class="ui-corner-all control_buttons">
-<a class="control_button" id="panto">Pan To</a> | 
-<a class="control_button" id="dlcsv">CSV</a> | 
-<a class="control_button" id="dlkml">KML</a
-</span>
-</span>
-<br />
-<span class="ui-corner-all control_buttons">
-<a class="control_button" id="showHideDebug">Show Debug</a> | 
-<a class="control_button" id="showHideForm">Hide Launch Card</a> |
-<a class="control_button" id="about_window_show">About</a>
-</span>
+    <img src="images/drag_handle.png" class="handle" />
+    <h1>Scenario Information</h1>
+    <span id="cursor_info">Current mouse position: 
+        Lat: <span id="cursor_lat">?</span> 
+        Lon: <span id="cursor_lon">?</span>
+    </span><br />
+    <span id="cursor_pred" style="display:none">
+        Range: <span id="cursor_pred_range"></span>km, 
+        Flight Time: <span id="cursor_pred_time"></span><br />
+        Cursor range from launch: <span id="cursor_pred_launchrange">?</span>km, 
+        land: <span id="cursor_pred_landrange">?</span>km
+        <br />
+        Last run at <span id="run_time">?</span> UTC using model <span id="gfs_timestamp">?</span>
+        <br />
+        <span class="ui-corner-all control_buttons">
+            <a class="control_button" id="panto">Pan To</a> | 
+            <a class="control_button" id="dlcsv">CSV</a> | 
+            <a class="control_button" id="dlkml">KML</a>
+        </span>
+    </span>
+    <br />
+    <span class="ui-corner-all control_buttons">
+        <a class="control_button" id="showHideDebug">Show Debug</a> | 
+        <a class="control_button" id="showHideForm">Hide Launch Card</a> |
+        <a class="control_button" id="about_window_show">About</a>
+    </span>
 </div>
 
 <!-- save location -->
 <div id="location_save" class="box ui-corner-all">
-<h1>Request Location Save</h1><br />
-<form name="location_save_form" id="location_save_form">
-<table name="req_table" id="req_table">
-<tr>
-<td>Latitude: </td><td><input type="text" name="req_lat" id="req_lat" size="10"></td>
-</tr><tr>
-<td>Longitude: </td><td><input type="text" name="req_lon" id="req_lon" size="10"></td>
-</tr><tr>
-<td>Altitude: </td><td><input type="text" name="req_alt" id="req_alt" size="10"></td>
-</tr><tr>
-<td>Site Name: </td><td><input type="text" name="req_name" id="req_name" size="10"></td>
-</tr><tr>
-<td></td><td><input type="submit" value="Request" name="submit" id="req_sub_btn"></td>
-</tr>
-</table>
-</form><br />
-<a id="req_close">Close this window</a>
+    <h1>Request Location Save</h1><br />
+    <form name="location_save_form" id="location_save_form">
+    <table name="req_table" id="req_table">
+    <tr>
+    <td>Latitude: </td><td><input type="text" name="req_lat" id="req_lat" size="10"></td>
+    </tr><tr>
+    <td>Longitude: </td><td><input type="text" name="req_lon" id="req_lon" size="10"></td>
+    </tr><tr>
+    <td>Altitude: </td><td><input type="text" name="req_alt" id="req_alt" size="10"></td>
+    </tr><tr>
+    <td>Site Name: </td><td><input type="text" name="req_name" id="req_name" size="10"></td>
+    </tr><tr>
+    <td></td><td><input type="submit" value="Request" name="submit" id="req_sub_btn"></td>
+    </tr>
+    </table>
+    </form><br />
+    <a id="req_close">Close this window</a>
 </div>
 
 <!-- the about window -->
 <div id="about_window">
-<b>Cambridge University Spaceflight Landing Predictor (<a href="http://github.com/jonsowman/cusf-standalone-predictor" target="_blank">github</a>)</b>
-<br /><br />
-A tool to predict the flight path and landing location of latex sounding balloons.
-<br /><br />
-Written by <a href="http://github.com/jonsowman" target="_blank">Jon Sowman</a> and <a href="http://github.com/randomskk" target="_blank">Adam Greig</a> for <a href="http://www.cuspaceflight.co.uk" target="_blank">CUSF</a>.
-Credit also to <a href="http://github.com/rjw57" target="_blank">Rich Wareham</a> for work on the predictor. Some parts of code taken from old landing prediction software, credit to Rob Anderson, Fergus Noble and Ed Moore.
-<br /><br />
-No guarantee is given for the accuracy, precision or reliability of the data produced by this software, and you use it entirely at your own risk. For more information, see #highaltitude on irc.freenode.net.
+    <b>Cambridge University Spaceflight Landing Predictor (<a href="http://github.com/jonsowman/cusf-standalone-predictor" target="_blank">github</a>)</b>
+    <br /><br />
+    A tool to predict the flight path and landing location of latex sounding balloons.
+    <br /><br />
+    Written by <a href="http://github.com/jonsowman" target="_blank">Jon Sowman</a> and <a href="http://github.com/randomskk" target="_blank">Adam Greig</a> for <a href="http://www.cuspaceflight.co.uk" target="_blank">CUSF</a>.
+    Credit also to <a href="http://github.com/rjw57" target="_blank">Rich Wareham</a> for work on the predictor. Some parts of code taken from old landing prediction software, credit to Rob Anderson, Fergus Noble and Ed Moore.
+    <br /><br />
+    No guarantee is given for the accuracy, precision or reliability of the data produced by this software, and you use it entirely at your own risk. For more information, see #highaltitude on irc.freenode.net.
 </div>
 
 <!-- launch card form -->
