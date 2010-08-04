@@ -72,7 +72,7 @@ function runPred($pred_model) {
     // check if this is a re-run
     if ( !file_exists(PREDS_PATH . $pred_model['uuid'] . "/" . SCENARIO_FILE) ) {
         // if not, make a new directory and scenario file
-        makePredDir($pred_model);
+        makePredDir($pred_model) or die ("Couldn't create the scenario dir");
         makeINI($pred_model);
     }
 
@@ -96,7 +96,12 @@ function runPred($pred_model) {
 }
 
 function makePredDir($pred_model) {
-    shell_exec("mkdir " . PREDS_PATH . $pred_model['uuid']); //make sure we use the uuid from model
+    //make sure we use the uuid from model
+    if ( mkdir( PREDS_PATH . $pred_model['uuid'] ) ) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 function makeINI($pred_model) { // makes an ini file
