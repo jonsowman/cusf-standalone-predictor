@@ -710,10 +710,12 @@ function constructCookieLocationsTable(cookie_name) {
         throwError("Tried to write from an empty cookie");
     } else {
         idx = $.Jookie.Get(cookie_name, "idx");
-        t += "<td>Index</td><td>Name</td><td>Delete</td>";
+        t += "<td>Index</td><td>Name</td><td>Use</td><td>Delete</td>";
         for (i=1; i<=idx; i++) {
             t += "<tr>";
-            t += "<td>"+i+"</td><td>"+$.Jookie.Get(cookie_name, i+"_name")+"</td><td>Delete</td>";
+            t += "<td>"+i+"</td><td>"+$.Jookie.Get(cookie_name, i+"_name")+"</td><td>";
+            t += "<a id='"+i+"_usethis' onClick='setCookieLatLng("+i+")'>Use</a>";
+            t += "</td><td>Delete</td>";
             t += "</tr>";
         }
         t += "</table>";
