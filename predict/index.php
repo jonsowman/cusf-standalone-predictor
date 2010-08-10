@@ -139,6 +139,7 @@ var hlTimeout = 5000; // high latency
 
 <!-- cookie save location -->
 <div id="location_save_local" class="box ui-corner-all">
+    <img src="images/drag_handle.png" class="handle" />
     <b>Saved Locations</b><br />
     <span id="locations_table">?</span>
     <br />

@@ -27,6 +27,7 @@ $(document).ready(function() {
     // make launch card draggable
     $("#input_form").draggable({containment: '#map_canvas', handle: 'img.handle', snap: '#map_canvas'});
     $("#scenario_info").draggable({containment: '#map_canvas', handle: 'img.handle', snap: '#map_canvas'});
+    $("#location_save_local").draggable({containment: '#map_canvas', handle: 'img.handle', snap: '#map_canvas'});
     $("#run_pred_btn").button();
     $("#req_sub_btn").button();
 
@@ -622,11 +623,16 @@ function setupEventHandlers() {
         if ( $.Jookie.Get(cookie_name, "idx") > 5 ) {
             throwError("Too many saved locations");
         } else {
-            idx++;
-            $.Jookie.Set(cookie_name, idx+"_lat", req_lat);
-            $.Jookie.Set(cookie_name, idx+"_lon", req_lon);
-            $.Jookie.Set(cookie_name, idx+"_alt", req_alt);
-            $.Jookie.Set(cookie_name, idx+"_name", req_name);
+            // Find the next free index we can use
+            var i=1;
+            while ( $.Jookie.Get(cookie_name, i+"_name") && i<=5 ) {
+                i++;
+            }
+            // We will use this idx for the next location
+            $.Jookie.Set(cookie_name, i+"_lat", req_lat);
+            $.Jookie.Set(cookie_name, i+"_lon", req_lon);
+            $.Jookie.Set(cookie_name, i+"_alt", req_alt);
+            $.Jookie.Set(cookie_name, i+"_name", req_name);
 
             // Increase the index
             $.Jookie.Set(cookie_name, "idx", idx);
@@ -652,8 +658,9 @@ function setupEventHandlers() {
     $("#site").change(function() {
         if ( $("#site").val() == "Other" ) {
             appendDebug("User requested locally saved launch sites");
-            constructCookieLocationsTable("cusf_predictor");
-            $("#location_save_local").fadeIn();
+            if ( constructCookieLocationsTable("cusf_predictor") ) {
+                $("#location_save_local").fadeIn();
+            }
         } else {
             plotClick();
         }
@@ -717,24 +724,28 @@ function constructCookieLocationsTable(cookie_name) {
     $.Jookie.Initialise(cookie_name, 99999999);
     if ( !$.Jookie.Get(cookie_name, "idx") || $.Jookie.Get(cookie_name, "idx") == 0 ) {
         throwError("Tried to write from an empty cookie");
+        return false;
     } else {
         idx = $.Jookie.Get(cookie_name, "idx");
-        t += "<td>Index</td><td>Name</td><td>Use</td><td>Delete</td>";
-        for (i=1; i<=idx; i++) {
+        t += "<td>Name</td><td>Use</td><td>Delete</td>";
+        var i=1;
+        var j=0;
+        while ( j<idx ) {
             if ( $.Jookie.Get(cookie_name, i+"_name") ) {
                 t += "<tr>";
-                t += "<td>"+i+"</td><td>"+$.Jookie.Get(cookie_name, i+"_name")+"</td><td>";
+                t += "<td>"+$.Jookie.Get(cookie_name, i+"_name")+"</td><td>";
                 t += "<a id='"+i+"_usethis' onClick='setCookieLatLng(\""+cookie_name+"\", \""+i+"\")'>Use</a>";
                 t += "</td><td>";
                 t += "<a id='"+i+"_usethis' onClick='deleteCookieLocation(\""+cookie_name+"\", \""+i+"\")'>Delete</a>";
                 t += "</td>";
                 t += "</tr>";
-            } else {
-                i--;
+                j++;
             }
+            i++;
         }
         t += "</table>";
         $("#locations_table").html(t);
+        return true;
     }
 }
 
@@ -759,8 +770,9 @@ function deleteCookieLocation(cookie_name, idx) {
     $.Jookie.Unset(cookie_name, idx+"_name");
     // Decrease quantity in cookie by one
     var qty = $.Jookie.Get(cookie_name, "idx");
-    qty--;
+    qty -= 1;
     $.Jookie.Set(cookie_name, "idx", qty);
+    $("#location_save_local").fadeOut();
 }
 
 function POSIXtoHM(timestamp, format) {
