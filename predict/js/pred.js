@@ -619,7 +619,7 @@ function setupEventHandlers() {
             var idx = $.Jookie.Get(cookie_name, "idx");
         }
 
-        if ( $.Jookie.Get(cookie_name, "idx") > 20 ) {
+        if ( $.Jookie.Get(cookie_name, "idx") > 5 ) {
             throwError("Too many saved locations");
         } else {
             idx++;
@@ -699,6 +699,26 @@ function setupEventHandlers() {
     google.maps.event.addListener(map, 'mousemove', function(event) {
         showMousePos(event.latLng);
     });
+}
+
+function constructCookieLocationsTable(cookie_name) {
+    var t = "";
+    t += "<table border='0'>";
+
+    $.Jookie.Initialise(cookie_name, 99999999);
+    if ( !$.Jookie.Get(cookie_name, "idx") || $.Jookie.Get(cookie_name, "idx") == 0 ) {
+        throwError("Tried to write from an empty cookie");
+    } else {
+        idx = $.Jookie.Get(cookie_name, "idx");
+        t += "<td>Index</td><td>Name</td><td>Delete</td>";
+        for (i=1; i<=idx; i++) {
+            t += "<tr>";
+            t += "<td>"+i+"</td><td>"+$.Jookie.Get(cookie_name, i+"_name")+"</td><td>Delete</td>";
+            t += "</tr>";
+        }
+        t += "</table>";
+        $("#locations_table").html(t);
+    }
 }
 
 function POSIXtoHM(timestamp, format) {
