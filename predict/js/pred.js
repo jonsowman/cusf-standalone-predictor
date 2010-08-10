@@ -730,7 +730,7 @@ function constructCookieLocationsTable(cookie_name) {
 
     $.Jookie.Initialise(cookie_name, 99999999);
     if ( !$.Jookie.Get(cookie_name, "idx") || $.Jookie.Get(cookie_name, "idx") == 0 ) {
-        throwError("You haven't saved any locations yet! Please click Save Location to do so.");
+        throwError("You haven't saved any locations yet. Please click Save Location to do so.");
         return false;
     } else {
         idx = $.Jookie.Get(cookie_name, "idx");
