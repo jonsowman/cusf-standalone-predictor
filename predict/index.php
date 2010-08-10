@@ -118,7 +118,7 @@ var hlTimeout = 5000; // high latency
 
 <!-- save location -->
 <div id="location_save" class="box ui-corner-all">
-    <h1>Request Location Save</h1><br />
+    <h1>Save Launch Location</h1><br />
     <form name="location_save_form" id="location_save_form">
     <table name="req_table" id="req_table">
     <tr>
@@ -130,7 +130,7 @@ var hlTimeout = 5000; // high latency
     </tr><tr>
     <td>Site Name: </td><td><input type="text" name="req_name" id="req_name" size="10"></td>
     </tr><tr>
-    <td></td><td><input type="button" value="Request" name="submit" id="req_sub_btn"></td>
+    <td></td><td><input type="button" value="Save" name="submit" id="req_sub_btn"></td>
     </tr>
     </table>
     </form><br />
@@ -164,7 +164,12 @@ var hlTimeout = 5000; // high latency
 <form action="" id="modelForm" name="modelForm">
 <table>
 	<tr>
-		<td>Launch Site:</td>
+                <td>
+                    Launch Site:
+                    <span class="control_buttons ui-corner-all">
+                    <a id="cookieLocations" class="control_button">Custom</a>
+                    </span>
+                </td>
 		<td>
 			<select id="site" name="launchsite">
 			</select>
@@ -178,8 +183,16 @@ var hlTimeout = 5000; // high latency
         <td><input id="lon" type="text" name="lon" value="0.0964" onKeyDown="SetSiteOther()"></td>
     </tr>
     <tr>
-    <td><a id="setWithClick">Set With Map</a></td>
-    <td><a id="req_open">Save Location</a></td>
+    <td>
+        <span class="control_buttons ui-corner-all">
+        <a class="control_button" id="setWithClick">Set With Map</a>
+        </span>
+    </td>
+    <td>
+        <span class="control_buttons ui-corner-all">
+        <a class="control_button" id="req_open">Save Location</a>
+        </span>
+    </td>
     </tr>
     <tr>
         <td>Launch altitude (m):</td>

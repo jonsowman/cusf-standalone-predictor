@@ -620,8 +620,8 @@ function setupEventHandlers() {
             var idx = $.Jookie.Get(cookie_name, "idx");
         }
 
-        if ( $.Jookie.Get(cookie_name, "idx") > 5 ) {
-            throwError("Too many saved locations");
+        if ( $.Jookie.Get(cookie_name, "idx") >= 5 ) {
+            throwError("You may only save 5 locations - please delete some.");
         } else {
             // Find the next free index we can use
             var i=1;
@@ -640,7 +640,7 @@ function setupEventHandlers() {
 
             // Close dialog and let the user know it worked
             $("#location_save").hide();
-            throwError("Successfully saved the location to cookie " + cookie_name);
+            appendDebug("Successfully saved the location to cookie " + cookie_name);
         }
 
     });
@@ -678,6 +678,12 @@ function setupEventHandlers() {
     });
     $("#closeErrorWindow").click(function() {
         $("#error_window").fadeOut();
+    });
+    $("#cookieLocations").click(function() {
+        appendDebug("User requested locally saved launch sites");
+        if ( constructCookieLocationsTable("cusf_predictor") ) {
+            $("#location_save_local").fadeIn();
+        }
     });
     $("#about_window_show").click(function() {
         $("#about_window").dialog({
@@ -724,11 +730,11 @@ function constructCookieLocationsTable(cookie_name) {
 
     $.Jookie.Initialise(cookie_name, 99999999);
     if ( !$.Jookie.Get(cookie_name, "idx") || $.Jookie.Get(cookie_name, "idx") == 0 ) {
-        throwError("Tried to write from an empty cookie");
+        throwError("You haven't saved any locations yet! Please click Save Location to do so.");
         return false;
     } else {
         idx = $.Jookie.Get(cookie_name, "idx");
-        t += "<td>Name</td><td>Use</td><td>Delete</td>";
+        t += "<tr style='font-weight:bold'><td>Name</td><td>Use</td><td>Delete</td></tr>";
         var i=1;
         var j=0;
         while ( j<idx ) {
