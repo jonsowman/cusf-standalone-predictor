@@ -721,13 +721,17 @@ function constructCookieLocationsTable(cookie_name) {
         idx = $.Jookie.Get(cookie_name, "idx");
         t += "<td>Index</td><td>Name</td><td>Use</td><td>Delete</td>";
         for (i=1; i<=idx; i++) {
-            t += "<tr>";
-            t += "<td>"+i+"</td><td>"+$.Jookie.Get(cookie_name, i+"_name")+"</td><td>";
-            t += "<a id='"+i+"_usethis' onClick='setCookieLatLng(\""+cookie_name+"\", \""+i+"\")'>Use</a>";
-            t += "</td><td>";
-            t += "<a id='"+i+"_usethis' onClick='deleteCookieLocation(\""+cookie_name+"\", \""+i+"\")'>Delete</a>";
-            t += "</td>";
-            t += "</tr>";
+            if ( $.Jookie.Get(cookie_name, i+"_name") ) {
+                t += "<tr>";
+                t += "<td>"+i+"</td><td>"+$.Jookie.Get(cookie_name, i+"_name")+"</td><td>";
+                t += "<a id='"+i+"_usethis' onClick='setCookieLatLng(\""+cookie_name+"\", \""+i+"\")'>Use</a>";
+                t += "</td><td>";
+                t += "<a id='"+i+"_usethis' onClick='deleteCookieLocation(\""+cookie_name+"\", \""+i+"\")'>Delete</a>";
+                t += "</td>";
+                t += "</tr>";
+            } else {
+                i--;
+            }
         }
         t += "</table>";
         $("#locations_table").html(t);
