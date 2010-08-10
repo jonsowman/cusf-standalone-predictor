@@ -9,16 +9,6 @@
         "longitude" :   -0.0927,
         "altitude"  :   0
     },
-    "Glenrothes": {
-        "latitude"  :   56.13,
-        "longitude" :   -3.06,
-        "altitude"  :   0
-    },
-    "Bujaraloz, Monegros": {
-        "latitude"  :   41.4958,
-        "longitude" :   -0.15797,
-        "altitude"  :   0
-    },
     "Adelaide": {
         "altitude"  :   0,
         "latitude"  :   -34.9499,
@@ -44,14 +34,4 @@
 	"latitude"  :   54.654118,
 	"longitude" :   -7.034914
     },
-    "Agia Kiriaki": {
-        "altitude"  :   0,
-        "latitude"  :   40.0429,
-        "longitude" :   23.8125
-    },
-    "Utrecht, NL": {
-        "altitude"  :   0,
-        "latitude"  :   52.1,
-        "longitude" :   5.2
-    }
 }

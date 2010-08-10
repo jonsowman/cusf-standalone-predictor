@@ -610,6 +610,7 @@ function setupEventHandlers() {
         var req_alt = $("#req_alt").val();
         var req_name = $("#req_name").val();
         var cookie_name = "cusf_predictor";
+        var locations_limit = 5;
 
         // Now let's init the cookie
         $.Jookie.Initialise(cookie_name, 99999999);
@@ -620,12 +621,13 @@ function setupEventHandlers() {
             var idx = $.Jookie.Get(cookie_name, "idx");
         }
 
-        if ( $.Jookie.Get(cookie_name, "idx") >= 5 ) {
-            throwError("You may only save 5 locations - please delete some.");
+        if ( $.Jookie.Get(cookie_name, "idx") >= locations_limit ) {
+            $("#location_save").fadeOut();
+            throwError("You may only save "+locations_limit+" locations - please delete some.");
         } else {
             // Find the next free index we can use
             var i=1;
-            while ( $.Jookie.Get(cookie_name, i+"_name") && i<=5 ) {
+            while ( $.Jookie.Get(cookie_name, i+"_name") && i<=locations_limit ) {
                 i++;
             }
             // We will use this idx for the next location
