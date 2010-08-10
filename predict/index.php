@@ -141,6 +141,8 @@ var hlTimeout = 5000; // high latency
 <div id="location_save_local" class="box ui-corner-all">
     <b>Saved Locations</b><br />
     <span id="locations_table">?</span>
+    <br />
+    <a id="locations_close">Close this window</a>
 </div>
 
 <!-- the about window -->

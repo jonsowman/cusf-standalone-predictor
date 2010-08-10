@@ -650,7 +650,13 @@ function setupEventHandlers() {
         plotClick();
     });
     $("#site").change(function() {
-        plotClick();
+        if ( $("#site").val() == "Other" ) {
+            appendDebug("User requested locally saved launch sites");
+            constructCookieLocationsTable("cusf_predictor");
+            $("#location_save_local").fadeIn();
+        } else {
+            plotClick();
+        }
     });
     $("#showHideDebug").click(function() {
         toggleWindow("scenario_template", "showHideDebug", "Show Debug", "Hide Debug");
@@ -688,6 +694,9 @@ function setupEventHandlers() {
     $("#req_close").click(function() {
             $("#location_save").fadeOut();
     });
+    $("#locations_close").click(function() {
+            $("#location_save_local").fadeOut();
+    });
     $("#req_open").click(function() {
             $("#req_lat").val($("#lat").val());
             $("#req_lon").val($("#lon").val());
@@ -714,13 +723,40 @@ function constructCookieLocationsTable(cookie_name) {
         for (i=1; i<=idx; i++) {
             t += "<tr>";
             t += "<td>"+i+"</td><td>"+$.Jookie.Get(cookie_name, i+"_name")+"</td><td>";
-            t += "<a id='"+i+"_usethis' onClick='setCookieLatLng("+i+")'>Use</a>";
-            t += "</td><td>Delete</td>";
+            t += "<a id='"+i+"_usethis' onClick='setCookieLatLng(\""+cookie_name+"\", \""+i+"\")'>Use</a>";
+            t += "</td><td>";
+            t += "<a id='"+i+"_usethis' onClick='deleteCookieLocation(\""+cookie_name+"\", \""+i+"\")'>Delete</a>";
+            t += "</td>";
             t += "</tr>";
         }
         t += "</table>";
         $("#locations_table").html(t);
     }
+}
+
+function setCookieLatLng(cookie_name, idx) {
+    var req_lat = $.Jookie.Get(cookie_name, idx+"_lat");
+    var req_lon= $.Jookie.Get(cookie_name, idx+"_lon");
+    var req_alt = $.Jookie.Get(cookie_name, idx+"_alt");
+    $("#lat").val(req_lat);
+    $("#lon").val(req_lon);
+    $("#initial_alt").val(req_alt);
+    // now hide the window
+    $("#location_save_local").fadeOut();
+    SetSiteOther();
+    plotClick();
+}
+
+function deleteCookieLocation(cookie_name, idx) {
+    // Delete the location in the cookie
+    $.Jookie.Unset(cookie_name, idx+"_lat");
+    $.Jookie.Unset(cookie_name, idx+"_lon");
+    $.Jookie.Unset(cookie_name, idx+"_alt");
+    $.Jookie.Unset(cookie_name, idx+"_name");
+    // Decrease quantity in cookie by one
+    var qty = $.Jookie.Get(cookie_name, "idx");
+    qty--;
+    $.Jookie.Set(cookie_name, "idx", qty);
 }
 
 function POSIXtoHM(timestamp, format) {
