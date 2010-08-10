@@ -635,6 +635,7 @@ function setupEventHandlers() {
             $.Jookie.Set(cookie_name, i+"_name", req_name);
 
             // Increase the index
+            idx++;
             $.Jookie.Set(cookie_name, "idx", idx);
 
             // Close dialog and let the user know it worked
