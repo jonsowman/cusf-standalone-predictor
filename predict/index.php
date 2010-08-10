@@ -166,8 +166,8 @@ var hlTimeout = 5000; // high latency
 	<tr>
                 <td>
                     Launch Site:
-                    <span class="control_buttons ui-corner-all">
-                    <a id="cookieLocations" class="control_button">Custom</a>
+                    <span>
+                    <a id="cookieLocations">Custom</a>
                     </span>
                 </td>
 		<td>
@@ -184,13 +184,13 @@ var hlTimeout = 5000; // high latency
     </tr>
     <tr>
     <td>
-        <span class="control_buttons ui-corner-all">
-        <a class="control_button" id="setWithClick">Set With Map</a>
+        <span>
+        <a id="setWithClick">Set With Map</a>
         </span>
     </td>
     <td>
-        <span class="control_buttons ui-corner-all">
-        <a class="control_button" id="req_open">Save Location</a>
+        <span>
+        <a id="req_open">Save Location</a>
         </span>
     </td>
     </tr>
