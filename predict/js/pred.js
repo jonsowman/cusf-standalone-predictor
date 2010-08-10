@@ -602,19 +602,42 @@ function setupEventHandlers() {
             }
         }
     });
-    $("#location_save_form").ajaxForm({
-        url: 'ajax.php?action=locationSave',
-        type: 'POST',
-        success: function(data) {
-            if (data == "true") {
-                appendDebug("Server returned OK - closing window");
-                $("#location_save").fadeOut();
-            } else {
-                alert("The server rejected the request for location save");
-                appendDebug("Failed to request location save from server");
-            }
+    $("#req_sub_btn").click(function() {
+        // Get the variables from the form
+        var req_lat = $("#req_lat").val();
+        var req_lon = $("#req_lon").val();
+        var req_alt = $("#req_alt").val();
+        var req_name = $("#req_name").val();
+        var cookie_name = "cusf_predictor";
+
+        // Now let's init the cookie
+        $.Jookie.Initialise(cookie_name, 99999999);
+        if ( !$.Jookie.Get(cookie_name, "idx") ) { 
+            $.Jookie.Set(cookie_name, "idx", 0);
+            var idx = 0;
+        } else {
+            var idx = $.Jookie.Get(cookie_name, "idx");
         }
+
+        if ( $.Jookie.Get(cookie_name, "idx") > 20 ) {
+            throwError("Too many saved locations");
+        } else {
+            idx++;
+            $.Jookie.Set(cookie_name, idx+"_lat", req_lat);
+            $.Jookie.Set(cookie_name, idx+"_lon", req_lon);
+            $.Jookie.Set(cookie_name, idx+"_alt", req_alt);
+            $.Jookie.Set(cookie_name, idx+"_name", req_name);
+
+            // Increase the index
+            $.Jookie.Set(cookie_name, "idx", idx);
+
+            // Close dialog and let the user know it worked
+            $("#location_save").hide();
+            throwError("Successfully saved the location to cookie " + cookie_name);
+        }
+
     });
+        
     // activate the "Set with Map" link
     $("#setWithClick").click(function() {
         setLatLonByClick(true);

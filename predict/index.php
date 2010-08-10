@@ -33,6 +33,7 @@ google.load("jquery", "1.4.2");
 google.load("jqueryui", "1.8.1");
 </script>
 <script src="js/jquery.form.js" type="text/javascript"></script>
+<script src="js/jquery.jookie.js" type="text/javascript"></script>
 <script src="js/date.jsport.js" type="text/javascript"></script>
 <script src="js/pred.js" type="text/javascript"></script>
 <script type="text/javascript">
@@ -129,11 +130,16 @@ var hlTimeout = 5000; // high latency
     </tr><tr>
     <td>Site Name: </td><td><input type="text" name="req_name" id="req_name" size="10"></td>
     </tr><tr>
-    <td></td><td><input type="submit" value="Request" name="submit" id="req_sub_btn"></td>
+    <td></td><td><input type="button" value="Request" name="submit" id="req_sub_btn"></td>
     </tr>
     </table>
     </form><br />
     <a id="req_close">Close this window</a>
+</div>
+
+<!-- cookie save location -->
+<div id="location_save_local" class="box ui-corner-all">
+<b>Saved Locations</b><br />
 </div>
 
 <!-- the about window -->
@@ -168,8 +174,8 @@ var hlTimeout = 5000; // high latency
         <td><input id="lon" type="text" name="lon" value="0.0964" onKeyDown="SetSiteOther()"></td>
     </tr>
     <tr>
-    <td><a id="setWithClick">Set with map</a></td>
-    <td><a id="req_open">Request to save</a></td>
+    <td><a id="setWithClick">Set With Map</a></td>
+    <td><a id="req_open">Save Location</a></td>
     </tr>
     <tr>
         <td>Launch altitude (m):</td>
