@@ -612,6 +612,10 @@ function setupEventHandlers() {
         var req_name = $("#req_name").val();
         var cookie_name = "cusf_predictor";
         var locations_limit = 5;
+        var name_limit = 20;
+
+        // Check the length of the name
+        if ( req_name.length > name_limit ) req_name = req_name.substr(0, name_limit);
 
         // Now let's init the cookie
         $.Jookie.Initialise(cookie_name, 99999999);
@@ -715,16 +719,37 @@ function setupEventHandlers() {
             $("#location_save_local").fadeOut();
     });
     $("#req_open").click(function() {
-            $("#req_lat").val($("#lat").val());
-            $("#req_lon").val($("#lon").val());
+            var lat = $("#lat").val();
+            var lon = $("#lon").val();
+            $("#req_lat").val(lat);
+            $("#req_lon").val(lon);
             $("#req_alt").val($("#initial_alt").val());
             // this is bad, use a geocoder to guess it
             $("#req_name").val("Unnamed");
+            appendDebug("Trying to reverse geo-code the launch point");
+            rvGeocode(lat, lon, "req_name");
             $("#location_save").fadeIn();
     });
     $(".tipsyLink").tipsy({fade: true});
     google.maps.event.addListener(map, 'mousemove', function(event) {
         showMousePos(event.latLng);
+    });
+}
+
+function rvGeocode(lat, lon, fillField) {
+    var geocoder = new google.maps.Geocoder();
+    var latlng = new google.maps.LatLng(parseFloat(lat), parseFloat(lon));
+    var coded = "Unnamed";
+    geocoder.geocode({'latLng': latlng}, function(results, status) {
+        if ( status == google.maps.GeocoderStatus.OK ) {
+            // Successfully got rv-geocode information
+            appendDebug("Got a good response from the geocode server");
+            coded = results[1].address_components[1].short_name;
+        } else {
+            appendDebug("The rv-geocode failed: " + status);
+        }
+        // Now write the value to the field
+        $("#"+fillField+"").val(coded);
     });
 }
 

@@ -125,13 +125,13 @@ var hlTimeout = 5000; // high latency
     <form name="location_save_form" id="location_save_form">
     <table name="req_table" id="req_table">
     <tr>
-    <td>Latitude: </td><td><input type="text" name="req_lat" id="req_lat" size="10"></td>
+    <td>Latitude: </td><td><input type="text" name="req_lat" id="req_lat" size="15"></td>
     </tr><tr>
-    <td>Longitude: </td><td><input type="text" name="req_lon" id="req_lon" size="10"></td>
+    <td>Longitude: </td><td><input type="text" name="req_lon" id="req_lon" size="15"></td>
     </tr><tr>
-    <td>Altitude: </td><td><input type="text" name="req_alt" id="req_alt" size="10"></td>
+    <td>Altitude: </td><td><input type="text" name="req_alt" id="req_alt" size="15"></td>
     </tr><tr>
-    <td>Site Name: </td><td><input type="text" name="req_name" id="req_name" size="10"></td>
+    <td>Site Name: </td><td><input type="text" name="req_name" id="req_name" size="15"></td>
     </tr><tr>
     <td></td><td><input type="button" value="Save" name="submit" id="req_sub_btn"></td>
     </tr>
