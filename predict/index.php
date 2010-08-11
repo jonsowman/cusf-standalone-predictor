@@ -25,15 +25,17 @@ $time = time() + 3600;
 <script type="text/javascript" src="http://www.google.com/jsapi?key=<?php echo GMAPS_API_KEY; ?>">
 </script>
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
-<link href="css/pred.css" type="text/css" rel="stylesheet">
+<link href="css/pred.css" type="text/css" rel="stylesheet" />
+<link rel="stylesheet" href="css/tipsy.css" type="text/css" />
 <link href="css/cupertino/jquery-ui-1.8.1.custom.css" type="text/css" rel="stylesheet">
 <script type="text/javascript">
-// load jquery and jqueryui before loading jquery.form.js later
+// Load jquery and jqueryui before loading jquery.form.js later
 google.load("jquery", "1.4.2");
 google.load("jqueryui", "1.8.1");
 </script>
 <script src="js/jquery.form.js" type="text/javascript"></script>
 <script src="js/jquery.jookie.js" type="text/javascript"></script>
+<script src="js/jquery.tipsy.js" type="text/javascript"></script>
 <script src="js/date.jsport.js" type="text/javascript"></script>
 <script src="js/pred.js" type="text/javascript"></script>
 <script type="text/javascript">
@@ -118,6 +120,7 @@ var hlTimeout = 5000; // high latency
 
 <!-- save location -->
 <div id="location_save" class="box ui-corner-all">
+    <img src="images/drag_handle.png" class="handle" />
     <h1>Save Launch Location</h1><br />
     <form name="location_save_form" id="location_save_form">
     <table name="req_table" id="req_table">
@@ -167,7 +170,7 @@ var hlTimeout = 5000; // high latency
                 <td>
                     Launch Site:
                     <span>
-                    <a id="cookieLocations">Custom</a>
+                    <a id="cookieLocations" class="tipsyLink" title="View your saved launch sites">Custom</a>
                     </span>
                 </td>
 		<td>
@@ -185,12 +188,12 @@ var hlTimeout = 5000; // high latency
     <tr>
     <td>
         <span>
-        <a id="setWithClick">Set With Map</a>
+        <a id="setWithClick" class="tipsyLink" title="Use the map to set your desired launch site">Set With Map</a>
         </span>
     </td>
     <td>
         <span>
-        <a id="req_open">Save Location</a>
+        <a id="req_open" class="tipsyLink" title="Save this location to a browser cookie">Save Location</a>
         </span>
     </td>
     </tr>

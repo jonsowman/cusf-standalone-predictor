@@ -27,6 +27,7 @@ $(document).ready(function() {
     // make launch card draggable
     $("#input_form").draggable({containment: '#map_canvas', handle: 'img.handle', snap: '#map_canvas'});
     $("#scenario_info").draggable({containment: '#map_canvas', handle: 'img.handle', snap: '#map_canvas'});
+    $("#location_save").draggable({containment: '#map_canvas', handle: 'img.handle', snap: '#map_canvas'});
     $("#location_save_local").draggable({containment: '#map_canvas', handle: 'img.handle', snap: '#map_canvas'});
     $("#run_pred_btn").button();
     $("#req_sub_btn").button();
@@ -721,6 +722,7 @@ function setupEventHandlers() {
             $("#req_name").val("Unnamed");
             $("#location_save").fadeIn();
     });
+    $(".tipsyLink").tipsy({fade: true});
     google.maps.event.addListener(map, 'mousemove', function(event) {
         showMousePos(event.latLng);
     });
