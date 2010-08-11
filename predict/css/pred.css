@@ -79,15 +79,21 @@ a { text-decoration: underline; color: #333; cursor: pointer; }
 }
 
 .box {
-	position: absolute; 
-	background-color: white; 
-	border: 1px solid #0070a3; 
-	padding: 0.5em;
+    position: absolute; 
+    background-color: white; 
+    border: 1px solid #0070a3; 
+    padding: 0.5em;
 }
 
 .box {
-        background: rgb(255,255,255); /* fallback */
-	background: rgba(255,255,255,0.75); /* for more modern browsers */
+    background-attachment:initial;
+    background-clip:initial;
+    background-color:rgb(255, 255, 255);
+    background-color:rgba(255, 255, 255, 0.746094);
+    background-image:initial;
+    background-origin:initial;
+    background-position:initial initial;
+    background-repeat:initial initial;
 }
 
 .box * {
