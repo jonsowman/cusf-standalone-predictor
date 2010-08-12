@@ -37,29 +37,8 @@ google.load("jqueryui", "1.8.1");
 <script src="js/jquery.jookie.js" type="text/javascript"></script>
 <script src="js/jquery.tipsy.js" type="text/javascript"></script>
 <script src="js/date.jsport.js" type="text/javascript"></script>
+<script src="js/config.js" type="text/javascript"></script>
 <script src="js/pred.js" type="text/javascript"></script>
-<script type="text/javascript">
-
-var ajaxEventHandle;
-var current_uuid = '0';
-
-var map;
-var map_items = [];
-var launch_img = "images/target-1-sm.png";
-var land_img = "images/target-8-sm.png";
-var burst_img = "images/pop-marker.png";
-var clickListener;
-var clickMarker;
-
-// polling progress parameters
-var ajaxTimeout = 500;
-var maxAjaxTimeout = 2000;
-var deltaAjaxTimeout = 500;
-var stdPeriod = 2000; // standard
-var hlPeriod = 10000; // high latency
-var hlTimeout = 5000; // high latency
-
-</script>
 </head>
 <body>
 
