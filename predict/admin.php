@@ -28,7 +28,7 @@ foreach( $dirs as $dir ) {
 echo '<h3>' . $limit . ' days old or newer</h3>';
 
 $i=1;
-echo '<table border=1>';
+echo '<table border="1" cellspacing="0">';
 echo '<tr style="font-weight:bold; text-align:center"><td>Index</td><td>UUID</td>'
     . '<td>Lat</td><td>Lon</td><td>Asc</td><td>Desc</td><td>Burst</td><td>View</td></tr>';
 foreach( $uuid_list as $uuid ) {
