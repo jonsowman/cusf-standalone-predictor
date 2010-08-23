@@ -6,6 +6,7 @@
 body { background-color: #fff; }
 </style>
 </head><body>
+<h1>Recent Predictions</h1>
 <?php
 
 require_once("includes/config.inc.php");
@@ -24,11 +25,13 @@ foreach( $dirs as $dir ) {
         $uuid_list[] = $dir;
 }
 
+echo '<h3>' . $limit . ' days old or newer</h3>';
+
 $i=1;
 echo '<table border=1>';
-echo '<tr><td>Index</td><td>UUID</td><td>View</td></tr>';
+echo '<tr style="font-weight:bold; text-align:center"><td>Index</td><td>UUID</td><td>View</td></tr>';
 foreach( $uuid_list as $uuid ) {
-    echo '<tr><td>' . $i . '</td><td>' . $uuid . '</td><td>';
+    echo '<tr><td>' . $i . '</td><td style="font-family:courier">' . $uuid . '</td><td>';
     echo '<a href="./#!/uuid=' . $uuid . '">View</a>';
     echo '</td></tr>';
     $i++;
