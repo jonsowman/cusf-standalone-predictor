@@ -29,10 +29,17 @@ echo '<h3>' . $limit . ' days old or newer</h3>';
 
 $i=1;
 echo '<table border=1>';
-echo '<tr style="font-weight:bold; text-align:center"><td>Index</td><td>UUID</td><td>View</td></tr>';
+echo '<tr style="font-weight:bold; text-align:center"><td>Index</td><td>UUID</td>'
+    . '<td>Lat</td><td>Lon</td><td>Asc</td><td>Desc</td><td>Burst</td><td>View</td></tr>';
 foreach( $uuid_list as $uuid ) {
-    echo '<tr><td>' . $i . '</td><td style="font-family:courier">' . $uuid . '</td><td>';
-    echo '<a href="./#!/uuid=' . $uuid . '">View</a>';
+    $scenario = parse_ini_file( PREDS_PATH . $uuid . "/" . SCENARIO_FILE );
+    echo '<tr><td>' . $i . '</td><td style="font-family:courier">' . $uuid . '</td>';
+    echo '<td>' . $scenario['latitude'] . '</td>';
+    echo '<td>' . $scenario['longitude'] . '</td>';
+    echo '<td>' . $scenario['ascent-rate'] . '</td>';
+    echo '<td>' . $scenario['descent-rate'] . '</td>';
+    echo '<td>' . $scenario['burst-altitude'] . '</td>';
+    echo '<td><a href="./#!/uuid=' . $uuid . '">View</a>';
     echo '</td></tr>';
     $i++;
 }
