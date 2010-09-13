@@ -10,10 +10,13 @@ require_once("config.inc.php");
 function createModel($post_array) {
     $pred_model = array();
 
-    // first, populate the prediction model
+    // Populate the prediction model
     $pred_model['hour'] = (int)$post_array['hour']; //adjust for GMT
     $pred_model['min'] = (int)$post_array['min'];
-    $pred_model['sec'] = (int)$post_array['sec'];
+
+    // Account for no 'seconds' value, though really it should be sent
+    $pred_model['sec'] = (isset($post_array['sec']) ? 
+        (int)$post_array['sec'] : 0);
 
     $pred_model['month'] = (int)$post_array['month'];
     $pred_model['day'] = (int)$post_array['day'];
@@ -46,7 +49,7 @@ function createModel($post_array) {
 }
 
 function makesha1hash($pred_model) {
-    $sha1str;
+    $sha1str = "";
     foreach ( $pred_model as $idx => $value ){
         $sha1str .= $idx . "=" . $value . ",";
     }
@@ -78,6 +81,7 @@ function runPred($pred_model) {
 
     // if we're using GFS HD, then append --hd to the exec string
     if ( $pred_model['software'] == "gfs_hd" ) $use_hd ="--hd ";
+    else $use_hd = "";
 
     $predictor_lat = number_format($pred_model['lat'], 0);
     $predictor_lon = number_format($pred_model['lon'], 0);
