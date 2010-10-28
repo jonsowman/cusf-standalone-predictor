@@ -421,6 +421,8 @@ function plotClick() {
     // get the new values from the form
     click_lat = parseFloat($("#lat").val());
     click_lon = parseFloat($("#lon").val());
+    // Make sure the data is valid before we try and do anything with it
+    if ( isNaN(click_lat) || isNaN(click_lon) ) return;
     var click_pt = new google.maps.LatLng(click_lat, click_lon);
     clickMarker = new google.maps.Marker({
         position: click_pt,
