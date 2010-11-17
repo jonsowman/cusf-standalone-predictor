@@ -443,8 +443,8 @@ function drawDeltaSquare(map) {
     // get the values from the form
     var lat = parseFloat($("#lat").val());
     var lon = parseFloat($("#lon").val());
-    var dlon = parseFloat($("#delta_lat").val());
-    var dlat = parseFloat($("#delta_lon").val());
+    var dlat = parseFloat($("#delta_lat").val());
+    var dlon = parseFloat($("#delta_lon").val());
     // make a rectange of points
     var points = [
     new google.maps.LatLng(lat+dlat, lon+dlon),
