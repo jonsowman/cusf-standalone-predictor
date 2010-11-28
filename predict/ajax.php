@@ -53,7 +53,7 @@ case "locationSave":
 
 case "getModelByUUID":
     $uuid = ( isset($_GET['uuid']) ? $_GET['uuid'] : false );
-    if( !uuid ) die ("No uuid given to getModelByUUID");
+    if( !$uuid ) die ("No uuid given to getModelByUUID");
     // make a new model
     $pred_model = array();
     if ( !file_exists(PREDS_PATH . $uuid . "/" . SCENARIO_FILE ) ) {
