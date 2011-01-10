@@ -589,9 +589,13 @@ function setupEventHandlers() {
         dataType: 'json',
         success: function(data) {
             if ( data.valid == "false" ) {
-                appendDebug("The server rejected the submitted form data");
-                throwError("The server rejected the submitted form data: \n" +
-                    data.error);
+                // If something went wrong, write the error messages to
+                // the debug window
+                appendDebug("The server rejected the submitted form data:");
+                appendDebug(data.error);
+                // And throw an error window to alert the user of what happened
+                throwError("The server rejected the submitted form data: \n"
+                    + data.error);
                 resetGUI();
             } else if ( data.valid == "true" ) {
                 predSub();
