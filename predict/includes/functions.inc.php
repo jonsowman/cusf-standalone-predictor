@@ -7,6 +7,7 @@
 
 require_once("config.inc.php");
 
+// Given a POST array, create a scenario model
 function createModel($post_array) {
     $pred_model = array();
 
@@ -36,18 +37,17 @@ function createModel($post_array) {
 
     $pred_model['software'] = $post_array['software'];
 
-    // make a timestamp of the form data
-    $pred_model['timestamp'] = mktime($pred_model['hour'], $pred_model['min'], $pred_model['sec'], (int)$pred_model['month'], $pred_model['day'], (int)$pred_model['year'] - 2000);
+    // Make a timestamp of the form data
+    $pred_model['timestamp'] = mktime($pred_model['hour'], $pred_model['min'], 
+        $pred_model['sec'], (int)$pred_model['month'], $pred_model['day'], 
+        (int)$pred_model['year'] - 2000);
 
-    // and check that it's within range
-    if ( $pred_model['timestamp'] > (time() + 180*3600) || $pred_model['timestamp'] < time() ) {
-        return false;
-        break;
-    }
 
+    // If all was good, return the prediction model
     return $pred_model;
 }
 
+// Create a UUID by SHA1 hashing the scenario model parameters
 function makesha1hash($pred_model) {
     $sha1str = "";
     foreach ( $pred_model as $idx => $value ){
@@ -57,29 +57,65 @@ function makesha1hash($pred_model) {
     return $uuid;
 }
 
-function verifyModel($pred_model, $software_available) {
-    if(!isset($pred_model)) return false;
-    foreach($pred_model as $idx => $value) {
-        if ($idx == "software") {
-            if (!in_array($value, $software_available)) return false;
-        } else if ($idx == "delta_lat" || $idx == "delta_lon") {
-            if ( $value < 1 || $value > 10 ) return false;
-        } else if (!is_numeric($value)) {
-            return false;
+// Check that the model that we built was valid
+// This involves sanity checking all the parameters
+function verifyModel( $pred_model, $software_available ) {
+    // Check that we have not been passed an empty model
+    if( !isset( $pred_model ) ) return false;
+
+    // We will return an array of information to the calling function
+    $return_array;
+    $return_array['valid'] = true;
+
+    // Iterate though the scenario parameters
+    foreach( $pred_model as $idx => $value ) {
+        if ( $idx == "software" ) {
+            if ( !in_array( $value, $software_available ) ) {
+                $return_array['valid'] = false;
+                $return_array['msg'] = "The model asked for software that 
+                    does not exist on this server";
+            }
+        } else if ( $idx == "delta_lat" || $idx == "delta_lon" ) {
+            if ( $value < 1 || $value > 10 ) {
+                $return_array['valid'] = false;
+                $return_array['msg'] = "The latitude or longitude deltas
+                    were outside the allowed range on this server";
+            }
+        } else if ( !is_numeric( $value ) ) {
+            $return_array['valid'] = false;
+            $return_array['msg'] = "A value that should have been numeric
+                did not validate as such";
         }
     }
-    return true;
+
+    // Now check that the timestamp is within range
+    if ( $pred_model['timestamp'] > (time() + 180*3600) ) {
+        // More than 180 hours into future
+        $return_array['valid'] = false;
+        $return_array['msg'] = "A prediction cannot be run for a time that is 
+            more than 180 hours in the future";
+    } else if ( $pred_model['timestamp'] < time() ) {
+        // Can't run predictions in the past
+        $return_array['valid'] = false;
+        $return_array['msg'] = "A prediction cannot be run for a time that 
+            is in the past";
+    }
+
+    // Return true if all went okay
+    return $return_array;
 }
 
+// Run the prediction given a prediction model
 function runPred($pred_model) {
-    // check if this is a re-run
-    if ( !file_exists(PREDS_PATH . $pred_model['uuid'] . "/" . SCENARIO_FILE) ) {
-        // if not, make a new directory and scenario file
+    // Check if this is a re-run
+    if ( !file_exists(PREDS_PATH . $pred_model['uuid'] . "/" . SCENARIO_FILE) ) 
+    {
+        // If not, make a new directory and scenario file
         makePredDir($pred_model) or die ("Couldn't create the scenario dir");
         makeINI($pred_model);
     }
 
-    // if we're using GFS HD, then append --hd to the exec string
+    // If using GFS HD, then append --hd to the exec string
     if ( $pred_model['software'] == "gfs_hd" ) $use_hd ="--hd ";
     else $use_hd = "";
 
@@ -99,6 +135,8 @@ function runPred($pred_model) {
 
 }
 
+// Use PHP's mkdir() to create a directory for the prediction data using
+// the UUID for the scenario
 function makePredDir($pred_model) {
     //make sure we use the uuid from model
     if ( mkdir( PREDS_PATH . $pred_model['uuid'] ) ) {
@@ -108,6 +146,8 @@ function makePredDir($pred_model) {
     }
 }
 
+// Write the scenario model parameters to an INI file that can be read by
+// the predictor binary
 function makeINI($pred_model) { // makes an ini file
     $fh = fopen(PREDS_PATH . $pred_model['uuid'] . "/" . SCENARIO_FILE, "w"); //write
 
@@ -128,6 +168,7 @@ function makeINI($pred_model) { // makes an ini file
     fclose($fh);
 }
 
+// Given a UUID, return the prediction scenario model
 function getModelByUUID($uuid) {
     if ( file_exists( PREDS_PATH . $uuid . "/" . SCENARIO_FILE ) ) {
         $pred_model = parse_ini_file(PREDS_PATH . $uuid . "/" . SCENARIO_FILE);

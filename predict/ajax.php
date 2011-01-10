@@ -76,27 +76,42 @@ case "submitForm":
     $json_return = array();
     $json_return['valid'] = "false";
 
+    // Make sure we have a submitted form
     if ( isset($_POST['submit'])) {
-        // form was submitted, let's run a pred!
-        // first, make a model from the form data
+        // First, make a model from the form data
         if ( !$pred_model = createModel($_POST)) {
-            $json_return['error'] = "Server couldn't make a model from the form data";
-        // if that worked, make sure the model is valid
-        } else if ( !verifyModel($pred_model, $software_available) ) {
-            $json_return['error'] = "The server said the model it made was invalid";
-        // if we have a valid model, try and make a UUID
-        } else if ( !$pred_model['uuid'] = makesha1hash($pred_model) ) {
-            $json_return['error'] = "Couldn't make the SHA1 hash";
-        // if all of the above worked, let's run the prediction
-        } else {
-            runPred($pred_model);
-            $json_return['valid'] = "true";
-            $json_return['uuid'] = $pred_model['uuid'];
-            $json_return['timestamp'] = $pred_model['timestamp'];
+            $json_return['error'] = "Server couldn't make a model from the form 
+                data";
+            echo json_encode($json_return);
+            break;
         }
+
+        // If that worked, make sure the model is valid
+        $verify_dump = verifyModel($pred_model, $software_available);
+        if ( !$verify_dump['valid'] ) {
+            $json_return['error'] = $verify_dump['msg'];
+            echo json_encode($json_return);
+            break;
+        }
+
+        // If we have a valid model, try and make a UUID
+        if ( !$pred_model['uuid'] = makesha1hash($pred_model) ) {
+            $json_return['error'] = "Couldn't make the SHA1 hash";
+            echo json_encode($json_return);
+            break;
+        }
+
+        // If all of the above worked, let's run the prediction
+        runPred($pred_model);
+        $json_return['valid'] = "true";
+        $json_return['uuid'] = $pred_model['uuid'];
+        $json_return['timestamp'] = $pred_model['timestamp'];
+
     } else {
-        $json_return['error'] = "The form submit function was called without any data";
+        $json_return['error'] = "The form submit function was called without 
+            any data";
     }
+
     echo json_encode($json_return);
     break;
 
