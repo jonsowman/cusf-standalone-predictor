@@ -145,89 +145,100 @@ google.load("jqueryui", "1.8.1");
 <img class="handle" src="images/drag_handle.png" />
 <form action="" id="modelForm" name="modelForm">
 <table>
-	<tr>
-                <td>
-                    Launch Site:
-                    <span>
-                    <a id="cookieLocations" class="tipsyLink" title="View your saved launch sites">Custom</a>
-                    </span>
-                </td>
-		<td>
-			<select id="site" name="launchsite">
-			</select>
-		</td>
-	<tr>
-		<td>Latitude:</td>
-                <td><input id="lat" type="text" name="lat" value="52.2135" onKeyDown="SetSiteOther()"></td>
-	</tr>
     <tr>
-        <td>Longitude:</td>
-        <td><input id="lon" type="text" name="lon" value="0.0964" onKeyDown="SetSiteOther()"></td>
+        <td>Launch Site:
+            <span>
+                <a id="cookieLocations" class="tipsyLink" 
+                    title="View your saved launch sites">Custom</a>
+            </span>
+        </td>
+        <td>
+            <select id="site" name="launchsite">
+            </select>
+        </td>
     </tr>
     <tr>
-    <td>
-        <span>
-        <a id="setWithClick" class="tipsyLink" title="Use the map to set your desired launch site">Set With Map</a>
-        </span>
-    </td>
-    <td>
-        <span>
-        <a id="req_open" class="tipsyLink" title="Save this location to a browser cookie">Save Location</a>
-        </span>
-    </td>
+        <td>Latitude:</td>
+        <td><input id="lat" type="text" name="lat" value="52.2135" 
+            onKeyDown="SetSiteOther()">
+        </td>
+    </tr>
+    <tr>
+        <td>Longitude:</td>
+        <td><input id="lon" type="text" name="lon" value="0.0964" 
+            onKeyDown="SetSiteOther()">
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <span><a id="setWithClick" class="tipsyLink" 
+                title="Use the map to set your desired launch site">
+                Set With Map</a></span>
+        </td>
+        <td>
+            <span>
+                <a id="req_open" class="tipsyLink" 
+                    title="Save this location to a browser cookie">
+                    Save Location</a>
+            </span>
+        </td>
     </tr>
     <tr>
         <td>Launch altitude (m):</td>
-        <td><input id="initial_alt" type="text" name="initial_alt" value="0"></td>
+        <td>
+            <input id="initial_alt" type="text" name="initial_alt" 
+                value="0">
+        </td>
     </tr>
-	<tr>
-		<td>Launch Time (UTC):</td>
-		<td>
-                        <input id="hour" type="text" name="hour" value="<?php
-                    echo date("H", $time);
-                    ?>" maxlength="2" size="2"> :
-                        <input id="min" type="text" name="min" value="<?php
-                    echo date("i", $time);
-                    ?>" maxlength="2" size="2">
-			<input id="sec" type="hidden" name="second" value="0"></td></tr>
-			<tr><td>Launch Date:</td><td>
-                        <input id="day" type="text" name="day" value="<?php
-                    echo date("d", $time);
-                    ?>" maxlength="2" size="2">
-                        <select id="month" name="month"><?php
-                    // php enumeration
-                    for($i=1;$i<=12;$i++) {
-                        echo "<option value=\"" . $i . "\"";
-                        if ($i == date("n", $time) ) {
-                            echo " selected=\"selected\"";
-                        }
-                        echo ">".date("M", mktime(0,0,0,$i,11,1978))."</option>\n";
-                    }
+    <tr>
+        <td>Launch Time (UTC):</td>
+        <td>
+                <input id="hour" type="text" name="hour" value="<?php
+            echo date("H", $time);
+            ?>" maxlength="2" size="2"> :
+                <input id="min" type="text" name="min" value="<?php
+            echo date("i", $time);
+            ?>" maxlength="2" size="2">
+                <input id="sec" type="hidden" name="second" value="0"></td></tr>
+                <tr><td>Launch Date:</td><td>
+                <input id="day" type="text" name="day" value="<?php
+            echo date("d", $time);
+            ?>" maxlength="2" size="2">
+                <select id="month" name="month"><?php
+            // php enumeration
+            for($i=1;$i<=12;$i++) {
+                echo "<option value=\"" . $i . "\"";
+                if ($i == date("n", $time) ) {
+                    echo " selected=\"selected\"";
+                }
+                echo ">".date("M", mktime(0,0,0,$i,11,1978))."</option>\n";
+            }
 
-                    ?></select>
-                        <input id="year" type="text" name="year" value="<?php
-                    echo date("Y", $time);
-                    ?>" maxlength="4" size="4">
-		</td>
+            ?></select>
+                <input id="year" type="text" name="year" value="<?php
+            echo date("Y", $time);
+            ?>" maxlength="4" size="4">
+        </td>
     <tr>
         <td>Ascent Rate (m/s):</td>
         <td><input id="ascent" type="text" name="ascent" value="5"></td>
-    </tr>
-    <tr>
-        <td>Descent Rate (sea level m/s):</td>
-        <td><input id="drag" type="text" name="drag" value="5"></td>
     </tr>
     <tr>
         <td>Burst Altitude (m):</td>
         <td><input id="burst" type="text" name="burst" value="30000"></td>
     </tr>
     <tr>
+        <td>Descent Rate (sea level m/s):</td>
+        <td><input id="drag" type="text" name="drag" value="5"></td>
+    </tr>
+    <tr>
         <td>Landing prediction software: </td><td>
         <select id="software" name="software">
             <option value="gfs" selected="selected">GFS</option>
             <option value="gfs_hd">GFS HD</option>
-        </select></td></tr>
-        <tr><td>Lat/Lon Deltas: </td>
+        </select></td>
+    </tr>
+    <tr><td>Lat/Lon Deltas: </td>
         <td>Lat: 
         <select id="delta_lat" name="delta_lat">
             <option value="3" selected="selected">3</option>
@@ -240,12 +251,11 @@ google.load("jqueryui", "1.8.1");
             <option value="10">10</option>
         </select>
         </td>
-        </tr>
-	<tr>
-                <td>
-                </td>
-		<td><input type="submit" name="submit" id="run_pred_btn" value="Run Prediction"></td>
-	</tr>
+    </tr>
+    <tr>
+        <td></td>
+        <td><input type="submit" name="submit" id="run_pred_btn" value="Run Prediction"></td>
+    </tr>
 </table>
 </form>
 </div>
