@@ -355,8 +355,10 @@ google.load("jqueryui", "1.8.1");
         </tr>
     </table>
     <br>
-    <input type="button" id="burst-calc-hide" name="burst-calc-submit" 
-        value="Done"/ >
+    <input type="button" id="burst-calc-use" name="burst-calc-submit" 
+        value="Use Values"/ >
+    <input type="button" id="burst-calc-close" name="burst-calc-submit" 
+        value="Close"/ >
 </div>
 
 <!-- these are the burst calc constants -->

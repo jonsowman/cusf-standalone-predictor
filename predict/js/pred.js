@@ -32,7 +32,8 @@ $(document).ready(function() {
     $("#location_save_local").draggable({containment: '#map_canvas', handle: 'img.handle', snap: '#map_canvas'});
     $("#run_pred_btn").button();
     $("#req_sub_btn").button();
-    $("#burst-calc-hide").button();
+    $("#burst-calc-use").button();
+    $("#burst-calc-close").button();
 
     // see if we want an old prediction displayed
     if ( current_uuid != '0' ) {
@@ -672,10 +673,15 @@ function setupEventHandlers() {
         $("#modelForm").hide();
         $("#burst-calc").show();
     });
-    $("#burst-calc-hide").click(function() {
+    $("#burst-calc-use").click(function() {
         // Write the ascent rate and burst altitude to the launch card
         $("#ascent").val($("#ar").html());
         $("#burst").val($("#ba").html());
+        $("#burst-calc").hide();
+        $("#modelForm").show();
+    });
+    $("#burst-calc-close").click(function() {
+        // Close the burst calc without doing anything
         $("#burst-calc").hide();
         $("#modelForm").show();
     });
