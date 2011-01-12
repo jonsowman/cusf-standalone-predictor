@@ -1,0 +1,63 @@
+#mb {
+    width: 170px;
+    text-align: center;
+}
+
+#ui {
+    float: left;
+}
+
+#input_table {
+    border-spacing: 0;
+}
+
+#input_table td {
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+.input_label {
+    text-align: center;
+}
+
+.input_field {
+    text-align: center;
+}
+
+.input_instruction {
+    font-weight: bold;
+    text-align: center;
+}
+
+.input_row {
+}
+
+.input_row td {
+    text-align: center;
+}
+
+.warning_row {
+    color: #f55;
+    font-size: 0.8em;
+    font-weight: bold;
+    padding-bottom: 5px;
+    text-align: center;
+}
+
+.input_warning {
+    color: red;
+}
+
+.output_row {
+}
+
+.output_label {
+    text-align: right;
+}
+
+.output_data {
+    text-align: left;
+}
+
