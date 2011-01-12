@@ -78,6 +78,10 @@ a { text-decoration: underline; color: #333; cursor: pointer; }
     display: none;
 }
 
+#burst-calc-constants {
+    display: none;
+}
+
 .box {
     position: absolute; 
     background-color: white; 
@@ -139,6 +143,12 @@ a { text-decoration: underline; color: #333; cursor: pointer; }
     width: 400px;
     padding: 5px;
     bottom: 0; right: 0;
+}
+
+#burst-calc {
+    display: none;
+    padding: 5px;
+    text-align: center;
 }
 
 #scenario_info {

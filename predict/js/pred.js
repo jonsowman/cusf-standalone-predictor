@@ -24,13 +24,15 @@ $(document).ready(function() {
     initMap(52, 0, 8);
     populateLaunchSite();
     setupEventHandlers();
-    // make launch card draggable
+
+    // Make launch card draggable
     $("#input_form").draggable({containment: '#map_canvas', handle: 'img.handle', snap: '#map_canvas'});
     $("#scenario_info").draggable({containment: '#map_canvas', handle: 'img.handle', snap: '#map_canvas'});
     $("#location_save").draggable({containment: '#map_canvas', handle: 'img.handle', snap: '#map_canvas'});
     $("#location_save_local").draggable({containment: '#map_canvas', handle: 'img.handle', snap: '#map_canvas'});
     $("#run_pred_btn").button();
     $("#req_sub_btn").button();
+    $("#burst-calc-hide").button();
 
     // see if we want an old prediction displayed
     if ( current_uuid != '0' ) {
@@ -51,6 +53,9 @@ $(document).ready(function() {
 
     // plot the initial launch location
     plotClick();
+
+    // Initialise the burst calculator
+    calc_init();
 });
 
 function predSub() {
@@ -661,6 +666,18 @@ function setupEventHandlers() {
     // activate the "Set with Map" link
     $("#setWithClick").click(function() {
         setLatLonByClick(true);
+    });
+    // activate the "use burst calc" links
+    $("#burst-calc-show").click(function() {
+        $("#modelForm").hide();
+        $("#burst-calc").show();
+    });
+    $("#burst-calc-hide").click(function() {
+        // Write the ascent rate and burst altitude to the launch card
+        $("#ascent").val($("#ar").html());
+        $("#burst").val($("#ba").html());
+        $("#burst-calc").hide();
+        $("#modelForm").show();
     });
     // attach onchange handlers to the lat/long boxes
     $("#lat").change(function() {
