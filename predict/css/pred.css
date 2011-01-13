@@ -54,6 +54,30 @@ a { text-decoration: underline; color: #333; cursor: pointer; }
     display: none;
 }
 
+#burst-calc-wrapper {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 400px;
+    margin-left: -200px;
+    margin-top: -200px;
+    padding: 1em;
+    text-align: center;
+    display: none;
+}
+
+/*
+#burst-calc {
+    display: none;
+    padding: 5px;
+    text-align: center;
+}
+*/
+
+#burst-calc-constants {
+    display: none;
+}
+
 #location_save {
     position: absolute;
     left: 50%;
@@ -75,10 +99,6 @@ a { text-decoration: underline; color: #333; cursor: pointer; }
     margin-top: -120px;
     padding: 1em;
     text-align: center;
-    display: none;
-}
-
-#burst-calc-constants {
     display: none;
 }
 
@@ -143,12 +163,6 @@ a { text-decoration: underline; color: #333; cursor: pointer; }
     width: 400px;
     padding: 5px;
     bottom: 0; right: 0;
-}
-
-#burst-calc {
-    display: none;
-    padding: 5px;
-    text-align: center;
 }
 
 #scenario_info {

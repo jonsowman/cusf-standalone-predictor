@@ -18,6 +18,10 @@
     padding-right: 3px;
 }
 
+.constants_header {
+    font-weight: bold;
+}
+
 .input_label {
     text-align: center;
 }

@@ -34,6 +34,8 @@ $(document).ready(function() {
     $("#req_sub_btn").button();
     $("#burst-calc-use").button();
     $("#burst-calc-close").button();
+    $("#burst-calc-advanced-show").button();
+    $("#burst-calc-advanced-hide").button();
 
     // see if we want an old prediction displayed
     if ( current_uuid != '0' ) {
@@ -670,20 +672,28 @@ function setupEventHandlers() {
     });
     // activate the "use burst calc" links
     $("#burst-calc-show").click(function() {
-        $("#modelForm").hide();
-        $("#burst-calc").show();
+        $("#burst-calc-wrapper").show();
     });
     $("#burst-calc-use").click(function() {
         // Write the ascent rate and burst altitude to the launch card
         $("#ascent").val($("#ar").html());
         $("#burst").val($("#ba").html());
-        $("#burst-calc").hide();
-        $("#modelForm").show();
+        $("#burst-calc-wrapper").hide();
     });
     $("#burst-calc-close").click(function() {
         // Close the burst calc without doing anything
-        $("#burst-calc").hide();
+        $("#burst-calc-wrapper").hide();
         $("#modelForm").show();
+    });
+    $("#burst-calc-advanced-show").click(function() {
+        // Show the burst calculator constants
+        $("#burst-calc").slideUp();
+        $("#burst-calc-constants").slideDown();
+    });
+    $("#burst-calc-advanced-hide").click(function() {
+        // Show the burst calculator constants
+        $("#burst-calc-constants").slideUp();
+        $("#burst-calc").slideDown();
     });
     // attach onchange handlers to the lat/long boxes
     $("#lat").change(function() {
