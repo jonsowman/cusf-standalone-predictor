@@ -10,6 +10,32 @@
 
 $(document).ready(function() {
 
+    // Initialise the map canvas
+    initMap(52, 0, 8);
+
+    // Populate the launch site list from sites.json
+    populateLaunchSite();
+
+    // Setup all event handlers in the UI using jQuery
+    setupEventHandlers();
+
+    // Initialise UI elements such as draggable windows
+    initUI();
+    
+    // Check if an old prediction is to be displayed, and process if so
+    displayOld();
+
+    // Plot the initial launch location
+    plotClick();
+
+    // Initialise the burst calculator
+    calc_init();
+});
+
+// See if an old UUID was supplied in the hashstring
+// If it was, extract it, then populate the launch card with its parameters
+// then display the prediction
+function displayOld() {
     // Are we trying to display an old prediction?
     if( window.location.hash != "" ) {
         var ln = window.location.hash.split("=");
@@ -40,23 +66,7 @@ $(document).ready(function() {
                 });
         }
     }
-
-    initMap(52, 0, 8);
-    populateLaunchSite();
-    setupEventHandlers();
-    initUI();
-
-    // see if we want an old prediction displayed
-    if ( current_uuid != '0' ) {
-
-    }
-
-    // plot the initial launch location
-    plotClick();
-
-    // Initialise the burst calculator
-    calc_init();
-});
+}
 
 function predSub() {
     appendDebug(null, 1); // clear debug window
