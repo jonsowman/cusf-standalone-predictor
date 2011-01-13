@@ -24,18 +24,7 @@ $(document).ready(function() {
     initMap(52, 0, 8);
     populateLaunchSite();
     setupEventHandlers();
-
-    // Make launch card draggable
-    $("#input_form").draggable({containment: '#map_canvas', handle: 'img.handle', snap: '#map_canvas'});
-    $("#scenario_info").draggable({containment: '#map_canvas', handle: 'img.handle', snap: '#map_canvas'});
-    $("#location_save").draggable({containment: '#map_canvas', handle: 'img.handle', snap: '#map_canvas'});
-    $("#location_save_local").draggable({containment: '#map_canvas', handle: 'img.handle', snap: '#map_canvas'});
-    $("#run_pred_btn").button();
-    $("#req_sub_btn").button();
-    $("#burst-calc-use").button();
-    $("#burst-calc-close").button();
-    $("#burst-calc-advanced-show").button();
-    $("#burst-calc-advanced-hide").button();
+    initUI();
 
     // see if we want an old prediction displayed
     if ( current_uuid != '0' ) {
@@ -153,11 +142,6 @@ function changeLaunchSite() {
     });
 }
 
-function throwError(data) {
-    $("#error_message").html(data);
-    $("#error_window").fadeIn();
-}
-
 function writePredictionInfo(current_uuid, run_time, gfs_timestamp) {
     // populate the download links
     $("#dlcsv").attr("href", "preds/"+current_uuid+"/flight_path.csv");
@@ -228,21 +212,6 @@ function getJSONProgress(pred_uuid) {
         success: processProgress
     });
 }
-
-function resetGUI() {
-    $("#status_message").fadeOut(500);
-    // now clear the status window
-    $("#prediction_status").html("");
-    $("#prediction_progress").progressbar("options", "value", 0);
-    $("#prediction_percent").html("");
-    $("#cursor_pred").hide();
-    // bring the input form back up
-    toggleWindow("input_form", null, null, null, "show");
-    toggleWindow("scenario_info", null, null, null, "show");
-    // un-fade the map canvas
-    $("#map_canvas").fadeTo(1500, 1);
-}
-
 
 function processProgress(progress) {
     if ( progress['error'] ) {
@@ -536,45 +505,7 @@ function getAssocSize(arr) {
     return i;
 }
 
-function appendDebug(appendage, clear) {
-    if ( clear == null ){
-        var curr = $("#debuginfo").html();
-        curr += "<br>" + appendage;
-        $("#debuginfo").html(curr);
-    } else {
-        $("#debuginfo").html("");
-    }
-    // keep the debug window scrolled to bottom
-    scrollToBottom("scenario_template");
-}
 
-function scrollToBottom(div_id) {
-    $("#"+div_id).animate({scrollTop: $("#"+div_id)[0].scrollHeight});
-}
-
-function toggleWindow(window_name, linker, onhide, onshow, force) {
-    if ( force == null ) {
-        if( $("#"+window_name).css('display') != "none" ){
-            $("#"+window_name+"").hide("slide", { direction: "down" }, 500);
-            $("#"+linker).html(onhide);
-        } else {
-            $("#"+window_name).show("slide", { direction: "down" }, 500);
-            $("#"+linker).html(onshow);
-        }
-    } else if ( force == "hide" ) {
-        if( $("#"+window_name).css('display') != "none" ){
-            $("#"+window_name+"").hide("slide", { direction: "down" }, 500);
-            $("#"+linker).html(onhide);
-        }
-    } else if ( force == "show") {
-        if( $("#"+window_name).css('display') == "none" ){
-            $("#"+window_name).show("slide", { direction: "down" }, 500);
-            $("#"+linker).html(onshow);
-        }
-    } else {
-        appendDebug("toggleWindow force parameter unrecognised");
-    }
-}
 
 function initMap(centre_lat, centre_lon, zoom_level) {
     // make the map and set center
@@ -861,10 +792,6 @@ function POSIXtoHM(timestamp, format) {
     if ( format == null || format == "" ) format = "H:i";
     var str = ts.format(format);
     return str;
-}
-
-function SetSiteOther() {
-    $("#site").val("Other");
 }
 
 rad = function(x) {return x*Math.PI/180;}

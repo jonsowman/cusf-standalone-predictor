@@ -40,6 +40,7 @@ google.load("jqueryui", "1.8.1");
 <script src="js/date.jsport.js" type="text/javascript"></script>
 <script src="js/config.js" type="text/javascript"></script>
 <script src="js/pred.js" type="text/javascript"></script>
+<script src="js/pred-ui.js" type="text/javascript"></script>
 <script src="js/calc.js" type="text/javascript"></script>
 </head>
 <body>
@@ -144,6 +145,7 @@ google.load("jqueryui", "1.8.1");
 
 <!-- burst calculator window -->
 <div id="burst-calc-wrapper" class="box ui-corner-all">
+    <img src="images/drag_handle.png" class="handle" />
     <div id="burst-calc">
         <b>Burst Calculator</b>
         <br>
