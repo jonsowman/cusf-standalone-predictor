@@ -9,8 +9,9 @@
  */
 
 $(document).ready(function() {
-    // are we trying to display an old prediction?
-    if(window.location.hash != "") {
+
+    // Are we trying to display an old prediction?
+    if( window.location.hash != "" ) {
         var ln = window.location.hash.split("=");
         var posteq = ln[1];
         if ( posteq.length != 40 ) {
@@ -18,6 +19,25 @@ $(document).ready(function() {
             appendDebug("The hashstring was not the expected length");
         } else {
             current_uuid = posteq;
+            appendDebug("Got an old UUID to plot:<br>" + current_uuid);
+            appendDebug("Trying to populate form with scenario data...");
+            populateFormByUUID(current_uuid);
+            appendDebug("Trying to get progress JSON");
+            $.getJSON("preds/"+current_uuid+"/progress.json", 
+                function(progress) {
+                    appendDebug("Got progress JSON from server for UUID");
+                    if ( progress['error'] || !progress['pred_complete'] ) {
+                        appendDebug("The prediction was not completed"
+                            + " correctly, quitting");
+                    } else {
+                        appendDebug("JSON said the prediction completed "
+                            + "without errors");
+                        writePredictionInfo(current_uuid, 
+                            progress['run_time'], 
+                            progress['gfs_timestamp']);
+                        getCSV(current_uuid);
+                    }
+                });
         }
     }
 
@@ -28,19 +48,7 @@ $(document).ready(function() {
 
     // see if we want an old prediction displayed
     if ( current_uuid != '0' ) {
-        appendDebug("Got an old UUID to plot:<br>" + current_uuid);
-        appendDebug("Trying to populate form with scenario data...");
-        populateFormByUUID(current_uuid);
-        appendDebug("Trying to get progress JSON");
-        $.getJSON("preds/"+current_uuid+"/progress.json", function(progress) {
-            appendDebug("Got progress JSON from server for UUID");
-            if ( progress['error'] || !progress['pred_complete'] ) {
-                appendDebug("The prediction was not completed correctly, quitting");
-            } else {
-                writePredictionInfo(current_uuid, progress['run_time'], progress['gfs_timestamp']);
-                getCSV(current_uuid);
-            }
-        });
+
     }
 
     // plot the initial launch location
