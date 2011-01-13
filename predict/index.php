@@ -41,6 +41,7 @@ google.load("jqueryui", "1.8.1");
 <script src="js/config.js" type="text/javascript"></script>
 <script src="js/pred.js" type="text/javascript"></script>
 <script src="js/pred-ui.js" type="text/javascript"></script>
+<script src="js/pred-cookie.js" type="text/javascript"></script>
 <script src="js/calc.js" type="text/javascript"></script>
 </head>
 <body>
