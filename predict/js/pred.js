@@ -69,15 +69,19 @@ function displayOld() {
     }
 }
 
+// A prediction has just been requested, so initialise the progress bar
+// and fade in the prediction progress window
 function predSub() {
     appendDebug(null, 1); // clear debug window
     appendDebug("Sending data to server...");
-    // initialise progress bar
+    // Initialise progress bar
     $("#prediction_progress").progressbar({ value: 0 });
     $("#prediction_status").html("Sending data to server...");
     $("#status_message").fadeIn(250);
 }
 
+// Make an AJAX request to the server and get the scenario information
+// for a given UUID, then populate the launch card with it
 function populateFormByUUID(pred_uuid) {
     $.get("ajax.php", { "action":"getModelByUUID", "uuid":pred_uuid }, function(data) {
         if ( !data.valid ) {
@@ -112,11 +116,14 @@ function populateFormByUUID(pred_uuid) {
     }, 'json');
 }
 
+// Add information to the hashstring of the current window
 function addHashLink(link) {
    var ln = "#!/" + link;
    window.location = ln;
 }
 
+// Clear the Launch Site dropdown and repopulate it with the information from
+// sites.json, as well as an "Other" option to open the saved locations window
 function populateLaunchSite() {
     $("#site > option").remove();
     $.getJSON("sites.json", function(sites) {
@@ -129,6 +136,9 @@ function populateLaunchSite() {
     return true;
 }
 
+// The onchange handler for the launch locations dropdown menu, which opens
+// the saved locations window if "Other" was chosen; sets the launch card
+// lat/lon and plots the new launch location otherwise
 function changeLaunchSite() {
     var selectedName = $("#site").val();
     if ( selectedName == "Other" ) {
@@ -150,6 +160,8 @@ function changeLaunchSite() {
     }
 }
 
+// Populate and enable the download CSV, KML and Pan To links, and write the 
+// time the prediction was run and the model used to the Scenario Info window
 function writePredictionInfo(current_uuid, run_time, gfs_timestamp) {
     // populate the download links
     $("#dlcsv").attr("href", "preds/"+current_uuid+"/flight_path.csv");
@@ -162,6 +174,8 @@ function writePredictionInfo(current_uuid, run_time, gfs_timestamp) {
     $("#gfs_timestamp").html(gfs_timestamp);
 }
 
+// Hide the launch card and scenario information windows, then fade out the
+// map before setting an interval to poll for prediction progress
 function handlePred(pred_uuid) {
     $("#prediction_status").html("Searching for wind data...");
     $("#input_form").hide("slide", { direction: "down" }, 500);
@@ -173,6 +187,7 @@ function handlePred(pred_uuid) {
             + pred_uuid + "')", stdPeriod);
 }
 
+// Get the CSV for a UUID and then pass it to the parseCSV() function
 function getCSV(pred_uuid) {
     $.get("ajax.php", { "action":"getCSV", "uuid":pred_uuid }, function(data) {
             if(data != null) {
@@ -192,6 +207,10 @@ function getCSV(pred_uuid) {
     }, 'json');
 }
 
+// Called at set inervals to examine the progress.json file on the server for
+// a UUID to check for progress, and update the progress window
+// Also handles high latency connections by increasing the timeout before
+// the AJAX request completes and decreasing polling interval
 function getJSONProgress(pred_uuid) {
     $.ajax({
         url:"preds/"+pred_uuid+"/progress.json",
@@ -226,6 +245,9 @@ function getJSONProgress(pred_uuid) {
     });
 }
 
+// The contents of progress.json are given to this function to process
+// If the prediction has completed, reset the GUI and display the new
+// prediction; otherwise update the progress window
 function processProgress(progress) {
     if ( progress['error'] ) {
         clearInterval(ajaxEventHandle);
@@ -272,6 +294,11 @@ function processProgress(progress) {
     return true;
 }
 
+// Once a flight path has been returned from the server, this function takes
+// an array where each elemt is a line of that file
+// Constructs the path, plots the launch/land/burst markers, writes the
+// prediction information to the scenario information window and then plots
+// the delta square
 function parseCSV(lines) {
     if( lines.length <= 0 ) {
         appendDebug("The server returned an empty CSV file");
@@ -405,155 +432,13 @@ function parseCSV(lines) {
     return true;
 }
 
+// Return the size of a given associative array
 function getAssocSize(arr) {
     var i = 0;
     for ( j in arr ) {
         i++;
     }
     return i;
-}
-
-function setupEventHandlers() {
-    // Attach form submit event handler to Run Prediction button
-    $("#modelForm").ajaxForm({
-        url: 'ajax.php?action=submitForm',
-        type: 'POST',
-        dataType: 'json',
-        success: function(data) {
-            if ( data.valid == "false" ) {
-                // If something went wrong, write the error messages to
-                // the debug window
-                appendDebug("The server rejected the submitted form data:");
-                appendDebug(data.error);
-                // And throw an error window to alert the user of what happened
-                throwError("The server rejected the submitted form data: \n"
-                    + data.error);
-                resetGUI();
-            } else if ( data.valid == "true" ) {
-                predSub();
-                appendDebug("The server accepted the form data");
-                // Update the global current_uuid variable
-                current_uuid = data.uuid;
-                appendDebug("The server gave us uuid:<br>" + current_uuid);
-                appendDebug("Starting to poll for progress JSON");
-                handlePred(current_uuid);
-            } else {
-                appendDebug("data.valid was not a recognised state: " 
-                        + data.valid);
-            }
-        }
-    });
-    
-    // Location saving to cookies event handlers
-    $("#req_sub_btn").click(function() {
-        saveLocationToCookie();
-    });
-    $("#cookieLocations").click(function() {
-        appendDebug("User requested locally saved launch sites");
-        if ( constructCookieLocationsTable("cusf_predictor") ) {
-            $("#location_save_local").fadeIn();
-        }
-    });
-    $("#req_open").click(function() {
-            var lat = $("#lat").val();
-            var lon = $("#lon").val();
-            $("#req_lat").val(lat);
-            $("#req_lon").val(lon);
-            $("#req_alt").val($("#initial_alt").val());
-            appendDebug("Trying to reverse geo-code the launch point");
-            rvGeocode(lat, lon, "req_name");
-            $("#location_save").fadeIn();
-    })
-    $("#req_close").click(function() {
-            $("#location_save").fadeOut();
-    });
-    $("#locations_close").click(function() {
-            $("#location_save_local").fadeOut();
-    });;
-
-    // Activate the "Set with Map" link
-    $("#setWithClick").click(function() {
-        setLatLonByClick(true);
-    });
-
-    // Activate the "use burst calc" links
-    $("#burst-calc-show").click(function() {
-        $("#burst-calc-wrapper").show();
-    });
-    $("#burst-calc-use").click(function() {
-        // Write the ascent rate and burst altitude to the launch card
-        $("#ascent").val($("#ar").html());
-        $("#burst").val($("#ba").html());
-        $("#burst-calc-wrapper").hide();
-    });
-    $("#burst-calc-close").click(function() {
-        // Close the burst calc without doing anything
-        $("#burst-calc-wrapper").hide();
-        $("#modelForm").show();
-    });
-    $("#burst-calc-advanced-show").click(function() {
-        // Show the burst calculator constants
-        $("#burst-calc").slideUp();
-        $("#burst-calc-constants").slideDown();
-    });
-    $("#burst-calc-advanced-hide").click(function() {
-        // Show the burst calculator constants
-        $("#burst-calc-constants").slideUp();
-        $("#burst-calc").slideDown();
-    });
-
-    // Launch card parameter onchange event handlers
-    $("#lat").change(function() {
-        plotClick();
-    });
-    $("#lon").change(function() {
-        plotClick();
-    });
-
-    $("#delta_lat").change(function() {
-        drawDeltaSquare(map);
-    });
-    $("#delta_lon").change(function() {
-        drawDeltaSquare(map);
-    });
-    $("#site").change(function() {
-        changeLaunchSite();
-    });
-
-    // Controls in the Scenario Information window
-    $("#showHideDebug").click(function() {
-        toggleWindow("scenario_template", "showHideDebug", "Show Debug", "Hide Debug");
-    });
-    $("#showHideDebug_status").click(function() {
-        toggleWindow("scenario_template", "showHideDebug", "Show Debug", "Hide Debug");
-    });
-    $("#showHideForm").click(function() {
-        toggleWindow("input_form", "showHideForm", "Show Launch Card",
-            "Hide Launch Card");
-    });
-    $("#closeErrorWindow").click(function() {
-        $("#error_window").fadeOut();
-    });
-
-    $("#about_window_show").click(function() {
-        $("#about_window").dialog({
-            modal:true,
-            width:600,
-            buttons: {
-                Close: function() {
-                        $(this).dialog('close');
-                    }
-            }
-        });
-    });
-
-    // Tipsylink tooltip class activation
-    $(".tipsyLink").tipsy({fade: true});
-
-    // Add the onmove event handler to the map canvas
-    google.maps.event.addListener(map, 'mousemove', function(event) {
-        showMousePos(event.latLng);
-    });
 }
 
 function POSIXtoHM(timestamp, format) {
