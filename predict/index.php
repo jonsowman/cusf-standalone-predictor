@@ -14,10 +14,9 @@
 
 require_once("includes/config.inc.php");
 require_once("includes/functions.inc.php");
-// get the time for pre-populating the form
+// Get the time for pre-populating the form
 $time = time() + 3600;
 ?>
-
 <html>
 <head>
 <title>CUSF Landing Predictor 2.0</title>
@@ -38,25 +37,27 @@ google.load("jqueryui", "1.8.1");
 <script src="js/jquery.jookie.js" type="text/javascript"></script>
 <script src="js/jquery.tipsy.js" type="text/javascript"></script>
 <script src="js/date.jsport.js" type="text/javascript"></script>
-<script src="js/config.js" type="text/javascript"></script>
+
+<script src="js/pred-config.js" type="text/javascript"></script>
 <script src="js/pred-ui.js" type="text/javascript"></script>
 <script src="js/pred-cookie.js" type="text/javascript"></script>
 <script src="js/pred-map.js" type="text/javascript"></script>
 <script src="js/pred.js" type="text/javascript"></script>
 <script src="js/calc.js" type="text/javascript"></script>
+
 </head>
 <body>
 
-<!-- map canvas -->
+<!-- Map canvas -->
 <div id="map_canvas"></div>
 
-<!-- debug window -->
+<!-- Debug window -->
 <div id="scenario_template" class="box ui-corner-all">
 <h1>Debug Window</h1>
 <span id="debuginfo">No Messages</span>
 </div>
 
-<!-- prediction progress window -->
+<!-- Prediction progress window -->
 <div id="status_message" class="box ui-corner-all">
     <div id="prediction_progress"></div>
     <div id="prediction_percent"></div>
@@ -65,14 +66,14 @@ google.load("jqueryui", "1.8.1");
     <a><span id="showHideDebug_status">Toggle Debug</span></a>
 </div>
 
-<!-- error window -->
+<!-- Error window -->
 <div id="error_window" class="box ui-corner-all">
     <span id="error_message">Nothing here!</span>
     <br /><br />
     <a id="closeErrorWindow">Close</a>
 </div>
 
-<!-- scenario info -->
+<!-- Scenario information -->
 <div id="scenario_info" class="box ui-corner-all">
     <img src="images/drag_handle.png" class="handle" />
     <h1>Scenario Information</h1>
@@ -102,7 +103,7 @@ google.load("jqueryui", "1.8.1");
     </span>
 </div>
 
-<!-- save location -->
+<!-- Save location to cookie -->
 <div id="location_save" class="box ui-corner-all">
     <img src="images/drag_handle.png" class="handle" />
     <h1>Save Launch Location</h1><br />
@@ -124,7 +125,7 @@ google.load("jqueryui", "1.8.1");
     <a id="req_close">Close this window</a>
 </div>
 
-<!-- cookie save location -->
+<!-- View saved locations -->
 <div id="location_save_local" class="box ui-corner-all">
     <img src="images/drag_handle.png" class="handle" />
     <b>Saved Locations</b><br />
@@ -133,7 +134,7 @@ google.load("jqueryui", "1.8.1");
     <a id="locations_close">Close this window</a>
 </div>
 
-<!-- the about window -->
+<!-- About window -->
 <div id="about_window">
     <b>Cambridge University Spaceflight Landing Predictor (<a href="http://github.com/jonsowman/cusf-standalone-predictor" target="_blank">github</a>)</b>
     <br /><br />
@@ -145,7 +146,7 @@ google.load("jqueryui", "1.8.1");
     No guarantee is given for the accuracy, precision or reliability of the data produced by this software, and you use it entirely at your own risk. For more information, see #highaltitude on irc.freenode.net.
 </div>
 
-<!-- burst calculator window -->
+<!-- Burst calculator window -->
 <div id="burst-calc-wrapper" class="box ui-corner-all">
     <img src="images/drag_handle.png" class="handle" />
     <div id="burst-calc">
@@ -282,7 +283,7 @@ google.load("jqueryui", "1.8.1");
     </div>
 </div>
 
-<!-- launch card form -->
+<!-- Launch card -->
 <div id="input_form" class="box ui-corner-all"> 
 <img class="handle" src="images/drag_handle.png" />
 <form action="" id="modelForm" name="modelForm">
@@ -403,9 +404,6 @@ google.load("jqueryui", "1.8.1");
     </tr>
 </table>
 </form>
-
-<!-- Burst calculato>
-
 
 </div>
 
