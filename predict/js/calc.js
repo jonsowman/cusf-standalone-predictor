@@ -37,30 +37,29 @@ function sanity_check_inputs(mb, mp, mp_set, tar, tba, tar_set, tba_set) {
     }
 
     if(tar_set && tar < 0) {
-        set_error('tar', "Target ascent rate can't be negative!");
+        set_error('tar', "Can't be negative!");
         return 1;
     } else if(tar_set && tar > 10) {
-        set_error('tar', "Target ascent rate is too large! (more than 10m/s)");
+        set_error('tar', "Too large! (> 10m/s)");
         return 1;
     }
 
     if(tba_set && tba < 10000) {
-        set_error('tba', "Target burst altitude is too low! (less than 10km)");
+        set_error('tba', "Too low! (< 10km)");
         return 1;
     } else if(tba_set && tba > 40000) {
-        set_error('tba',
-            "Target burst altitude is too high! (greater than 40km)");
+        set_error('tba', "Too high! (> 40km)");
         return 1;
     }
 
     if(!mp_set) {
-        set_error('mp', "You have to enter a payload mass!");
+        set_error('mp', "Mass required!");
         return 1;
     } else if(mp < 20) {
-        set_error('mp', "Mass is too small! (less than 20g)");
+        set_error('mp', "Too small! (< 20g)");
         return 1;
     } else if(mp > 5000) {
-        set_error('mp', "Mass is too large! (over 5kg)");
+        set_error('mp', "Too large! (> 5kg)");
         return 1;
     }
 
