@@ -32,6 +32,13 @@ function EH_BurstCalc() {
     $("#burst-calc-show").click(function() {
         $("#burst-calc-wrapper").show();
     });
+    $("#burst-calc-show").hover(
+        function() {
+            $("#ascent,#burst").css("background-color", "#AACCFF");
+        },
+        function() {
+            $("#ascent,#burst").css("background-color", "#FFFFFF");
+        });
     $("#burst-calc-use").click(function() {
         // Write the ascent rate and burst altitude to the launch card
         $("#ascent").val($("#ar").html());
@@ -93,6 +100,13 @@ function EH_LaunchCard() {
     $("#setWithClick").click(function() {
         setLatLonByClick(true);
     });
+    $("#setWithClick,#req_open").hover(
+        function() {
+            $("#lat,#lon").css("background-color", "#AACCFF");
+        },
+        function() {
+            $("#lat,#lon").css("background-color", "#FFFFFF");
+        });
     // Launch card parameter onchange event handlers
     $("#lat").change(function() {
         plotClick();

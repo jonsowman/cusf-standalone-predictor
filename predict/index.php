@@ -373,7 +373,7 @@ google.load("jqueryui", "1.8.1");
     <tr>
         <td colspan="2">
             <a id="burst-calc-show" class="tipsyLink"
-                title="Use a calculator to find burst altitude and ascent rate">
+                title="Use a calculator to find highlighted values">
                 Use Burst Calculator</a>
         </td>
     </tr>
