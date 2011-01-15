@@ -33,18 +33,18 @@ $time = time() + 3600;
 google.load("jquery", "1.4.2");
 google.load("jqueryui", "1.8.1");
 </script>
-<script src="js/jquery.form.js" type="text/javascript"></script>
-<script src="js/jquery.jookie.js" type="text/javascript"></script>
-<script src="js/jquery.tipsy.js" type="text/javascript"></script>
-<script src="js/date.jsport.js" type="text/javascript"></script>
+<script src="js/jquery/jquery.form.js" type="text/javascript"></script>
+<script src="js/jquery/jquery.jookie.js" type="text/javascript"></script>
+<script src="js/jquery/jquery.tipsy.js" type="text/javascript"></script>
+<script src="js/utils/date.jsport.js" type="text/javascript"></script>
 
-<script src="js/pred-config.js" type="text/javascript"></script>
-<script src="js/pred-ui.js" type="text/javascript"></script>
-<script src="js/pred-cookie.js" type="text/javascript"></script>
-<script src="js/pred-map.js" type="text/javascript"></script>
-<script src="js/pred-event.js" type="text/javascript"></script>
-<script src="js/pred.js" type="text/javascript"></script>
-<script src="js/calc.js" type="text/javascript"></script>
+<script src="js/pred/pred-config.js" type="text/javascript"></script>
+<script src="js/pred/pred-ui.js" type="text/javascript"></script>
+<script src="js/pred/pred-cookie.js" type="text/javascript"></script>
+<script src="js/pred/pred-map.js" type="text/javascript"></script>
+<script src="js/pred/pred-event.js" type="text/javascript"></script>
+<script src="js/pred/pred.js" type="text/javascript"></script>
+<script src="js/calc/calc.js" type="text/javascript"></script>
 
 </head>
 <body>
