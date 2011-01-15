@@ -288,7 +288,7 @@ google.load("jqueryui", "1.8.1");
 <div id="input_form" class="box ui-corner-all"> 
 <img class="handle" src="images/drag_handle.png" />
 <form action="" id="modelForm" name="modelForm">
-<table>
+<table id="launch-card">
     <tr>
         <td>Launch Site:
             <span>
@@ -302,15 +302,12 @@ google.load("jqueryui", "1.8.1");
         </td>
     </tr>
     <tr>
-        <td>Latitude:</td>
-        <td><input id="lat" type="text" name="lat" value="52.2135" 
-            onKeyDown="SetSiteOther()">
-        </td>
-    </tr>
-    <tr>
-        <td>Longitude:</td>
-        <td><input id="lon" type="text" name="lon" value="0.0964" 
-            onKeyDown="SetSiteOther()">
+        <td>Latitude/Longitude:</td>
+        <td>
+            <input id="lat" type="text" size="8" name="lat" value="52.2135" 
+                onKeyDown="SetSiteOther()">&nbsp;/&nbsp;
+            <input id="lon" type="text" size="8" name="lon" value="0.0964" 
+                onKeyDown="SetSiteOther()">
         </td>
     </tr>
     <tr>
@@ -365,8 +362,7 @@ google.load("jqueryui", "1.8.1");
         </td>
     <tr>
         <td>
-            Ascent Rate (m/s): <a id="burst-calc-show" class="tipsyLink"
-                title="Use the burst calculator to find this value">?</a>
+            Ascent Rate (m/s): 
         </td>
         <td><input id="ascent" type="text" name="ascent" value="5"></td>
     </tr>
@@ -375,11 +371,20 @@ google.load("jqueryui", "1.8.1");
         <td><input id="burst" type="text" name="burst" value="30000"></td>
     </tr>
     <tr>
-        <td>Descent Rate (sea level m/s):</td>
+        <td colspan="2">
+            <a id="burst-calc-show" class="tipsyLink"
+                title="Use a calculator to find burst altitude and ascent rate">
+                Use Burst Calculator</a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Descent Rate (<a class="tipsyLink" title="At sea level">m/s</a>):
+        </td>
         <td><input id="drag" type="text" name="drag" value="5"></td>
     </tr>
     <tr>
-        <td>Landing prediction software: </td><td>
+        <td>GFS Definition: </td><td>
         <select id="software" name="software">
             <option value="gfs" selected="selected">GFS</option>
             <option value="gfs_hd">GFS HD</option>
@@ -391,7 +396,7 @@ google.load("jqueryui", "1.8.1");
             <option value="3" selected="selected">3</option>
             <option value="5">5</option>
             <option value="10">10</option>
-        </select>&nbsp;Lon: 
+        </select>&nbsp;&nbsp;&nbsp;Lon: 
         <select id="delta_lon" name="delta_lon">
             <option value="3" selected="selected">3</option>
             <option value="5">5</option>

@@ -165,6 +165,15 @@ a { text-decoration: underline; color: #333; cursor: pointer; }
     bottom: 0; right: 0;
 }
 
+#launch-card {
+    width: 100%;
+    padding: 5px;
+}
+
+#launch-card tr {
+    width: 50%;
+}
+
 #scenario_info {
     position: absolute;
     top: 25px;

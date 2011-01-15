@@ -45,13 +45,17 @@ function EH_BurstCalc() {
     });
     $("#burst-calc-advanced-show").click(function() {
         // Show the burst calculator constants
-        $("#burst-calc").slideUp();
-        $("#burst-calc-constants").slideDown();
+        // We use a callback function to fade in the new content to make
+        // sure the old content has gone, in order to create a smooth effect
+        $("#burst-calc").fadeOut('fast', function() {
+            $("#burst-calc-constants").fadeIn();
+        });
     });
     $("#burst-calc-advanced-hide").click(function() {
         // Show the burst calculator constants
-        $("#burst-calc-constants").slideUp();
-        $("#burst-calc").slideDown();
+        $("#burst-calc-constants").fadeOut('fast', function() {
+            $("#burst-calc").fadeIn();
+        });
     });
 }
 
