@@ -122,17 +122,13 @@ function runPred($pred_model) {
     $predictor_lat = number_format($pred_model['lat'], 0);
     $predictor_lon = number_format($pred_model['lon'], 0);
 
-    // use `at` to automatically background the task
-    $ph = popen("at now", "w");
-    $sh = "./predict.py -v --latdelta="
+    $sh = ROOT . "/predict.py --cd=" . ROOT . " --fork --alarm -v --latdelta="
         .$pred_model['delta_lat']." --londelta=".$pred_model['delta_lon']
         ." -p1 -f5 -t ".$pred_model['timestamp']
         ." --lat=".$predictor_lat." --lon=".$predictor_lon." " . $use_hd
         . $pred_model['uuid'];
     if (DEBUG) shell_exec("echo " . $sh . " > " . AT_LOG);
-    fwrite($ph, "cd " . ROOT . " && " . $sh );
-    fclose($ph);
-
+    shell_exec($sh);
 }
 
 // Use PHP's mkdir() to create a directory for the prediction data using
