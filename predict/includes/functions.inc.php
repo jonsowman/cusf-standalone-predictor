@@ -147,8 +147,12 @@ function makePredDir($pred_model) {
 function makeINI($pred_model) { // makes an ini file
     $fh = fopen(PREDS_PATH . $pred_model['uuid'] . "/" . SCENARIO_FILE, "w"); //write
 
+    // Hacky (and hopefully temporary) fix for issue #77
+    $hacked_lon = $pred_model['lon'];
+    if ($hacked_lon < 0)  $hacked_lon += 360.0;
+
     $w_string = "[launch-site]\nlatitude = " . $pred_model['lat'] . "\naltitude = " . $pred_model['alt'] . "\n";
-    $w_string .= "longitude = " . $pred_model['lon'] . "\n[atmosphere]\nwind-error = ";
+    $w_string .= "longitude = " . $hacked_lon . "\n[atmosphere]\nwind-error = ";
     $w_string .= $pred_model['wind_error'] . "\n[altitude-model]\nascent-rate = " . $pred_model['asc'] . "\n";
     $w_string .= "descent-rate  = " . $pred_model['des'] . "\nburst-altitude = ";
     $w_string .= $pred_model['burst'] . "\n[launch-time]\nhour = " . $pred_model['hour'] . "\n";
