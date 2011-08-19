@@ -284,6 +284,108 @@ google.load("jqueryui", "1.8.1");
     </div>
 </div>
 
+<!-- Advanced NOTAM & Airspace Settings -->
+<div id="notam-settings-wrapper" class="box ui-corner-all">
+    <img src="images/drag_handle.png" class="handle" />
+    <div id="notam-settings">
+        <b>Advanced NOTAM & Airspace Settings</b>
+        <br>
+        <table id="input_table">
+            <tr class="input_row">
+                <td class="input_label" colspan="2">Payload Mass (g)</td>
+                <td class="input_instruction" rowspan="3">AND</td>
+
+                <td class="input_label" colspan="2">Balloon Mass (g)</td>
+            </tr>
+            <tr class="input_row">
+                <td colspan="2">
+                    <input type="text" id="mp" class="input_field" value="1500" 
+                        tabindex="1"/>
+                </td>
+                <td colspan="2">
+                    <select class="input_field" id="mb" tabindex="2"> 
+
+                        <option value="200">200</option>
+                        <option value="300">300</option>
+                        <option value="350">350</option>
+                        <option value="450">450</option>
+                        <option value="500">500</option>
+                        <option value="600">600</option>
+
+                        <option value="700">700</option>
+                        <option value="800">800</option>
+                        <option value="1000" selected="selected">1000</option>
+                        <option value="1200">1200</option>
+                        <option value="1500">1500</option>
+                        <option value="2000">2000</option>
+
+                        <option value="3000">3000</option>
+                    </select>
+                </td>
+            </tr>
+            <tr class="warning_row">
+                <td colspan="2" id="mp_w">&nbsp;</td>
+                <td colspan="2" id="mb_w">&nbsp;</td>
+            </tr>
+            <tr>
+                <td class="input_instruction" colspan="5">THEN</td>
+            </tr>
+            <tr class="input_row">
+                <td class="input_label" colspan="2">Target Burst Altitude (m)</td>
+
+                <td class="input_instruction" rowspan="3">OR</td>
+                <td class="input_label" colspan="2">Target Ascent Rate (m/s)</td>
+            </tr>
+            <tr class="input_row">
+                <td colspan="2">
+                    <input type="text" id="tba" class="input_field" value="33000" tabindex="3"/>
+                </td>
+                <td colspan="2">
+
+                    <input type="text" id="tar" class="input_field" tabindex="4"/>
+                </td>
+            </tr>
+            <tr class="warning_row">
+                <td id="tba_w" colspan="2">&nbsp;</td>
+                <td id="tar_w" colspan="2">&nbsp;</td>
+            </tr>
+            <tr class="output_row">
+                <td class="output_label">Burst Altitude:</td>
+                <td class="output_data"><span id="ba">33000</span> m</td>
+                <td></td>
+                <td class="output_label">Ascent Rate:</td>
+                <td class="output_data"><span id="ar">2.33</span> m/s</td>
+
+            </tr>
+            <tr class="output_row">
+                <td class="output_label">Time to Burst:</td>
+                <td class="output_data"><span id="ttb">238</span> min</td>
+                <td></td>
+                <td class="output_label">Neck Lift:</td>
+                <td class="output_data"><span id="nl">1733</span> g</td>
+
+            </tr>
+            <tr class="output_row">
+                <td class="output_label">Launch Volume:</td>
+                <td class="output_data"><span id="lv_m3">2.66</span> 
+                    m<sup>3</sup></td>
+                <td></td>
+                <td class="output_data"><span id="lv_l">2660</span> L</td>
+                <td class="output_data"><span id="lv_cf">93.9</span>
+                     ft<sup>3</sup></td>
+
+            </tr>
+        </table>
+        <br>
+        <input type="button" id="burst-calc-advanced-show"
+            name="burst-calc-advanced-show" value="Advanced">
+        <input type="button" id="burst-calc-use" name="burst-calc-submit" 
+            value="Use Values"/ >
+        <input type="button" id="burst-calc-close" name="burst-calc-submit" 
+            value="Close"/ >
+    </div>
+</div>
+
 <!-- Launch card -->
 <div id="input_form" class="box ui-corner-all"> 
 <img class="handle" src="images/drag_handle.png" />
@@ -404,9 +506,18 @@ google.load("jqueryui", "1.8.1");
         </select>
         </td>
     </tr>
+    <tr><td>Display UK NOTAMS &amp; Airspace: </td>
+        <td>
+	<input type="checkbox" name="notams" value="notams" />
+            <a id="notam-settings-show" class="tipsyLink"
+                title="Advanced NOTAM &amp; Airspace Settings">
+                Advanced</a>
+        </td>
+    </tr>
     <tr>
         <td></td>
-        <td><input type="submit" name="submit" id="run_pred_btn" value="Run Prediction"></td>
+        <td><input type="submit" name="submit" id="run_pred_btn" value="Run Prediction">
+        </td>
     </tr>
 </table>
 </form>

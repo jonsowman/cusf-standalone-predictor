@@ -4,6 +4,8 @@
 
 #IncludeRegexComplain: ^$
 
+#IncludeRegexTransform: 
+
 /usr/include/glib-2.0/glib.h
 glib/galloca.h
 -
@@ -152,10 +154,6 @@ time.h
 glib/glist.h
 -
 
-/usr/include/glib-2.0/glib/gchecksum.h
-glib/gtypes.h
--
-
 /usr/include/glib-2.0/glib/gcompletion.h
 glib/glist.h
 -
@@ -284,12 +282,6 @@ glib/glist.h
 glib/gtypes.h
 -
 
-/usr/include/glib-2.0/glib/gregex.h
-glib/gerror.h
--
-glib/gstring.h
--
-
 /usr/include/glib-2.0/glib/grel.h
 glib/gtypes.h
 -
@@ -298,10 +290,6 @@ glib/gtypes.h
 glib/gdataset.h
 -
 glib/ghash.h
--
-
-/usr/include/glib-2.0/glib/gsequence.h
-glib/gtypes.h
 -
 
 /usr/include/glib-2.0/glib/gshell.h
@@ -332,10 +320,6 @@ glib/gtypes.h
 glib/gunicode.h
 -
 glib/gutils.h
--
-
-/usr/include/glib-2.0/glib/gtestutils.h
-glib.h
 -
 
 /usr/include/glib-2.0/glib/gthread.h
@@ -370,10 +354,6 @@ glib/gerror.h
 glib/gtypes.h
 -
 
-/usr/include/glib-2.0/glib/gurifuncs.h
-glib.h
--
-
 /usr/include/glib-2.0/glib/gutils.h
 glib/gtypes.h
 -
@@ -392,7 +372,7 @@ limits.h
 float.h
 -
 
-/var/hab/cusf-landing-prediction/pred_src/altitude.c
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/altitude.c
 stdio.h
 -
 stdlib.h
@@ -400,17 +380,17 @@ stdlib.h
 math.h
 -
 pred.h
-/var/hab/cusf-landing-prediction/pred_src/pred.h
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/pred.h
 altitude.h
-/var/hab/cusf-landing-prediction/pred_src/altitude.h
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/altitude.h
 run_model.h
-/var/hab/cusf-landing-prediction/pred_src/run_model.h
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/run_model.h
 
-/var/hab/cusf-landing-prediction/pred_src/altitude.h
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/altitude.h
 
-/var/hab/cusf-landing-prediction/pred_src/ini/dictionary.c
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/ini/dictionary.c
 dictionary.h
-/var/hab/cusf-landing-prediction/pred_src/ini/dictionary.h
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/ini/dictionary.h
 stdio.h
 -
 stdlib.h
@@ -420,7 +400,7 @@ string.h
 unistd.h
 -
 
-/var/hab/cusf-landing-prediction/pred_src/ini/dictionary.h
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/ini/dictionary.h
 stdio.h
 -
 stdlib.h
@@ -430,13 +410,13 @@ string.h
 unistd.h
 -
 
-/var/hab/cusf-landing-prediction/pred_src/ini/iniparser.c
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/ini/iniparser.c
 ctype.h
 -
 iniparser.h
-/var/hab/cusf-landing-prediction/pred_src/ini/iniparser.h
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/ini/iniparser.h
 
-/var/hab/cusf-landing-prediction/pred_src/ini/iniparser.h
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/ini/iniparser.h
 stdio.h
 -
 stdlib.h
@@ -444,9 +424,9 @@ stdlib.h
 string.h
 -
 dictionary.h
-/var/hab/cusf-landing-prediction/pred_src/ini/dictionary.h
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/ini/dictionary.h
 
-/var/hab/cusf-landing-prediction/pred_src/pred.c
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/pred.c
 stdio.h
 -
 stdlib.h
@@ -458,21 +438,21 @@ time.h
 errno.h
 -
 ini/iniparser.h
-/var/hab/cusf-landing-prediction/pred_src/ini/iniparser.h
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/ini/iniparser.h
 util/gopt.h
-/var/hab/cusf-landing-prediction/pred_src/util/gopt.h
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/util/gopt.h
 wind/wind_file_cache.h
-/var/hab/cusf-landing-prediction/pred_src/wind/wind_file_cache.h
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/wind/wind_file_cache.h
 run_model.h
-/var/hab/cusf-landing-prediction/pred_src/run_model.h
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/run_model.h
 pred.h
-/var/hab/cusf-landing-prediction/pred_src/pred.h
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/pred.h
 altitude.h
-/var/hab/cusf-landing-prediction/pred_src/altitude.h
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/altitude.h
 
-/var/hab/cusf-landing-prediction/pred_src/pred.h
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/pred.h
 
-/var/hab/cusf-landing-prediction/pred_src/run_model.c
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/run_model.c
 math.h
 -
 stdio.h
@@ -482,27 +462,27 @@ stdlib.h
 assert.h
 -
 wind/wind_file.h
-/var/hab/cusf-landing-prediction/pred_src/wind/wind_file.h
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/wind/wind_file.h
 util/random.h
-/var/hab/cusf-landing-prediction/pred_src/util/random.h
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/util/random.h
 run_model.h
-/var/hab/cusf-landing-prediction/pred_src/run_model.h
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/run_model.h
 pred.h
-/var/hab/cusf-landing-prediction/pred_src/pred.h
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/pred.h
 altitude.h
-/var/hab/cusf-landing-prediction/pred_src/altitude.h
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/altitude.h
 
-/var/hab/cusf-landing-prediction/pred_src/run_model.h
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/run_model.h
 wind/wind_file_cache.h
-/var/hab/cusf-landing-prediction/pred_src/wind/wind_file_cache.h
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/wind/wind_file_cache.h
 altitude.h
-/var/hab/cusf-landing-prediction/pred_src/altitude.h
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/altitude.h
 
-/var/hab/cusf-landing-prediction/pred_src/util/getdelim.c
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/util/getdelim.c
 config.h
 -
 getdelim.h
-/var/hab/cusf-landing-prediction/pred_src/util/getdelim.h
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/util/getdelim.h
 limits.h
 -
 stdlib.h
@@ -510,7 +490,7 @@ stdlib.h
 errno.h
 -
 
-/var/hab/cusf-landing-prediction/pred_src/util/getdelim.h
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/util/getdelim.h
 stddef.h
 -
 stdio.h
@@ -518,15 +498,15 @@ stdio.h
 sys/types.h
 -
 
-/var/hab/cusf-landing-prediction/pred_src/util/getline.c
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/util/getline.c
 config.h
 -
 getdelim.h
-/var/hab/cusf-landing-prediction/pred_src/util/getdelim.h
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/util/getdelim.h
 getline.h
-/var/hab/cusf-landing-prediction/pred_src/util/getline.h
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/util/getline.h
 
-/var/hab/cusf-landing-prediction/pred_src/util/getline.h
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/util/getline.h
 stddef.h
 -
 stdio.h
@@ -534,7 +514,7 @@ stdio.h
 sys/types.h
 -
 
-/var/hab/cusf-landing-prediction/pred_src/util/gopt.c
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/util/gopt.c
 stdio.h
 -
 stdlib.h
@@ -542,23 +522,23 @@ stdlib.h
 string.h
 -
 gopt.h
-/var/hab/cusf-landing-prediction/pred_src/util/gopt.h
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/util/gopt.h
 sysexits.h
 -
 
-/var/hab/cusf-landing-prediction/pred_src/util/gopt.h
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/util/gopt.h
 
-/var/hab/cusf-landing-prediction/pred_src/util/random.c
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/util/random.c
 random.h
-/var/hab/cusf-landing-prediction/pred_src/util/random.h
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/util/random.h
 glib.h
 -
 math.h
 -
 
-/var/hab/cusf-landing-prediction/pred_src/util/random.h
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/util/random.h
 
-/var/hab/cusf-landing-prediction/pred_src/wind/../util/getline.h
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/wind/../util/getline.h
 stddef.h
 -
 stdio.h
@@ -566,9 +546,9 @@ stdio.h
 sys/types.h
 -
 
-/var/hab/cusf-landing-prediction/pred_src/wind/wind_file.c
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/wind/wind_file.c
 wind_file.h
-/var/hab/cusf-landing-prediction/pred_src/wind/wind_file.h
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/wind/wind_file.h
 stdio.h
 -
 stdlib.h
@@ -578,15 +558,15 @@ assert.h
 math.h
 -
 ../util/getline.h
-/var/hab/cusf-landing-prediction/pred_src/wind/../util/getline.h
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/wind/../util/getline.h
 
-/var/hab/cusf-landing-prediction/pred_src/wind/wind_file.h
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/wind/wind_file.h
 
-/var/hab/cusf-landing-prediction/pred_src/wind/wind_file_cache.c
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/wind/wind_file_cache.c
 wind_file_cache.h
-/var/hab/cusf-landing-prediction/pred_src/wind/wind_file_cache.h
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/wind/wind_file_cache.h
 wind_file.h
-/var/hab/cusf-landing-prediction/pred_src/wind/wind_file.h
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/wind/wind_file.h
 sys/types.h
 -
 sys/stat.h
@@ -608,9 +588,9 @@ string.h
 math.h
 -
 ../util/getline.h
-/var/hab/cusf-landing-prediction/pred_src/wind/../util/getline.h
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/wind/../util/getline.h
 
-/var/hab/cusf-landing-prediction/pred_src/wind/wind_file_cache.h
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/wind/wind_file_cache.h
 wind_file.h
-/var/hab/cusf-landing-prediction/pred_src/wind/wind_file.h
+/var/www/html/habhub/cusf-standalone-predictor/pred_src/wind/wind_file.h
 

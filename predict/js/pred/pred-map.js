@@ -23,6 +23,8 @@ function initMap(centre_lat, centre_lon, zoom_level) {
       center: latlng
     };
     map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+    var ctaLayer = new google.maps.KmlLayer('http://www.habhub.org/kml_testing/notam_and_restrict.kml', {preserveViewport: true});
+    ctaLayer.setMap(map);
 }
 
 // Enable or disable user control of the map canvas, including scrolling,
