@@ -143,6 +143,8 @@ google.load("jqueryui", "1.8.1");
     <br /><br />
     Written by <a href="http://github.com/jonsowman" target="_blank">Jon Sowman</a> and <a href="http://github.com/adamgreig" target="_blank">Adam Greig</a> for <a href="http://www.cuspaceflight.co.uk" target="_blank">CUSF</a>.
     Credit also to <a href="http://github.com/rjw57" target="_blank">Rich Wareham</a> for work on the predictor. Some parts of code taken from old landing prediction software, credit to Rob Anderson, Fergus Noble and Ed Moore.
+    <br />
+    Minor credit to Robert Harrison for integrating the NOTAM and airspace KML from www.notaminfo.com with kind permission from David Massie.
     <br /><br />
     No guarantee is given for the accuracy, precision or reliability of the data produced by this software, and you use it entirely at your own risk. For more information, see #highaltitude on irc.freenode.net.
 </div>
