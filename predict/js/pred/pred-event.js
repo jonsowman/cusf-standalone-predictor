@@ -68,42 +68,24 @@ function EH_BurstCalc() {
 }
 
 function EH_NOTAMSettings() {
-    // Activate the "use burst calc" links
+    // Activate the checkbox 
+    $("#notam-display").click(function() {
+        if (document.modelForm.notams.checked){
+            if (kmlLayer == null) kmlLayer = new google.maps.KmlLayer('http://www.habhub.org/kml_testing/notam_and_restrict.kml', {preserveViewport: true});
+            kmlLayer.setMap(map);
+	}
+	else {
+	    kmlLayer.setMap(null);
+	}
+    });
+    // Activate the "notam settings" links
     $("#notam-settings-show").click(function() {
-	alert("RJH");
         $("#notam-settings-wrapper").show();
     });
-    $("#burst-calc-show").hover(
-        function() {
-            $("#ascent,#burst").css("background-color", "#AACCFF");
-        },
-        function() {
-            $("#ascent,#burst").css("background-color", "#FFFFFF");
-        });
-    $("#burst-calc-use").click(function() {
-        // Write the ascent rate and burst altitude to the launch card
-        $("#ascent").val($("#ar").html());
-        $("#burst").val($("#ba").html());
-        $("#burst-calc-wrapper").hide();
-    });
-    $("#burst-calc-close").click(function() {
-        // Close the burst calc without doing anything
-        $("#burst-calc-wrapper").hide();
+    $("#notam-settings-close").click(function() {
+        // Close the notam settings doing anything
+        $("#notam-settings-wrapper").hide();
         $("#modelForm").show();
-    });
-    $("#burst-calc-advanced-show").click(function() {
-        // Show the burst calculator constants
-        // We use a callback function to fade in the new content to make
-        // sure the old content has gone, in order to create a smooth effect
-        $("#burst-calc").fadeOut('fast', function() {
-            $("#burst-calc-constants").fadeIn();
-        });
-    });
-    $("#burst-calc-advanced-hide").click(function() {
-        // Show the burst calculator constants
-        $("#burst-calc-constants").fadeOut('fast', function() {
-            $("#burst-calc").fadeIn();
-        });
     });
 }
 
