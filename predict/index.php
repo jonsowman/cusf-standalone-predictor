@@ -144,6 +144,8 @@ google.load("jqueryui", "1.8.1");
     Written by <a href="http://github.com/jonsowman" target="_blank">Jon Sowman</a> and <a href="http://github.com/adamgreig" target="_blank">Adam Greig</a> for <a href="http://www.cuspaceflight.co.uk" target="_blank">CUSF</a>.
     Credit also to <a href="http://github.com/rjw57" target="_blank">Rich Wareham</a> for work on the predictor. Some parts of code taken from old landing prediction software, credit to Rob Anderson, Fergus Noble and Ed Moore.
     <br /><br />
+    Minor credit to Robert Harrison for integrating the NOTAM and airspace KML from <a href="http://www.notaminfo.com/" >www.notaminfo.com</a> with kind permission from author David Massie.
+    <br /><br />
     No guarantee is given for the accuracy, precision or reliability of the data produced by this software, and you use it entirely at your own risk. For more information, see #highaltitude on irc.freenode.net.
 </div>
 
@@ -284,6 +286,25 @@ google.load("jqueryui", "1.8.1");
     </div>
 </div>
 
+<!-- Advanced NOTAM & Airspace Settings -->
+<div id="notam-settings-wrapper" class="box ui-corner-all">
+    <img src="images/drag_handle.png" class="handle" />
+    <div id="notam-settings">
+        <b>Advanced NOTAM & Airspace Settings</b>
+        <p>
+	<b>NB This is not yet functional !!!</b>
+        <table id="input_table">
+            <tr>
+	    <td> 
+<form name="userselection" action = "" method = "GET"  ><fieldset id="notamsFieldset" name="notams" ><legend>NOTAM details</legend><div id="notamsDiv" style="display: block"><input type="checkbox" name="warnings" id="warnings" onclick="setNOTAMs();" value="yes" checked="checked" />Show NOTAMs<br /></fieldset><fieldset id="airspaceFieldset"><legend>Airspace Details</legend><div id="airspaceDiv" style="display: block"><input type="checkbox" id = "defaultAirspace" name="default" value="yes" onclick="showStdAirspace();"/>Show Default airspace<br><input type="checkbox" id="clA" name="clA" value="yes" onclick="setAirspace();"/>Show class A airspace<br><input type="checkbox" id="clD" name="clD" value="yes" onclick="setAirspace();"/>Show class D airspace<br><input type="checkbox" id="clE" name="clE" value="yes" onclick="setAirspace();"/>Show class E airspace<br><input type="checkbox" id="clG" name="clG" value="yes" onclick="setAirspace();"/>Show class G airspace<br><input type="checkbox" id="clP" name="clP" value="yes" onclick="setAirspace();"/>Show prohibited airspace<br><input type="checkbox" id="clR" name="clR" value="yes" onclick="setAirspace();"/>Show restricted airspace<br><input type="checkbox" id="clM" name="clM" value="yes" onclick="setAirspace();"/>Show MATZs<br><input type="checkbox" id="clQ" name="clQ" value="yes" onclick="setAirspace();"/>Show danger areas<br><input type="checkbox" id="clX" name="clX" value="yes" onclick="setAirspace();"/>Show offshore/NOTAMed danger areas<br><input type="checkbox" id="clH" name="clH" value="yes" onclick="setAirspace();"/>Show hazards (HIRTA/AIAA etc)</fieldset></tr></table></form>
+            </td>
+            </tr>
+        </table>
+        <input type="button" id="notam-settings-close" name="notam-settings-submit" 
+            value="Close"/ >
+    </div>
+</div>
+
 <!-- Launch card -->
 <div id="input_form" class="box ui-corner-all"> 
 <img class="handle" src="images/drag_handle.png" />
@@ -404,9 +425,18 @@ google.load("jqueryui", "1.8.1");
         </select>
         </td>
     </tr>
+    <tr><td>Display UK NOTAMS &amp; Airspace: </td>
+        <td>
+	<input id="notam-display" type="checkbox" name="notams" value="notams" />
+            <a id="notam-settings-show" class="tipsyLink"
+                title="Advanced NOTAM &amp; Airspace Settings">
+                Advanced</a>
+        </td>
+    </tr>
     <tr>
         <td></td>
-        <td><input type="submit" name="submit" id="run_pred_btn" value="Run Prediction"></td>
+        <td><input type="submit" name="submit" id="run_pred_btn" value="Run Prediction">
+        </td>
     </tr>
 </table>
 </form>
