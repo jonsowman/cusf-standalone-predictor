@@ -15,6 +15,7 @@
 function setupEventHandlers() {
     EH_LaunchCard();
     EH_BurstCalc();
+    EH_NOTAMSettings();
     EH_ScenarioInfo();
     EH_LocationSave();
 
@@ -63,6 +64,28 @@ function EH_BurstCalc() {
         $("#burst-calc-constants").fadeOut('fast', function() {
             $("#burst-calc").fadeIn();
         });
+    });
+}
+
+function EH_NOTAMSettings() {
+    // Activate the checkbox 
+    $("#notam-display").click(function() {
+        if (document.modelForm.notams.checked){
+            if (kmlLayer == null) kmlLayer = new google.maps.KmlLayer('http://www.habhub.org/kml_testing/notam_and_restrict.kml', {preserveViewport: true});
+            kmlLayer.setMap(map);
+	}
+	else {
+	    kmlLayer.setMap(null);
+	}
+    });
+    // Activate the "notam settings" links
+    $("#notam-settings-show").click(function() {
+        $("#notam-settings-wrapper").show();
+    });
+    $("#notam-settings-close").click(function() {
+        // Close the notam settings doing anything
+        $("#notam-settings-wrapper").hide();
+        $("#modelForm").show();
     });
 }
 

@@ -1,7 +1,7 @@
 <?php
 
 // Enter the Google Maps API for your site
-define("GMAPS_API_KEY", "ABQIAAAAzpAeP4iTRyyvc3_y95bQZBSnyWegg1iFIOtWV3Ha3Qw-fH3UlBTg9lMAipYdJi6ac4b5hWAzBkkXgg");
+define("GMAPS_API_KEY", "ABQIAAAA4T7AS90KUqGrNPOsl6eyCBS4mbmQPYGFaQoYTVDm_qb3IIB-WBSwfZE_KhJy2GpxCqBbVm7PoSKM9Q");
 
 // Who should we email about errors etc?
 define("ADMIN_EMAIL", "jon@hexoc.com");
@@ -23,3 +23,4 @@ define("FLIGHT_CSV", "flight_path.csv");
 define("PROGRESS_JSON", "progress.json");
 
 ?>
+

@@ -17,6 +17,7 @@ var ajaxEventHandle;
 var current_uuid = '0';
 
 var map;
+var kmlLayer = null;
 var map_items = [];
 var launch_img = "images/target-1-sm.png";
 var land_img = "images/target-8-sm.png";
