@@ -81,6 +81,12 @@ function verifyModel( $pred_model, $software_available ) {
                 $return_array['msg'] = "The latitude or longitude deltas
                     were outside the allowed range on this server";
             }
+        } else if ( $idx == "asc" || $idx == "des" ) {
+            if ( $value <= 0 ) {
+                $return_array['valid'] = false;
+                $return_array['msg'] = "The ascent and descent rates cannot 
+                    be zero or negative";
+            }
         } else if ( !is_numeric( $value ) ) {
             $return_array['valid'] = false;
             $return_array['msg'] = "A value that should have been numeric
