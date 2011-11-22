@@ -95,7 +95,10 @@ function verifyModel( $pred_model, $software_available ) {
     }
 
     // Now check that the timestamp is within range
-    if ( $pred_model['timestamp'] > (time() + 180*3600) ) {
+    if ( !isset($pred_model['timestamp']) ) {
+        $return_array['valid'] = false;
+        $return_array['msg'] = "Launch time missing";
+    } else if ( $pred_model['timestamp'] > (time() + 180*3600) ) {
         // More than 180 hours into future
         $return_array['valid'] = false;
         $return_array['msg'] = "A prediction cannot be run for a time that is 
