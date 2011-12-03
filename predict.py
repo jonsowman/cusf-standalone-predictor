@@ -249,7 +249,12 @@ def main():
     
     update_progress(gfs_percent=100, gfs_timeremaining='Done', gfs_complete=True, pred_running=True)
     
-    subprocess.call([pred_binary, '-i/var/www/hab/predict/gfs/', '-v', '-o'+uuid_path+'flight_path.csv', uuid_path+'scenario.ini'])
+    if options.alarm:
+        alarm_flags = ["-a120"]
+    else:
+        alarm_flags = []
+
+    subprocess.call([pred_binary, '-i/var/www/hab/predict/gfs/', '-v', '-o'+uuid_path+'flight_path.csv', uuid_path+'scenario.ini'] + alarm_flags)
 
     update_progress(pred_running=False, pred_complete=True)
 
