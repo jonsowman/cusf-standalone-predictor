@@ -16,6 +16,7 @@
 #include <string.h>
 #include <time.h>
 #include <errno.h>
+#include <unistd.h>
 
 #include "ini/iniparser.h"
 #include "util/gopt.h"
@@ -39,6 +40,7 @@ int main(int argc, const char *argv[]) {
     float burst_alt, ascent_rate, drag_coeff, rmswinderror;
     int descent_mode;
     int scenario_idx, n_scenarios;
+    int alarm_time;
     char* endptr;       // used to check for errors on strtod calls 
     
     wind_file_cache_t* file_cache;
@@ -54,7 +56,8 @@ int main(int argc, const char *argv[]) {
         gopt_option('t', GOPT_ARG, gopt_shorts('t'), gopt_longs("start_time")),
         gopt_option('i', GOPT_ARG, gopt_shorts('i'), gopt_longs("data_dir")),
         gopt_option('d', 0, gopt_shorts('d'), gopt_longs("descending")),
-        gopt_option('e', GOPT_ARG, gopt_shorts('e'), gopt_longs("wind_error"))
+        gopt_option('e', GOPT_ARG, gopt_shorts('e'), gopt_longs("wind_error")),
+        gopt_option('a', GOPT_ARG, gopt_shorts('a'), gopt_longs("alarm"))
     ));
 
     if (gopt(options, 'h')) {
@@ -74,6 +77,7 @@ int main(int argc, const char *argv[]) {
         printf("                           burst or cutdown. burst_alt and ascent_rate ignored.\n");
         printf(" -i --data_dir <dir>     Input directory for wind data, defaults to current dir.\n\n");
         printf(" -e --wind_error <err>   RMS windspeed error (m/s).\n");
+        printf(" -a --alarm <seconds>    Use alarm() to kill pred incase it hangs.\n");
         printf("The scenario file is an INI-like file giving the launch scenario. If it is\n");
         printf("omitted, the scenario is read from standard input.\n");
       exit(0);
@@ -83,6 +87,15 @@ int main(int argc, const char *argv[]) {
       // Version information
       printf("Landing Prediction version: %s\nCopyright (c) CU Spaceflight 2009\n", VERSION);
       exit(0);
+    }
+
+    if (gopt_arg(options, 'a', &argument) && strcmp(argument, "-")) {
+      alarm_time = strtol(argument, &endptr, 0);
+      if (endptr == argument) {
+        fprintf(stderr, "ERROR: %s: invalid alarm length\n", argument);
+        exit(1);
+      }
+      alarm(alarm_time);
     }
     
     verbosity = gopt(options, 'v');
