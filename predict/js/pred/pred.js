@@ -442,13 +442,18 @@ function getAssocSize(arr) {
 }
 
 function POSIXtoHM(timestamp, format) {
-    // using JS port of PHP's date()
+    // Using JS port of PHP's date()
     var ts = new Date();
     ts.setTime(timestamp*1000);
-    // account for DST
+
+    // We always want to work in UTC, so adjust the Date
+    ts.setTime(ts.getTime() + (ts.getTimezoneOffset() * 60000));
+
+    // Account for DST
     if ( ts.format("I") ==  1 ) {
         ts.setTime((timestamp-3600)*1000);
     }
+
     if ( format == null || format == "" ) format = "H:i";
     var str = ts.format(format);
     return str;
