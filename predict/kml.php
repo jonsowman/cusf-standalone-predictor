@@ -143,7 +143,7 @@ $kml[] = '</Placemark>';
 
 $kml[] = '</Document></kml>';
 
-$kmlOut = join("\n", $kml);
+$kmlOut = join($kml, "\n");
 header("Content-type: application/vnd.google-earth.kml+xml");
 header("Content-Disposition: attachment; filename=".$uuid.".kml");
 echo $kmlOut;
