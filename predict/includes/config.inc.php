@@ -23,4 +23,3 @@ define("FLIGHT_CSV", "flight_path.csv");
 define("PROGRESS_JSON", "progress.json");
 
 ?>
-
