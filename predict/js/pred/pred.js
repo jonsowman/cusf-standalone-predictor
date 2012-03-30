@@ -380,6 +380,12 @@ function parseCSV(lines) {
         new google.maps.Point(0, 0),
         new google.maps.Point(8, 8)
     );
+
+    var burst_icon = new google.maps.MarkerImage(burst_img,
+        new google.maps.Size(16, 16),
+        new google.maps.Point(0, 0),
+        new google.maps.Point(8, 8)
+    );
       
     var launch_marker = new google.maps.Marker({
         position: launch_pt,
@@ -397,21 +403,21 @@ function parseCSV(lines) {
             + POSIXtoHM(land_time) + "UTC"
     });
 
+    var pop_marker = new google.maps.Marker({
+            position: burst_pt,
+            map: map,
+            icon: burst_icon,
+            title: 'Balloon burst (' + burst_lat + ', ' + burst_lon 
+                + ' at altitude ' + max_height + 'm) at ' 
+                + POSIXtoHM(burst_time) + "UTC"
+    });
+
     var path_polyline = new google.maps.Polyline({
-        path:path,
+        path: path,
         map: map,
         strokeColor: '#000000',
         strokeWeight: 3,
         strokeOpacity: 0.75
-    });
-
-    var pop_marker = new google.maps.Marker({
-            position: burst_pt,
-            map: map,
-            icon: burst_img,
-            title: 'Balloon burst (' + burst_lat + ', ' + burst_lon 
-                + ' at altitude ' + max_height + 'm) at ' 
-                + POSIXtoHM(burst_time) + "UTC"
     });
 
     // Add the launch/land markers to map
