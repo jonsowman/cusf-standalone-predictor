@@ -169,22 +169,33 @@ google.load("jqueryui", "1.8.1");
                 </td>
                 <td colspan="2">
                     <select class="input_field" id="mb" tabindex="2"> 
-
-                        <option value="200">200</option>
-                        <option value="300">300</option>
-                        <option value="350">350</option>
-                        <option value="450">450</option>
-                        <option value="500">500</option>
-                        <option value="600">600</option>
-
-                        <option value="700">700</option>
-                        <option value="800">800</option>
-                        <option value="1000" selected="selected">1000</option>
-                        <option value="1200">1200</option>
-                        <option value="1500">1500</option>
-                        <option value="2000">2000</option>
-
-                        <option value="3000">3000</option>
+                        <option value="k200">Kaymont - 200</option>
+                        <option value="k300">Kaymont - 300</option>
+                        <option value="k350">Kaymont - 350</option>
+                        <option value="k450">Kaymont - 450</option>
+                        <option value="k500">Kaymont - 500</option>
+                        <option value="k600">Kaymont - 600</option>
+                        <option value="k700">Kaymont - 700</option>
+                        <option value="k800">Kaymont - 800</option>
+                        <option value="k1000" selected="selected">Kaymont - 1000</option>
+                        <option value="k1200">Kaymont - 1200</option>
+                        <option value="k1500">Kaymont - 1500</option>
+                        <option value="k2000">Kaymont - 2000</option>
+                        <option value="k3000">Kaymont - 3000</option>
+                        <option value="h200">Hwoyee - 200</option>
+                        <option value="h300">Hwoyee - 300</option>
+                        <option value="h350">Hwoyee - 350</option>
+                        <option value="h450">Hwoyee - 400</option>
+                        <option value="h500">Hwoyee - 500</option>
+                        <option value="h600">Hwoyee - 600</option>
+                        <option value="h700">Hwoyee - 750</option>
+                        <option value="h800">Hwoyee - 800</option>
+                        <option value="h800">Hwoyee - 950</option>
+                        <option value="h1000">Hwoyee - 1000</option>
+                        <option value="h1200">Hwoyee - 1200</option>
+                        <option value="h1500">Hwoyee - 1500</option>
+                        <option value="h1600">Hwoyee - 1600</option>
+                        <option value="h2000">Hwoyee - 2000</option>
                     </select>
                 </td>
             </tr>
