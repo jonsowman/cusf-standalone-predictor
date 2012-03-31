@@ -360,34 +360,7 @@ function calc_update() {
     document.getElementById('lv_cf').innerHTML = launch_cf + " ft<sup>3</sup>";
 }
 
-function show_help() {
-    hide_about();
-    document.getElementById('helpbox').style.visibility = 'visible';
-    return false;
-}
-
-function show_about() {
-    hide_help();
-    document.getElementById('aboutbox').style.visibility = 'visible';
-    return false;
-}
-
-function hide_help() {
-    document.getElementById('helpbox').style.visibility = 'hidden';
-    return false;
-}
-
-function hide_about() {
-    document.getElementById('aboutbox').style.visibility = 'hidden';
-    return false;
-}
-
 function calc_init() {
-
-    document.getElementById('showhelp').onclick = show_help;
-    document.getElementById('showabout').onclick = show_about;
-    document.getElementById('hidehelp').onclick = hide_help;
-    document.getElementById('hideabout').onclick = hide_about;
 
     var ids = ['mb', 'mp', 'tar', 'tba', 'gas', 'rho_g', 'rho_a', 'adm', 'bd', 'cd', 'bd_c', 'cd_c'];
     for(var i in ids) {
