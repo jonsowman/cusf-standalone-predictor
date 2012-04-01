@@ -339,7 +339,7 @@ function calc_update() {
     time_to_burst = (burst_altitude / ascent_rate) / 60.0;
 
     if(isNaN(ascent_rate)) {
-        set_error('tba', "Altitude unreachable for this configuration.");
+        set_error('tba', "Altitude unreachable<br />for this configuration.");
         return;
     }
 
