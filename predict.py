@@ -589,8 +589,10 @@ if __name__ == '__main__':
         log.debug("Exit: " + repr(e))
         if e.code != 0 and progress_f:
             update_progress(error="Unknown error exit")
+            statsd.increment("unknown_error_exit")
         raise
     except Exception as e:
+        statsd.increment("uncaught_exception")
         log.exception("Uncaught exception")
         (exc_type, exc_value, discard_tb) = sys.exc_info()
         exc_tb = traceback.format_exception_only(exc_type, exc_value)
