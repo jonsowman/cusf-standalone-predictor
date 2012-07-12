@@ -134,12 +134,16 @@ function runPred($pred_model) {
     $predictor_lat = number_format($pred_model['lat'], 0);
     $predictor_lon = number_format($pred_model['lon'], 0);
 
-    $sh = ROOT . "/predict.py --cd=" . ROOT . " --fork --alarm -v --latdelta="
+    $log = PREDS_PATH . $pred_model['uuid'] . "/" . LOG_FILE;
+    $sh = ROOT . "/predict.py --cd=" . ROOT . " --fork --alarm --log=$log -v --latdelta="
         .$pred_model['delta_lat']." --londelta=".$pred_model['delta_lon']
         ." -p1 -f5 -t ".$pred_model['timestamp']
         ." --lat=".$predictor_lat." --lon=".$predictor_lon." " . $use_hd
         . $pred_model['uuid'];
-    file_put_contents(PREDS_PATH . $pred_model['uuid'] . "/" . LOG_FILE, "Command: " . $sh . "\n");
+    if (defined("PYTHON"))
+        $sh = PYTHON . " " . $sh;
+
+    file_put_contents($log, "Command: " . $sh . "\n");
     shell_exec($sh);
 }
 
