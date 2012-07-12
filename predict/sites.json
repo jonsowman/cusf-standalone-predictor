@@ -14,10 +14,10 @@
         "latitude"  :   -34.9499,
         "longitude" :   138.5194
     },
-    "Elvington": {
+    "Brightwalton": {
         "altitude"  :   0,
-        "latitude"  :   53.9231,
-        "longitude" :   -0.9935
+        "latitude"  :   51.51143,
+        "longitude" :   -1.38870
     },
     "Boston Spa": { 
         "latitude"  :   53.8997,
@@ -33,5 +33,10 @@
     	"altitude"  :   0,
 	"latitude"  :   54.654118,
 	"longitude" :   -7.034914
+    },
+    "Preston St Mary": {
+        "latitude"  :   52.1215,
+        "longitude" :   0.8078,
+        "altitude"  :   70
     }
 }

@@ -10,6 +10,7 @@ import math
 import sys
 import os
 import logging
+import traceback
 import calendar
 import optparse
 import subprocess
@@ -32,8 +33,9 @@ pydap.util.http.httplib2._entry_disposition = fresh
 
 # Output logger format
 log = logging.getLogger('main')
+log_formatter = logging.Formatter('%(levelname)s: %(message)s')
 console = logging.StreamHandler()
-console.setFormatter(logging.Formatter('%(levelname)s: %(message)s'))
+console.setFormatter(log_formatter)
 log.addHandler(console)
 
 progress_f = ''
@@ -45,7 +47,7 @@ progress = {
     'gfs_timestamp': '',
     'pred_running': False,
     'pred_complete': False,
-    'progress_error': '',
+    'error': '',
     }
 
 def update_progress(**kwargs):
@@ -77,6 +79,8 @@ def main():
             help='detach the process and run in the background')
     parser.add_option('--alarm', dest='alarm', action="store_true",
             help='setup an alarm for 10 minutes time to prevent hung processes')
+    parser.add_option('--redirect', dest='redirect', default='/dev/null',
+            help='if forking, file to send stdout/stderr to', metavar='FILE')
     parser.add_option('-t', '--timestamp', dest='timestamp',
         help='search for dataset covering the POSIX timestamp TIME \t[default: now]', 
         metavar='TIME', type='int',
@@ -144,7 +148,7 @@ def main():
         os.chdir(options.directory)
 
     if options.fork:
-        detach_process()
+        detach_process(options.redirect)
 
     if options.alarm:
         setup_alarm()
@@ -219,7 +223,7 @@ def main():
     try:
         dataset = dataset_for_time(time_to_find, options.hd)
     except:
-        print('Could not locate a dataset for the requested time.')
+        log.error('Could not locate a dataset for the requested time.')
         sys.exit(1)
 
     dataset_times = map(timestamp_to_datetime, dataset.time)
@@ -254,7 +258,7 @@ def main():
     else:
         alarm_flags = []
 
-    subprocess.call([pred_binary, '-i/var/www/hab/predict/gfs/', '-v', '-o'+uuid_path+'flight_path.csv', uuid_path+'scenario.ini'] + alarm_flags)
+    subprocess.call([pred_binary, '-i/var/www/cusf-standalone-predictor/gfs/', '-v', '-o'+uuid_path+'flight_path.csv', uuid_path+'scenario.ini'] + alarm_flags)
 
     update_progress(pred_running=False, pred_complete=True)
 
@@ -350,9 +354,7 @@ def write_file(output_format, data, window, mintime, maxtime):
             downloaded_data[var] = selection
 
             log.info('   Downloaded data has shape %s...', selection.shape)
-            if len(selection.shape) != 3:
-                log.error('    Expected 3-d data.')
-                return
+            assert len(selection.shape) == 3
 
             now = datetime.datetime.now()
             time_elapsed = now - starttime
@@ -539,7 +541,7 @@ def dataset_for_time(time, hd):
     
     raise RuntimeError('Could not find appropriate dataset.')
 
-def detach_process():
+def detach_process(redirect):
     # Fork
     if os.fork() > 0:
         os._exit(0)
@@ -547,9 +549,12 @@ def detach_process():
     # Detach
     os.setsid()
 
-    null_fd = os.open(os.devnull, os.O_RDWR)
-    for s in [sys.stdin, sys.stdout, sys.stderr]:
-        os.dup2(null_fd, s.fileno())
+    null_fd = os.open(os.devnull, os.O_RDONLY)
+    out_fd = os.open(redirect, os.O_WRONLY | os.O_APPEND)
+
+    os.dup2(null_fd, sys.stdin.fileno())
+    for s in [sys.stdout, sys.stderr]:
+        os.dup2(out_fd, s.fileno())
 
     # Fork
     if os.fork() > 0:
@@ -562,5 +567,18 @@ def setup_alarm():
 
 # If this is being run from the interpreter, run the main function.
 if __name__ == '__main__':
-    main()
-
+    try:
+        main()
+    except SystemExit as e:
+        log.debug("Exit: " + repr(e))
+        if e.code != 0 and progress_f:
+            update_progress(error="Unknown error exit")
+        raise
+    except Exception as e:
+        log.exception("Uncaught exception")
+        (exc_type, exc_value, discard_tb) = sys.exc_info()
+        exc_tb = traceback.format_exception_only(exc_type, exc_value)
+        info = exc_tb[-1].strip()
+        if progress_f:
+            update_progress(error="Unhandled exception: " + info)
+        raise
