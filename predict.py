@@ -14,7 +14,10 @@ import traceback
 import calendar
 import optparse
 import subprocess
+import statsd
 import simplejson as json
+
+statsd.init_statsd({'STATSD_BUCKET_PREFIX': 'habhub.predictor'})
 
 # We use Pydap from http://pydap.org/.
 import pydap.exceptions, pydap.client, pydap.lib
@@ -65,10 +68,13 @@ def update_progress(**kwargs):
         global log
         log.error('Could not update progress file')
 
+@statsd.StatsdTimer.wrap('time')
 def main():
     """
     The main program routine.
     """
+
+    statsd.increment('run')
 
     # Set up our command line options
     parser = optparse.OptionParser()
@@ -142,6 +148,7 @@ def main():
     # Check we got a UUID in the arguments
     if len(args) != 1:
         log.error('Exactly one positional argument should be supplied (uuid).')
+        statsd.increment('error')
         sys.exit(1)
 
     if options.directory:
@@ -162,6 +169,7 @@ def main():
         if process.find(uuid) > 0:
             pid = int(line.split()[0])
             if pid != os.getpid():
+                statsd.increment('duplicate')
                 log.error('A process is already running for this UUID, quitting.')
                 sys.exit(1)
 
@@ -180,25 +188,30 @@ def main():
             run_time=str(int(timelib.time())))
     except IOError:
         log.error('Error opening progress.json file')
+        statsd.increment('error')
         sys.exit(1)
     
     # Check the predictor binary exists
     if not os.path.exists(pred_binary):
         log.error('Predictor binary does not exist.')
+        statsd.increment('error')
         sys.exit(1)
 
     # Check the latitude is in the right range.
     if (options.lat < -90) | (options.lat > 90):
         log.error('Latitude %s is outside of the range (-90,90).')
+        statsd.increment('error')
         sys.exit(1)
 
     # Check the delta sizes are valid.
     if (options.latdelta <= 0.5) | (options.londelta <= 0.5):
         log.error('Latitiude and longitude deltas must be at least 0.5 degrees.')
+        statsd.increment('error')
         sys.exit(1)
 
     if options.londelta > 180:
         log.error('Longitude window sizes greater than 180 degrees are meaningless.')
+        statsd.increment('error')
         sys.exit(1)
 
     # We need to wrap the longitude into the right range.
@@ -224,6 +237,8 @@ def main():
         dataset = dataset_for_time(time_to_find, options.hd)
     except:
         log.error('Could not locate a dataset for the requested time.')
+        statsd.increment('no_dataset')
+        statsd.increment('error')
         sys.exit(1)
 
     dataset_times = map(timestamp_to_datetime, dataset.time)
@@ -261,6 +276,7 @@ def main():
     subprocess.call([pred_binary, '-i/var/www/cusf-standalone-predictor/gfs/', '-v', '-o'+uuid_path+'flight_path.csv', uuid_path+'scenario.ini'] + alarm_flags)
 
     update_progress(pred_running=False, pred_complete=True)
+    statsd.increment('success')
 
 def purge_cache():
     """
@@ -573,8 +589,10 @@ if __name__ == '__main__':
         log.debug("Exit: " + repr(e))
         if e.code != 0 and progress_f:
             update_progress(error="Unknown error exit")
+            statsd.increment("unknown_error_exit")
         raise
     except Exception as e:
+        statsd.increment("uncaught_exception")
         log.exception("Uncaught exception")
         (exc_type, exc_value, discard_tb) = sys.exc_info()
         exc_tb = traceback.format_exception_only(exc_type, exc_value)
