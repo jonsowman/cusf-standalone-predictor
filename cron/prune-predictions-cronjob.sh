@@ -1,7 +1,7 @@
 #!/bin/bash
 
 PARAM="mtime"
-AGE="7"
+AGE="14"
 
 REPOROOT="/var/www/hab/predict/"
 DATADIR="predict/preds"
