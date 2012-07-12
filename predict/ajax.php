@@ -2,6 +2,8 @@
 require_once("includes/functions.inc.php");
 require_once("includes/config.inc.php");
 
+$stats = new StatsD();
+
 $action = $_GET['action'];
 
 $software_available = array("gfs", "gfs_hd");
@@ -19,6 +21,7 @@ case "getCSV":
     }
     $returned = json_encode($data);
     echo $returned;
+    $stats->counting('habhub.predictor.php.get_csv');
     break;
 
 case "JSONexists":
@@ -58,6 +61,7 @@ case "getModelByUUID":
     $pred_model = array();
     if ( !file_exists(PREDS_PATH . $uuid . "/" . SCENARIO_FILE ) ) {
         $pred_model['valid'] = false;
+        $stats->counting('habhub.predictor.php.couldnt_get_by_uuid');
     } else {
         // populate the array, JSON encode it and return
         $pred_model = parse_ini_file(PREDS_PATH . $uuid . "/" . SCENARIO_FILE);
@@ -67,6 +71,7 @@ case "getModelByUUID":
             $pred_model['valid'] = false;
         }
         $pred_model['uuid'] = $uuid;
+        $stats->counting('habhub.predictor.php.got_by_uuid');
     }
     echo json_encode($pred_model);
     break;
@@ -83,6 +88,7 @@ case "submitForm":
             $json_return['error'] = "Server couldn't make a model from the form 
                 data";
             echo json_encode($json_return);
+            $stats->counter('habhub.predictor.php.form_error');
             break;
         }
 
@@ -91,6 +97,7 @@ case "submitForm":
         if ( !$verify_dump['valid'] ) {
             $json_return['error'] = $verify_dump['msg'];
             echo json_encode($json_return);
+            $stats->counter('habhub.predictor.php.invalid_model')
             break;
         }
 
@@ -98,6 +105,7 @@ case "submitForm":
         if ( !$pred_model['uuid'] = makesha1hash($pred_model) ) {
             $json_return['error'] = "Couldn't make the SHA1 hash";
             echo json_encode($json_return);
+            $stats->counter('habhub.predictor.php.unhashable');
             break;
         }
 
@@ -106,10 +114,12 @@ case "submitForm":
         $json_return['valid'] = "true";
         $json_return['uuid'] = $pred_model['uuid'];
         $json_return['timestamp'] = $pred_model['timestamp'];
+        $stats->counting('habhub.predictor.php.prediction_run');
 
     } else {
         $json_return['error'] = "The form submit function was called without 
             any data";
+        $stats->counting('habhub.predictor.php.no_form_data');
     }
 
     echo json_encode($json_return);
