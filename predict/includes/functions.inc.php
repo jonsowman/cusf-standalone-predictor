@@ -23,15 +23,15 @@ function createModel($post_array) {
     $pred_model['day'] = (int)$post_array['day'];
     $pred_model['year'] = (int)$post_array['year'];
 
-    $pred_model['lat'] = $post_array['lat'];
-    $pred_model['lon'] = $post_array['lon'];
+    $pred_model['lat'] = (float)$post_array['lat'];
+    $pred_model['lon'] = (float)$post_array['lon'];
     $pred_model['asc'] = (float)$post_array['ascent'];
-    $pred_model['alt'] = $post_array['initial_alt'];
+    $pred_model['alt'] = (int)$post_array['initial_alt'];
     $pred_model['des'] = (float)$post_array['drag'];
-    $pred_model['burst'] = $post_array['burst'];
+    $pred_model['burst'] = (int)$post_array['burst'];
 
-    $pred_model['delta_lat'] = $post_array['delta_lat'];
-    $pred_model['delta_lon'] = $post_array['delta_lon'];
+    $pred_model['delta_lat'] = (int)$post_array['delta_lat'];
+    $pred_model['delta_lon'] = (int)$post_array['delta_lon'];
 
     $pred_model['wind_error'] = 0;
 
@@ -39,8 +39,8 @@ function createModel($post_array) {
 
     // Make a timestamp of the form data
     $pred_model['timestamp'] = mktime($pred_model['hour'], $pred_model['min'], 
-        $pred_model['sec'], (int)$pred_model['month'], $pred_model['day'], 
-        (int)$pred_model['year'] - 2000);
+        $pred_model['sec'], $pred_model['month'], $pred_model['day'], 
+        $pred_model['year'] - 2000);
 
 
     // If all was good, return the prediction model
@@ -75,7 +75,14 @@ function verifyModel( $pred_model, $software_available ) {
                 $return_array['msg'] = "The model asked for software that 
                     does not exist on this server";
             }
-        } else if ( $idx == "delta_lat" || $idx == "delta_lon" ) {
+        }
+        else if ( !is_numeric( $value ) ) {
+            $return_array['valid'] = false;
+            $return_array['msg'] = "A value that should have been numeric
+                did not validate as such";
+        }
+
+        if ( $idx == "delta_lat" || $idx == "delta_lon" ) {
             if ( $value < 1 || $value > 10 ) {
                 $return_array['valid'] = false;
                 $return_array['msg'] = "The latitude or longitude deltas
@@ -87,10 +94,6 @@ function verifyModel( $pred_model, $software_available ) {
                 $return_array['msg'] = "The ascent and descent rates cannot 
                     be zero or negative";
             }
-        } else if ( !is_numeric( $value ) ) {
-            $return_array['valid'] = false;
-            $return_array['msg'] = "A value that should have been numeric
-                did not validate as such";
         }
     }
 
@@ -131,12 +134,16 @@ function runPred($pred_model) {
     $predictor_lat = number_format($pred_model['lat'], 0);
     $predictor_lon = number_format($pred_model['lon'], 0);
 
-    $sh = ROOT . "/predict.py --cd=" . ROOT . " --fork --alarm -v --latdelta="
+    $log = PREDS_PATH . $pred_model['uuid'] . "/" . LOG_FILE;
+    $sh = ROOT . "/predict.py --cd=" . ROOT . " --fork --alarm --redirect=predict/$log -v --latdelta="
         .$pred_model['delta_lat']." --londelta=".$pred_model['delta_lon']
         ." -p1 -f5 -t ".$pred_model['timestamp']
         ." --lat=".$predictor_lat." --lon=".$predictor_lon." " . $use_hd
         . $pred_model['uuid'];
-    if (DEBUG) shell_exec("echo " . $sh . " > " . AT_LOG);
+    if (defined("PYTHON"))
+        $sh = PYTHON . " " . $sh;
+
+    file_put_contents($log, "Command: " . $sh . "\n");
     shell_exec($sh);
 }
 

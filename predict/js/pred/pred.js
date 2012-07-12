@@ -253,6 +253,8 @@ function processProgress(progress) {
         clearInterval(ajaxEventHandle);
         appendDebug("There was an error in running the prediction: " 
                 + progress['error']);
+        resetGUI();
+        toggleWindow("scenario_template", "showHideDebug", "Show Debug", "Hide Debug", "show");
     } else {
         // get the progress of the wind data
         if ( progress['gfs_complete'] == true ) {
