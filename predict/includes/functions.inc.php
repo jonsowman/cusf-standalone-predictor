@@ -6,6 +6,7 @@
  */
 
 require_once("config.inc.php");
+require_once("statsd.php");
 
 // Given a POST array, create a scenario model
 function createModel($post_array) {
