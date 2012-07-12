@@ -135,7 +135,7 @@ function runPred($pred_model) {
     $predictor_lon = number_format($pred_model['lon'], 0);
 
     $log = PREDS_PATH . $pred_model['uuid'] . "/" . LOG_FILE;
-    $sh = ROOT . "/predict.py --cd=" . ROOT . " --fork --alarm --log=$log -v --latdelta="
+    $sh = ROOT . "/predict.py --cd=" . ROOT . " --fork --alarm --redirect=predict/$log -v --latdelta="
         .$pred_model['delta_lat']." --londelta=".$pred_model['delta_lon']
         ." -p1 -f5 -t ".$pred_model['timestamp']
         ." --lat=".$predictor_lat." --lon=".$predictor_lon." " . $use_hd

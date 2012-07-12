@@ -79,8 +79,8 @@ def main():
             help='detach the process and run in the background')
     parser.add_option('--alarm', dest='alarm', action="store_true",
             help='setup an alarm for 10 minutes time to prevent hung processes')
-    parser.add_option('--log', dest='log_target',
-            help='file to log debugging messages to', metavar='FILE')
+    parser.add_option('--redirect', dest='redirect', default='/dev/null',
+            help='if forking, file to send stdout/stderr to', metavar='FILE')
     parser.add_option('-t', '--timestamp', dest='timestamp',
         help='search for dataset covering the POSIX timestamp TIME \t[default: now]', 
         metavar='TIME', type='int',
@@ -139,12 +139,6 @@ def main():
 
     (options, args) = parser.parse_args()
 
-    # Setup log as soon as possible
-    if options.log_target:
-        log_target = logging.FileHandler(options.log_target)
-        log_target.setFormatter(log_formatter)
-        log.addHandler(log_target)
-
     # Check we got a UUID in the arguments
     if len(args) != 1:
         log.error('Exactly one positional argument should be supplied (uuid).')
@@ -154,7 +148,7 @@ def main():
         os.chdir(options.directory)
 
     if options.fork:
-        detach_process()
+        detach_process(options.redirect)
 
     if options.alarm:
         setup_alarm()
@@ -547,7 +541,7 @@ def dataset_for_time(time, hd):
     
     raise RuntimeError('Could not find appropriate dataset.')
 
-def detach_process():
+def detach_process(redirect):
     # Fork
     if os.fork() > 0:
         os._exit(0)
@@ -555,9 +549,12 @@ def detach_process():
     # Detach
     os.setsid()
 
-    null_fd = os.open(os.devnull, os.O_RDWR)
-    for s in [sys.stdin, sys.stdout, sys.stderr]:
-        os.dup2(null_fd, s.fileno())
+    null_fd = os.open(os.devnull, os.O_RDONLY)
+    out_fd = os.open(redirect, os.O_WRONLY | os.O_APPEND)
+
+    os.dup2(null_fd, sys.stdin.fileno())
+    for s in [sys.stdout, sys.stderr]:
+        os.dup2(out_fd, s.fileno())
 
     # Fork
     if os.fork() > 0:
@@ -573,7 +570,7 @@ if __name__ == '__main__':
     try:
         main()
     except SystemExit as e:
-        log.debug("Caught: " + repr(e))
+        log.debug("Exit: " + repr(e))
         if e.code != 0 and progress_f:
             update_progress(error="Unknown error exit")
         raise
