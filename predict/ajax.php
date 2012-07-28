@@ -88,7 +88,7 @@ case "submitForm":
             $json_return['error'] = "Server couldn't make a model from the form 
                 data";
             echo json_encode($json_return);
-            $stats->counter('habhub.predictor.php.form_error');
+            $stats->counting('habhub.predictor.php.form_error');
             break;
         }
 
@@ -97,7 +97,7 @@ case "submitForm":
         if ( !$verify_dump['valid'] ) {
             $json_return['error'] = $verify_dump['msg'];
             echo json_encode($json_return);
-            $stats->counter('habhub.predictor.php.invalid_model')
+            $stats->counting('habhub.predictor.php.invalid_model');
             break;
         }
 
@@ -105,7 +105,7 @@ case "submitForm":
         if ( !$pred_model['uuid'] = makesha1hash($pred_model) ) {
             $json_return['error'] = "Couldn't make the SHA1 hash";
             echo json_encode($json_return);
-            $stats->counter('habhub.predictor.php.unhashable');
+            $stats->counting('habhub.predictor.php.unhashable');
             break;
         }
 
