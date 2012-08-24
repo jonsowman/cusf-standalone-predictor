@@ -594,9 +594,6 @@ if __name__ == '__main__':
     except Exception as e:
         statsd.increment("uncaught_exception")
         log.exception("Uncaught exception")
-        #(exc_type, exc_value, discard_tb) = sys.exc_info()
-        #exc_tb = traceback.format_exception_only(exc_type, exc_value)
-        #info = exc_tb[-1].strip()
         info = traceback.format_exc()
         if progress_f:
             update_progress(error="Unhandled exception: " + info)
