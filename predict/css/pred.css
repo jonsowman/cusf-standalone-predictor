@@ -54,6 +54,10 @@ a { text-decoration: underline; color: #333; cursor: pointer; }
     display: none;
 }
 
+#debuginfo {
+    white-space: pre;
+}
+
 #burst-calc-wrapper {
     position: absolute;
     left: 50%;
