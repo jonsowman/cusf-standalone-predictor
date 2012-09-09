@@ -230,6 +230,7 @@ google.load("jqueryui", "1.8.1");
                         <option value="h1500">Hwoyee - 1500</option>
                         <option value="h1600">Hwoyee - 1600</option>
                         <option value="h2000">Hwoyee - 2000</option>
+                        <option value="p1200">PAWAN - 1200</option>
                     </select>
                 </td>
             </tr>
