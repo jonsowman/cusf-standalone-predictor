@@ -15,6 +15,9 @@ import calendar
 import optparse
 import subprocess
 import statsd
+import tempfile
+import shutil
+import bisect
 import simplejson as json
 
 statsd.init_statsd({'STATSD_BUCKET_PREFIX': 'habhub.predictor'})
@@ -91,10 +94,6 @@ def main():
         help='search for dataset covering the POSIX timestamp TIME \t[default: now]', 
         metavar='TIME', type='int',
         default=calendar.timegm(datetime.datetime.utcnow().timetuple()))
-    parser.add_option('-o', '--output', dest='output',
-        help='file to write GFS data to with \'%(VAR)\' replaced with the the value of VAR [default: %default]',
-        metavar='FILE',
-        default='gfs/gfs_%(time)_%(lat)_%(lon)_%(latdelta)_%(londelta).dat')
     parser.add_option('-v', '--verbose', action='count', dest='verbose',
         help='be verbose. The more times this is specified the more verbose.', default=False)
     parser.add_option('-p', '--past', dest='past',
@@ -259,7 +258,14 @@ def main():
             options.lat, options.latdelta, \
             options.lon, options.londelta)
 
-    write_file(options.output, dataset, \
+    gfs_dir = "/var/www/cusf-standalone-predictor/gfs/"
+
+    gfs_dir = tempfile.mkdtemp(dir=gfs_dir)
+
+    gfs_filename = "gfs_%(time)_%(lat)_%(lon)_%(latdelta)_%(londelta).dat"
+    output_format = os.path.join(gfs_dir, gfs_filename)
+
+    write_file(output_format, dataset, \
             window, \
             time_to_find - datetime.timedelta(hours=options.past), \
             time_to_find + datetime.timedelta(hours=options.future))
@@ -273,7 +279,9 @@ def main():
     else:
         alarm_flags = []
 
-    subprocess.call([pred_binary, '-i/var/www/cusf-standalone-predictor/gfs/', '-v', '-o'+uuid_path+'flight_path.csv', uuid_path+'scenario.ini'] + alarm_flags)
+    subprocess.call([pred_binary, '-i' + gfs_dir, '-v', '-o'+uuid_path+'flight_path.csv', uuid_path+'scenario.ini'] + alarm_flags)
+
+    shutil.rmtree(gfs_dir)
 
     update_progress(pred_running=False, pred_complete=True)
     statsd.increment('success')
@@ -302,8 +310,10 @@ def write_file(output_format, data, window, mintime, maxtime):
     assert(hgtprs_global.dimensions == ('time', 'lev', 'lat', 'lon'))
 
     # Work out what times we want to download
-    times = filter(lambda x: (x >= mintime) & (x <= maxtime),
-        map(timestamp_to_datetime, hgtprs_global.maps['time']))
+    times = sorted(map(timestamp_to_datetime, hgtprs_global.maps['time']))
+    times_first = max(0, bisect.bisect_right(times, mintime) - 1)
+    times_last = min(len(times), bisect.bisect_left(times, maxtime) + 1)
+    times = times[times_first:times_last]
 
     num_times = len(times)
     current_time = 0
