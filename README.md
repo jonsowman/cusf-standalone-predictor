@@ -13,7 +13,9 @@ The following items need to be executable (`chmod +x ./predict.py`) by the user 
 *   `cron/clear-pydap-cache-cronjob.sh`
 *   `cron/purge-predictions-cronjob.sh`
 
-The `predict/preds/` and `gfs/` directories need to have rwx access by the PHP interpreter and the `predict.py` python script. You will need to install the following python packages: pydap, numpy, json, simple-json. We use `at` to automatically background the predictor, so you will need that installed.  
+The `predict/preds/` and `gfs/` directories need to have rwx access by the PHP interpreter and the `predict.py` python script. You will need to install the python dependencies listed in requirements.txt. In the case of PyDAP, the exact version is important; the easiest way is:
+
+    $ pip install -r requirements.txt
 
 Other than that, just clone this repo to a non web-accessible folder and create symlinks to the `predict/` directory in the repo.  
 
