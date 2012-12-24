@@ -109,8 +109,8 @@ function drawDeltaSquare(map) {
     // Clear the old delta square if it exists
     if ( map_items['delta_square'] ) map_items['delta_square'].setMap(null);
     // Get the values from the form
-    var lat = parseFloat($("#lat").val());
-    var lon = parseFloat($("#lon").val());
+    var lat = Math.round(parseFloat($("#lat").val()));
+    var lon = Math.round(parseFloat($("#lon").val()));
     var dlat = parseFloat($("#delta_lat").val());
     var dlon = parseFloat($("#delta_lon").val());
     // Construct a rectange of points
