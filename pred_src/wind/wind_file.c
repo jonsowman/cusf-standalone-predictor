@@ -173,11 +173,10 @@ _parse_values_line(const char* line, unsigned int n_values, float* values)
         while(1 == sscanf(record, "%f", &value)) {
                 if(record_idx >= n_values)
                 {
-                        if(verbosity > 0)
-                                fprintf(stderr, "WARN: Read too many values for axis "
-                                                "(%i, expected %i). "
-                                                "Ignoring them.\n",
-                                                record_idx, n_values);
+                        fprintf(stderr, "ERROR: Read too many values for axis "
+                                        "(%i, expected %i).\n"
+                                        record_idx, n_values);
+                        return 0;
                 } else {
                         values[record_idx] = value;
                 }
@@ -473,7 +472,7 @@ _bilinear_interpolate(float ll, float lr, float rl, float rr, float lambda1, flo
         return _lerp(il,ir,lambda2);
 }
 
-void
+int
 wind_file_get_wind(wind_file_t* file, float lat, float lon, float height, 
                 float* windu, float *windv, float *uvar, float *vvar)
 {
@@ -492,6 +491,8 @@ wind_file_get_wind(wind_file_t* file, float lat, float lon, float height,
         int i;
         float left_height, right_height;
         float lat_lambda, lon_lambda, pr_lambda;
+
+        int status = 1; // 0: error (returned immediately) 1: ok; 2: ok with warnings
 
         assert(file);
         assert(windu && windv);
@@ -521,9 +522,8 @@ wind_file_get_wind(wind_file_t* file, float lat, float lon, float height,
                 if(!_wind_file_axis_find_value(file->axes[1], lat,
                                         _float_is_left_of, &left_lat_idx, &right_lat_idx))
                 {
-                        if(verbosity > 0)
-                                fprintf(stderr, "WARN: Latitude %f is not covered by file.\n", lat);
-                        return;
+                        fprintf(stderr, "ERROR: Latitude %f is not covered by file.\n", lat);
+                        return 0;
                 }
                 left_lat = file->axes[1]->values[left_lat_idx];
                 right_lat = file->axes[1]->values[right_lat_idx];
@@ -532,9 +532,8 @@ wind_file_get_wind(wind_file_t* file, float lat, float lon, float height,
                 if(!_wind_file_axis_find_value(file->axes[2], lon,
                                         _longitude_is_left_of, &left_lon_idx, &right_lon_idx))
                 {
-                        if(verbosity > 0)
-                                fprintf(stderr, "WARN: Longitude %f is not covered by file.\n", lon);
-                        return;
+                        fprintf(stderr, "ERROR: Longitude %f is not covered by file.\n", lon);
+                        return 0;
                 }
                 left_lon = file->axes[2]->values[left_lon_idx];
                 right_lon = file->axes[2]->values[right_lon_idx];
@@ -645,6 +644,7 @@ wind_file_get_wind(wind_file_t* file, float lat, float lon, float height,
                                                 file->axes[0]->values[left_pr_idx],
                                                 _wind_file_get_height(file,
                                                         left_lat_idx, left_lon_idx, left_pr_idx));
+                        status = 2;
                 }
 
                 if(right_pr_idx == file->axes[0]->n_values)
@@ -658,6 +658,7 @@ wind_file_get_wind(wind_file_t* file, float lat, float lon, float height,
                                                 file->axes[0]->values[right_pr_idx],
                                                 _wind_file_get_height(file,
                                                         left_lat_idx, left_lon_idx, right_pr_idx));
+                        status = 2;
                 }
 
                 if((left_pr_idx == file->axes[0]->n_values) ||
@@ -665,7 +666,7 @@ wind_file_get_wind(wind_file_t* file, float lat, float lon, float height,
                 {
                         fprintf(stderr, "ERROR: Moved to a totally stupid height (%f). "
                                         "Giving up!\n", height);
-                        return;
+                        return 0;
                 }
 
                 if(verbosity > 1)
@@ -780,6 +781,8 @@ wind_file_get_wind(wind_file_t* file, float lat, float lon, float height,
                 *uvar = usqmean - umean * umean;
                 *vvar = vsqmean - vmean * vmean;
         }
+
+        return status;
 }
 
 // Data for God's own editor.

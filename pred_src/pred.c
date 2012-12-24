@@ -43,6 +43,8 @@ int main(int argc, const char *argv[]) {
     int alarm_time;
     char* endptr;       // used to check for errors on strtod calls 
     
+    int exit_code = 0;
+
     wind_file_cache_t* file_cache;
     dictionary*        scenario = NULL;
     
@@ -250,8 +252,8 @@ int main(int argc, const char *argv[]) {
 
                 scenario_launch_time = mktime(&timeval);
                 if(scenario_launch_time <= 0) {
-                    fprintf(stderr, "WARN: Launch time in scenario is invalid, reverting to "
-                            "default timestamp.\n");
+                    fprintf(stderr, "ERROR: Launch time in scenario is invalid\n");
+                    exit(1);
                 } else {
                     initial_timestamp = scenario_launch_time;
                 }
@@ -281,11 +283,18 @@ int main(int argc, const char *argv[]) {
                     exit(1);
             }
 
-            if (!run_model(file_cache, alt_model, 
+            state = run_model(file_cache, alt_model, 
                            initial_lat, initial_lng, initial_alt, initial_timestamp,
-                           rmswinderror)) {
+                           rmswinderror)
+            if (state == 0)
+            {
                     fprintf(stderr, "ERROR: error during model run!\n");
                     exit(1);
+            }
+            else if (state == 2)
+            {
+                    fprintf(stderr, "WARN: model run completed by with warnings\n");
+                    exit_code = 2;
             }
 
             altitude_model_free(alt_model);
@@ -311,7 +320,7 @@ int main(int argc, const char *argv[]) {
     // release the file cache resources.
     wind_file_cache_free(file_cache);
 
-    return 0;
+    return exit_code;
 }
 
 void write_position(float lat, float lng, float alt, int timestamp) {

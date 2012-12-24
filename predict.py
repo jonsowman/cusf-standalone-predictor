@@ -53,6 +53,8 @@ progress = {
     'gfs_timestamp': '',
     'pred_running': False,
     'pred_complete': False,
+    'warnings': False,
+    'pred_output': [],
     'error': '',
     }
 
@@ -279,12 +281,34 @@ def main():
     else:
         alarm_flags = []
 
-    subprocess.call([pred_binary, '-i' + gfs_dir, '-v', '-o'+uuid_path+'flight_path.csv', uuid_path+'scenario.ini'] + alarm_flags)
+    command = [pred_binary, '-i' + gfs_dir, '-v', '-o'+uuid_path+'flight_path.csv', uuid_path+'scenario.ini'] + alarm_flags
+    pred_process = subprocess.Popen(command, stdout=subprocess.PIPE)
+    pred_output = []
+
+    while True:
+        line = pred_process.stdout.readline()
+        if line == '':
+            break
+
+        # pass through
+        sys.stdout.write(line)
+
+        if ("WARN" in line or "ERROR" in line) and len(pred_output) < 10:
+            pred_output.append(line)
+
+    exit_code = pred_process.wait()
 
     shutil.rmtree(gfs_dir)
 
-    update_progress(pred_running=False, pred_complete=True)
-    statsd.increment('success')
+    if exit_code == 0:
+        update_progress(pred_running=False, pred_complete=True)
+        statsd.increment('success')
+    elif exit_code == 1:
+        update_progress(pred_running=False, error="Predictor exit code: 1", pred_output=pred_output)
+        statsd.increment('error_exit')
+    elif exit_code == 2:
+        update_progress(pred_running=False, pred_complete=True, warnings=True, pred_output=pred_output)
+        statsd.increment('success_with_warnings')
 
 def purge_cache():
     """

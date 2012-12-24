@@ -251,6 +251,8 @@ function getJSONProgress(pred_uuid) {
 function processProgress(progress) {
     if ( progress['error'] ) {
         clearInterval(ajaxEventHandle);
+        for (var i = 0; i < progress['pred_output'].length; i++)
+            appendDebug("Pred output: " + progress['pred_output'][i]);
         appendDebug("There was an error in running the prediction: " 
                 + progress['error']);
         resetGUI();
@@ -272,6 +274,12 @@ function processProgress(progress) {
                         + progress['run_time']);
                 appendDebug("Server said it used the " 
                         + progress['gfs_timestamp'] + " GFS model");
+
+                for (var i = 0; i < progress['pred_output'].length; i++)
+                    appendDebug("Pred output: " + progress['pred_output'][i]);
+                if (progress['warnings'])
+                    toggleWindow("scenario_template", "showHideDebug", "Show Debug", "Hide Debug", "show");
+
                 writePredictionInfo(current_uuid, progress['run_time'], 
                         progress['gfs_timestamp']);
                 addHashLink("uuid="+current_uuid);
