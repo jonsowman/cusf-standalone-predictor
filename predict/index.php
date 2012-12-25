@@ -480,14 +480,14 @@ google.load("jqueryui", "1.8.1");
         </select>
         </td>
     </tr>
-    <tr><td>Display UK NOTAMS &amp; Airspace: </td>
+<!--    <tr><td>Display UK NOTAMS &amp; Airspace: </td>
         <td>
 	<input id="notam-display" type="checkbox" name="notams" value="notams" />
             <a id="notam-settings-show" class="tipsyLink"
                 title="Advanced NOTAM &amp; Airspace Settings">
                 Advanced</a>
         </td>
-    </tr>
+    </tr> -->
     <tr>
         <td></td>
         <td><input type="submit" name="submit" id="run_pred_btn" value="Run Prediction">
