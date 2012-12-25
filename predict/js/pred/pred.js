@@ -57,12 +57,11 @@ function displayOld() {
                         appendDebug("The prediction was not completed"
                             + " correctly, quitting");
                     } else {
-                        appendDebug("JSON said the prediction completed "
-                            + "without errors");
+                        appendDebug("JSON said the prediction completed");
+                        processCompletedPrediction(progress);
                         writePredictionInfo(current_uuid, 
                             progress['run_time'], 
                             progress['gfs_timestamp']);
-                        getCSV(current_uuid);
                     }
                 });
         }
@@ -74,6 +73,8 @@ function displayOld() {
 function predSub() {
     appendDebug(null, 1); // clear debug window
     appendDebug("Sending data to server...");
+    // Gets in the way of #status_message
+    $("#error_window").fadeOut(250);
     // Initialise progress bar
     $("#prediction_progress").progressbar({ value: 0 });
     $("#prediction_status").html("Sending data to server...");
@@ -109,6 +110,7 @@ function populateFormByUUID(pred_uuid) {
             $("#software").val(data.software);
             $("#delta_lat").val(data['lat-delta']);
             $("#delta_lon").val(data['lon-delta']);
+            $("#delta_time").val(data['time-delta']);
             // now sort the map out
             SetSiteOther();
             plotClick();
@@ -214,6 +216,7 @@ function getCSV(pred_uuid) {
 function getJSONProgress(pred_uuid) {
     $.ajax({
         url:"preds/"+pred_uuid+"/progress.json",
+        cache: false,
         dataType:'json',
         timeout: ajaxTimeout,
         error: function(xhr, status, error) {
@@ -245,6 +248,31 @@ function getJSONProgress(pred_uuid) {
     });
 }
 
+function processCompletedPrediction(progress) {
+    // parse the data
+    getCSV(current_uuid);
+    appendDebug("Server gave a prediction run timestamp of " 
+        + progress['run_time']);
+    appendDebug("Server said it used the " 
+        + progress['gfs_timestamp'] + " GFS model");
+
+    var warnings = "<b>The prediction completed, but with warnings!<br>" +
+               "The prediction may be unreliable!</b><br><br>";
+    for (var i = 0; i < progress['pred_output'].length; i++) {
+        appendDebug("Pred output: " + progress['pred_output'][i]);
+        warnings += progress['pred_output'][i] + "<br>";
+    }
+
+    if (progress['pred_output'].length != 0)
+        toggleWindow("scenario_template", "showHideDebug", "Show Debug", "Hide Debug", "show");
+
+    if (progress['warnings'])
+        throwError(warnings);
+
+    writePredictionInfo(current_uuid, progress['run_time'], 
+                        progress['gfs_timestamp']);
+}
+
 // The contents of progress.json are given to this function to process
 // If the prediction has completed, reset the GUI and display the new
 // prediction; otherwise update the progress window
@@ -266,14 +294,7 @@ function processProgress(progress) {
                 resetGUI();
                 // stop polling for JSON
                 clearInterval(ajaxEventHandle);
-                // parse the data
-                getCSV(current_uuid);
-                appendDebug("Server gave a prediction run timestamp of " 
-                        + progress['run_time']);
-                appendDebug("Server said it used the " 
-                        + progress['gfs_timestamp'] + " GFS model");
-                writePredictionInfo(current_uuid, progress['run_time'], 
-                        progress['gfs_timestamp']);
+                processCompletedPrediction(progress);
                 addHashLink("uuid="+current_uuid);
             } else if ( progress['pred_running'] != true ) {
                 $("#prediction_status").html("Waiting for predictor to run...");

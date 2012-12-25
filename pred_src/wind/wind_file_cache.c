@@ -310,12 +310,6 @@ wind_file_cache_find_entry(wind_file_cache_t *cache,
                         }
                 }
         }
-
-        if(!*earlier) { *earlier = *later; }
-        if(!*later) { *later = *earlier; }
-
-        // If all else fails, just choose the first entry.
-        if(!*earlier) { *earlier = *later = cache->entries[0]; }
 }
 
 const char*

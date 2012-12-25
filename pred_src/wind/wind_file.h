@@ -29,7 +29,7 @@ wind_file_t            *wind_file_new          (const char         *file);
 //                      Free resources associated with 'file'.
 void                    wind_file_free         (wind_file_t        *file);
 
-void                    wind_file_get_wind     (wind_file_t        *file, 
+int                     wind_file_get_wind     (wind_file_t        *file, 
                                                 float               lat,
                                                 float               lon,
                                                 float               height, 
