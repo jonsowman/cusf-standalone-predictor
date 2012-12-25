@@ -33,6 +33,7 @@ function createModel($post_array) {
 
     $pred_model['delta_lat'] = (int)$post_array['delta_lat'];
     $pred_model['delta_lon'] = (int)$post_array['delta_lon'];
+    $pred_model['delta_time'] = (int)$post_array['delta_time'];
 
     $pred_model['wind_error'] = 0;
 
@@ -89,6 +90,12 @@ function verifyModel( $pred_model, $software_available ) {
                 $return_array['msg'] = "The latitude or longitude deltas
                     were outside the allowed range on this server";
             }
+        } else if ( $idx == "delta_time" ) {
+            if ( $value < 5 || $value > 24) {
+                $return_array['valid'] = false;
+                $return_array['msg'] = "The time delta was
+                    outside the allowed range on this server";
+            }
         } else if ( $idx == "asc" || $idx == "des" ) {
             if ( $value <= 0 ) {
                 $return_array['valid'] = false;
@@ -138,7 +145,7 @@ function runPred($pred_model) {
     $log = PREDS_PATH . $pred_model['uuid'] . "/" . LOG_FILE;
     $sh = ROOT . "/predict.py --cd=" . ROOT . " --fork --alarm --redirect=predict/$log -v --latdelta="
         .$pred_model['delta_lat']." --londelta=".$pred_model['delta_lon']
-        ." -p1 -f5 -t ".$pred_model['timestamp']
+        ." -p1 -f".$pred_model['delta_time']." -t ".$pred_model['timestamp']
         ." --lat=".$predictor_lat." --lon=".$predictor_lon." " . $use_hd
         . $pred_model['uuid'];
     if (defined("PYTHON"))
@@ -178,6 +185,7 @@ function makeINI($pred_model) { // makes an ini file
     $w_string .= $pred_model['min'] . "\n";
     // add our predictor stuff
     $w_string .= "[predictor]\nlat-delta = " . $pred_model['delta_lat'] . "\n";
+    $w_string .= "time-delta = " . $pred_model['delta_time'] . "\n";
     $w_string .= "lon-delta = " . $pred_model['delta_lon'] . "\nsoftware = ";
     $w_string .= $pred_model['software'] . "\n";
 

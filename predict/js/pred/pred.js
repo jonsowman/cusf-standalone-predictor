@@ -110,6 +110,7 @@ function populateFormByUUID(pred_uuid) {
             $("#software").val(data.software);
             $("#delta_lat").val(data['lat-delta']);
             $("#delta_lon").val(data['lon-delta']);
+            $("#delta_time").val(data['time-delta']);
             // now sort the map out
             SetSiteOther();
             plotClick();
