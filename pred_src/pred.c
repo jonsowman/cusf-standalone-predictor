@@ -43,8 +43,6 @@ int main(int argc, const char *argv[]) {
     int alarm_time;
     char* endptr;       // used to check for errors on strtod calls 
     
-    int exit_code = 0;
-
     wind_file_cache_t* file_cache;
     dictionary*        scenario = NULL;
     
@@ -283,18 +281,11 @@ int main(int argc, const char *argv[]) {
                     exit(1);
             }
 
-            state = run_model(file_cache, alt_model, 
+            if (!run_model(file_cache, alt_model, 
                            initial_lat, initial_lng, initial_alt, initial_timestamp,
-                           rmswinderror)
-            if (state == 0)
-            {
+                           rmswinderror)) {
                     fprintf(stderr, "ERROR: error during model run!\n");
                     exit(1);
-            }
-            else if (state == 2)
-            {
-                    fprintf(stderr, "WARN: model run completed by with warnings\n");
-                    exit_code = 2;
             }
 
             altitude_model_free(alt_model);
@@ -320,7 +311,7 @@ int main(int argc, const char *argv[]) {
     // release the file cache resources.
     wind_file_cache_free(file_cache);
 
-    return exit_code;
+    return 0;
 }
 
 void write_position(float lat, float lng, float alt, int timestamp) {

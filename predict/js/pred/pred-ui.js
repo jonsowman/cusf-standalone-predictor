@@ -43,6 +43,7 @@ function throwError(data) {
 // Reset the GUI to a onLoad state ready for a new prediction to be shown
 function resetGUI() {
     $("#status_message").fadeOut(500);
+    $("#error_window").fadeOut(500);
     // now clear the status window
     $("#prediction_status").html("");
     $("#prediction_progress").progressbar("options", "value", 0);

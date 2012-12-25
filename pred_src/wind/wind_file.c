@@ -174,7 +174,7 @@ _parse_values_line(const char* line, unsigned int n_values, float* values)
                 if(record_idx >= n_values)
                 {
                         fprintf(stderr, "ERROR: Read too many values for axis "
-                                        "(%i, expected %i).\n"
+                                        "(%i, expected %i).\n",
                                         record_idx, n_values);
                         return 0;
                 } else {
@@ -492,8 +492,6 @@ wind_file_get_wind(wind_file_t* file, float lat, float lon, float height,
         float left_height, right_height;
         float lat_lambda, lon_lambda, pr_lambda;
 
-        int status = 1; // 0: error (returned immediately) 1: ok; 2: ok with warnings
-
         assert(file);
         assert(windu && windv);
 
@@ -644,7 +642,6 @@ wind_file_get_wind(wind_file_t* file, float lat, float lon, float height,
                                                 file->axes[0]->values[left_pr_idx],
                                                 _wind_file_get_height(file,
                                                         left_lat_idx, left_lon_idx, left_pr_idx));
-                        status = 2;
                 }
 
                 if(right_pr_idx == file->axes[0]->n_values)
@@ -658,7 +655,6 @@ wind_file_get_wind(wind_file_t* file, float lat, float lon, float height,
                                                 file->axes[0]->values[right_pr_idx],
                                                 _wind_file_get_height(file,
                                                         left_lat_idx, left_lon_idx, right_pr_idx));
-                        status = 2;
                 }
 
                 if((left_pr_idx == file->axes[0]->n_values) ||
@@ -782,7 +778,7 @@ wind_file_get_wind(wind_file_t* file, float lat, float lon, float height,
                 *vvar = vsqmean - vmean * vmean;
         }
 
-        return status;
+        return 1;
 }
 
 // Data for God's own editor.

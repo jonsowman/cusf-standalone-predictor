@@ -4,15 +4,15 @@
 define("GMAPS_API_KEY", "ABQIAAAA4T7AS90KUqGrNPOsl6eyCBS4mbmQPYGFaQoYTVDm_qb3IIB-WBSwfZE_KhJy2GpxCqBbVm7PoSKM9Q");
 
 // Who should we email about errors etc?
-define("ADMIN_EMAIL", "jon@hexoc.com");
+define("ADMIN_EMAIL", "daniel@habhub.org");
 
 define("LOCATION_SAVE_ENABLE", true);
 
 // Path to the root of the git repo inc. trailing /
-define("ROOT", "/var/www/hab/predict/");
+define("ROOT", "/var/www/cusf-standalone-predictor/");
 
 // Path to python virtualenv to use
-// define("PYTHON", ROOT . "ENV/bin/python");
+define("PYTHON", ROOT . "venv/bin/python");
 
 // Path to prediction data dir from predict/
 define("PREDS_PATH", "preds/");
