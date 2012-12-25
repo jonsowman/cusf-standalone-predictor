@@ -294,9 +294,9 @@ def main():
         sys.stdout.write(line)
 
         if "ERROR: Do not have wind data" in line:
-            pred_output.append("Either the latitude, longitude deltas were too small, or "
-                               "the prediction ran for more than 5 hours.")
-            pred_output.append("If it is the former, please re-run your prediction with larger deltas.")
+            pred_output.append("One of the latitude, longitude or time deltas ({0}, {1}, {2}) was too small."
+                               .format(options.latdelta, options.londelta, options.future))
+            pred_output.append("Please adjust the settings accordingly and re-run your prediction.")
             pred_output.append("")
 
         if ("WARN" in line or "ERROR" in line) and len(pred_output) < 10:
