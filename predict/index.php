@@ -471,14 +471,23 @@ google.load("jqueryui", "1.8.1");
         </select>
         </td>
     </tr>
-    <tr><td>Display UK NOTAMS &amp; Airspace: </td>
+    <tr><td>Time Delta:</td>
+        <td>
+        <select id="delta_time" name="delta_time">
+            <option value="5">~5 hour prediction</option>
+            <option value="10">~10 hour prediction</option>
+            <option value="24">~24 hour prediction</option>
+        </select>
+        </td>
+    </tr>
+<!--    <tr><td>Display UK NOTAMS &amp; Airspace: </td>
         <td>
 	<input id="notam-display" type="checkbox" name="notams" value="notams" />
             <a id="notam-settings-show" class="tipsyLink"
                 title="Advanced NOTAM &amp; Airspace Settings">
                 Advanced</a>
         </td>
-    </tr>
+    </tr> -->
     <tr>
         <td></td>
         <td><input type="submit" name="submit" id="run_pred_btn" value="Run Prediction">

@@ -250,8 +250,8 @@ int main(int argc, const char *argv[]) {
 
                 scenario_launch_time = mktime(&timeval);
                 if(scenario_launch_time <= 0) {
-                    fprintf(stderr, "WARN: Launch time in scenario is invalid, reverting to "
-                            "default timestamp.\n");
+                    fprintf(stderr, "ERROR: Launch time in scenario is invalid\n");
+                    exit(1);
                 } else {
                     initial_timestamp = scenario_launch_time;
                 }

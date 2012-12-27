@@ -75,13 +75,11 @@ _advance_one_timestep(wind_file_cache_t* cache,
 
         if(!altitude_model_get_altitude(state->alt_model, 
                                         timestamp - initial_timestamp, &state->alt))
-            return 0;
+            return 0; // alt < 0; finished
 
         if(!get_wind(cache, state->lat, state->lng, state->alt, timestamp, 
-                    &wind_v, &wind_u, &wind_var)) {
-                fprintf(stderr, "ERROR: error getting wind data\n");
-                return 0;
-        }
+                    &wind_v, &wind_u, &wind_var))
+            return -1; // error
 
         _get_frame(state->lat, state->lng, state->alt, &ddlat, &ddlng);
 
@@ -108,7 +106,7 @@ _advance_one_timestep(wind_file_cache_t* cache,
         state->loglik += (double)(u_lik + v_lik);
     }
 
-    return 1;
+    return 1; // OK, and continue
 }
 
 static int _state_compare_rev(const void* a, const void *b)
@@ -145,10 +143,18 @@ int run_model(wind_file_cache_t* cache, altitude_model_t* alt_model,
     long int timestamp = initial_timestamp;
     
     int log_counter = 0; // only write position to output files every LOG_DECIMATE timesteps
-    
-    while(_advance_one_timestep(cache, TIMESTEP, timestamp, initial_timestamp, 
-                n_states, states, rmswinderror))
+    int r, return_code = 1;
+
+    while(1)
     {
+        r = _advance_one_timestep(cache, TIMESTEP, timestamp, initial_timestamp, 
+                                  n_states, states, rmswinderror);
+        if (r == -1) // error getting wind. Save prediction, but emit error messages
+            return_code = 0;
+
+        if (r != 1) // 1 = continue
+            break;
+
         // Sort the array of models in order of log likelihood. 
         qsort(states, n_states, sizeof(model_state_t), _state_compare_rev);
 
@@ -173,12 +179,12 @@ int run_model(wind_file_cache_t* cache, altitude_model_t* alt_model,
 
     free(states);
 
-    return 1;
+    return return_code;
 }
 
 int get_wind(wind_file_cache_t* cache, float lat, float lng, float alt, long int timestamp,
         float* wind_v, float* wind_u, float *wind_var) {
-    int i;
+    int i, s;
     float lambda, wu_l, wv_l, wu_h, wv_h;
     float wuvar_l, wvvar_l, wuvar_h, wvvar_h;
     wind_file_cache_entry_t* found_entries[] = { NULL, NULL };
@@ -190,7 +196,7 @@ int get_wind(wind_file_cache_t* cache, float lat, float lng, float alt, long int
             &(found_entries[0]), &(found_entries[1]));
 
     if(!found_entries[0] || !found_entries[1]) {
-        fprintf(stderr, "ERROR: Could not locate appropriate wind data tile for time.\n");
+        fprintf(stderr, "ERROR: Do not have wind data for this (lat, lon, alt, time).\n");
         return 0;
     }
 
@@ -211,10 +217,10 @@ int get_wind(wind_file_cache_t* cache, float lat, float lng, float alt, long int
     earlier_ts = wind_file_cache_entry_timestamp(found_entries[0]);
     later_ts = wind_file_cache_entry_timestamp(found_entries[1]);
 
-    if(earlier_ts == later_ts)
+    if(earlier_ts > timestamp || later_ts < timestamp)
     {
-        fprintf(stderr, "WARN: Do not have two data files around current time. "
-                        "Expect the results to be wrong!\n");
+        fprintf(stderr, "Error: found_entries have bad times.\n");
+        return 0;
     }
 
     if(earlier_ts != later_ts)
@@ -223,8 +229,10 @@ int get_wind(wind_file_cache_t* cache, float lat, float lng, float alt, long int
     else
         lambda = 0.5f;
 
-    wind_file_get_wind(found_files[0], lat, lng, alt, &wu_l, &wv_l, &wuvar_l, &wvvar_l);
-    wind_file_get_wind(found_files[1], lat, lng, alt, &wu_h, &wv_h, &wuvar_h, &wvvar_h);
+    s = wind_file_get_wind(found_files[0], lat, lng, alt, &wu_l, &wv_l, &wuvar_l, &wvvar_l);
+    if (s == 0) return 0; // hard error
+    s = wind_file_get_wind(found_files[1], lat, lng, alt, &wu_h, &wv_h, &wuvar_h, &wvvar_h);
+    if (s == 0) return 0;
 
     *wind_u = lambda * wu_h + (1.f-lambda) * wu_l;
     *wind_v = lambda * wv_h + (1.f-lambda) * wv_l;

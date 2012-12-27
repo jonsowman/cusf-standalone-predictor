@@ -53,6 +53,8 @@ progress = {
     'gfs_timestamp': '',
     'pred_running': False,
     'pred_complete': False,
+    'warnings': False,
+    'pred_output': [],
     'error': '',
     }
 
@@ -279,12 +281,45 @@ def main():
     else:
         alarm_flags = []
 
-    subprocess.call([pred_binary, '-i' + gfs_dir, '-v', '-o'+uuid_path+'flight_path.csv', uuid_path+'scenario.ini'] + alarm_flags)
+    command = [pred_binary, '-i' + gfs_dir, '-v', '-o'+uuid_path+'flight_path.csv', uuid_path+'scenario.ini'] + alarm_flags
+    pred_process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    pred_output = []
+
+    while True:
+        line = pred_process.stdout.readline()
+        if line == '':
+            break
+
+        # pass through
+        sys.stdout.write(line)
+
+        if "ERROR: Do not have wind data" in line:
+            pred_output = ["One of the latitude, longitude or time deltas ({0}, {1}, {2}) was too small."
+                           .format(options.latdelta, options.londelta, options.future),
+                           "Please adjust the settings accordingly and re-run your prediction.",
+                           ""] + pred_output
+
+        if ("WARN" in line or "ERROR" in line) and len(pred_output) < 10:
+            pred_output.append(line.strip())
+
+    exit_code = pred_process.wait()
 
     shutil.rmtree(gfs_dir)
 
-    update_progress(pred_running=False, pred_complete=True)
-    statsd.increment('success')
+    if exit_code == 1:
+        # Hard error from the predictor. Tell the javascript it completed, so that it will show the trace,
+        # but pop up a 'warnings' window with the error messages
+        update_progress(pred_running=False, pred_complete=True, warnings=True, pred_output=pred_output)
+        statsd.increment('success_serious_warnings')
+    elif pred_output:
+        # Soft error (altitude too low error, typically): pred_output being set forces the debug
+        # window open with the messages in
+        update_progress(pred_running=False, pred_complete=True, pred_output=pred_output)
+        statsd.increment('success_minor_warnings')
+    else:
+        assert exit_code == 0
+        update_progress(pred_running=False, pred_complete=True)
+        statsd.increment('success')
 
 def purge_cache():
     """
