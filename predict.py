@@ -9,6 +9,7 @@ import time as timelib
 import math
 import sys
 import os
+import socket
 import logging
 import traceback
 import calendar
@@ -560,9 +561,18 @@ def possible_urls(time, hd):
     latest = time
 
     if hd:
-        url_format = 'http://nomads.ncep.noaa.gov:9090/dods/gfs_hd/gfs_hd%i%02i%02i/gfs_hd_%02iz'
+        url_format = 'http://{host}:9090/dods/gfs_hd/gfs_hd%i%02i%02i/gfs_hd_%02iz'
     else:
-        url_format = 'http://nomads.ncep.noaa.gov:9090/dods/gfs/gfs%i%02i%02i/gfs_%02iz'
+        url_format = 'http://{host}:9090/dods/gfs/gfs%i%02i%02i/gfs_%02iz'
+
+    # Often we have issues where one IP address (the DNS resolves to 2 or more)
+    # will have a dataset and the other one won't yet.
+    # This causes "blah is not an available dataset" errors since predict.py
+    # thinks it's OK to use a recent one, and then by chance we end up talking
+    # to a server on a later request that doesn't have it.
+    selected_ip = socket.gethostbyname("nomads.ncep.noaa.gov")
+    log.info("Picked IP: {0}".format(selected_ip))
+    url_format = url_format.format(host=selected_ip)
 
     # Start from the latest, work to the earliest
     proposed = latest
