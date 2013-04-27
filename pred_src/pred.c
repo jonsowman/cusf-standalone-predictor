@@ -315,6 +315,10 @@ int main(int argc, const char *argv[]) {
 }
 
 void write_position(float lat, float lng, float alt, int timestamp) {
+    // the predictor uses 0<=lng<360; most other things expect -180<lng<=180
+    if (lng > 180)
+        lng -= 360;
+
     if (kml_file) {
         fprintf(kml_file, "%g,%g,%g\n", lng, lat, alt);
         if (ferror(kml_file)) {
