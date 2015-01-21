@@ -563,7 +563,7 @@ def possible_urls(time, hd):
     if hd:
         url_format = 'http://{host}:9090/dods/gfs_hd/gfs_hd%i%02i%02i/gfs_hd_%02iz'
     else:
-        url_format = 'http://{host}:9090/dods/gfs/gfs%i%02i%02i/gfs_%02iz'
+        url_format = 'http://{host}:9090/dods/gfs_1p00/gfs%i%02i%02i/gfs_1p00_%02iz'
 
     # Often we have issues where one IP address (the DNS resolves to 2 or more)
     # will have a dataset and the other one won't yet.
