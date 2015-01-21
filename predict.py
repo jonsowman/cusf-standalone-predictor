@@ -561,7 +561,7 @@ def possible_urls(time, hd):
     latest = time
 
     if hd:
-        url_format = 'http://{host}:9090/dods/gfs_hd/gfs_hd%i%02i%02i/gfs_hd_%02iz'
+        url_format = 'http://{host}:9090/dods/gfs_0p50/gfs%i%02i%02i/gfs_0p50_%02iz'
     else:
         url_format = 'http://{host}:9090/dods/gfs_1p00/gfs%i%02i%02i/gfs_1p00_%02iz'
 
