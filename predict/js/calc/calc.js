@@ -157,6 +157,7 @@ function find_bd(mb) {
     bds["h1500"] = 9.50;
     bds["h1600"] = 10.50;
     bds["h2000"] = 11.00;
+    bds["h3000"] = 13.00;
     // PAWAN data from
     // https://sites.google.com/site/balloonnewswebstore/1200g-balloon-data
     bds["p1200"] = 8.0;
@@ -209,6 +210,7 @@ function find_cd(mb) {
     cds["h1500"] = 0.25;
     cds["h1600"] = 0.25;
     cds["h2000"] = 0.25;
+    cds["h3000"] = 0.25;
     // PAWAN data also guesswork
     cds["p1200"] = 0.25;
 
