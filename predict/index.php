@@ -25,9 +25,27 @@ $time = time() + 3600;
 <head>
 <title>CUSF Landing Predictor 2.0</title>
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-<script type="text/javascript" src="https://www.google.com/jsapi?key=<?php echo GMAPS_API_KEY; ?>">
+<script type="text/javascript">
+
+function inaug(comin){
+	var script = document.createElement('script');
+	script.type = 'text/javascript';
+
+	script.onerror = function() {
+	return false;
+}
+
+script.src = comin;
+document.head.appendChild(script);
+}
+	
+//Fall back to Google Maps API (China) if failed
+if (!(inaug('http://www.google.com/jsapi?key=ABQIAAAA4T7AS90KUqGrNPOsl6eyCBS4mbmQPYGFaQoYTVDm_qb3IIB-WBSwfZE_KhJy2GpxCqBbVm7PoSKM9Q'))) inaug('http://www.google.cn/jsapi?key=ABQIAAAA4T7AS90KUqGrNPOsl6eyCBS4mbmQPYGFaQoYTVDm_qb3IIB-WBSwfZE_KhJy2GpxCqBbVm7PoSKM9Q');
+
+if (!(inaug('http://maps.google.com/maps/api/js?sensor=false'))) inaug('http://maps.google.cn/maps/api/js?sensor=false');
+
 </script>
-<script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false"></script>
+
 <link href="css/pred.css" type="text/css" rel="stylesheet" />
 <link href="css/calc.css" type="text/css" rel="stylesheet" />
 <link rel="stylesheet" href="css/tipsy.css" type="text/css" />
